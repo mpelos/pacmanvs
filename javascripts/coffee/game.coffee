@@ -1,7 +1,10 @@
+# Global contants
 WALL = 1
 PATH = 0
+TILE_WIDTH = 20
+TILE_HEIGHT = 20
 
-level = [
+matrix = [
   [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL],
   [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL],
   [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL],
@@ -35,54 +38,13 @@ level = [
   [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL]
 ]
 
-transposedLevel = []
-for levelLine, i in level
-  transposedLevel[i] = []
-  for value, j in levelLine
-    transposedLevel[i][j] = level[j][i]
-
-tileWidth = 20
-tileHeight = 20
-wallPadding = 0
-
-
 jQuery ($) ->
   canvas = document.getElementById("pacman_canvas")
-  canvas.width = level[0].length * tileWidth
-  canvas.height = level.length * tileHeight
+  canvas.width = matrix[0].length * TILE_WIDTH
+  canvas.height = matrix.length * TILE_HEIGHT
 
   context = canvas.getContext("2d")
   context.strokeStyle = "#03F"
 
-  for levelLine, i in level
-    for value, j in levelLine
-      x = j * tileWidth
-      y = i * tileHeight
-
-      if value is WALL
-        # If the above tile is blank space, draw a line in the top side of the current tile
-        if i isnt 0 and level[i - 1][j] is PATH
-          _y = y + wallPadding + 0.5
-          context.moveTo x, _y
-          context.lineTo x + tileWidth, _y
-
-        # If the right tile is blank space, draw a line in the right side of the current tile
-        if level[i][j + 1] is PATH
-          _x = x + tileWidth - wallPadding - 0.5
-          context.moveTo _x, y
-          context.lineTo _x, y + tileHeight
-
-        # If the bottom tile is blank space, draw a line in the bottom side of the current tile
-        if i isnt level.length - 1 and level[i + 1][j] is PATH
-          _y = y + tileHeight - wallPadding - 0.5
-          context.moveTo x, _y
-          context.lineTo x + tileWidth, _y
-
-        # If the left tile is blank space, draw a line in the left side of the current tile
-        if level[i][j - 1] is PATH
-          _x = x + wallPadding + 0.5
-          context.moveTo _x, y
-          context.lineTo _x, y + tileHeight
-
-  context.stroke()
-  context.width = context.width
+  map = new Map(context, matrix)
+  map.draw()
