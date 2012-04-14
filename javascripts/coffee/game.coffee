@@ -1,8 +1,9 @@
 # Global contants
-WALL = 1
-PATH = 0
-TILE_WIDTH = 20
-TILE_HEIGHT = 20
+WALL         = 1
+PATH         = 0
+TILE_WIDTH   = 20
+TILE_HEIGHT  = 20
+WALL_PADDING = 3
 
 matrix = [
   [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL],
@@ -40,8 +41,8 @@ matrix = [
 
 jQuery ($) ->
   canvas = document.getElementById("pacman_canvas")
-  canvas.width = matrix[0].length * TILE_WIDTH
-  canvas.height = matrix.length * TILE_HEIGHT
+  canvas.width  = matrix[0].length * TILE_WIDTH
+  canvas.height = matrix.length    * TILE_HEIGHT
 
   context = canvas.getContext("2d")
   context.strokeStyle = "#03F"
