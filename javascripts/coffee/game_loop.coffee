@@ -13,4 +13,4 @@ window.onload = ->
   setInterval( ->
     game.update()
     game.draw()
-  6)
+  30)
