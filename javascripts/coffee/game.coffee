@@ -54,6 +54,7 @@ class Game
 
     @map = new Map(mapMatrix)
     @map.draw(@context.map)
+    @map.drawGrid(@context.map)
 
   update: ->
     @pacman.move()

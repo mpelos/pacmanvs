@@ -42,7 +42,9 @@
           }
         }
       }
-      return this.map = new Map(mapMatrix).draw(this.context.map);
+      this.map = new Map(mapMatrix);
+      this.map.draw(this.context.map);
+      return this.map.drawGrid(this.context.map);
     };
     Game.prototype.update = function() {
       var i, j, pacmanTile;
@@ -53,7 +55,8 @@
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
-      return this.pacman.draw(this.context.player);
+      this.pacman.draw(this.context.player);
+      return this.pacman.drawPosition(this.context.player);
     };
     Game.prototype.handleKey = function(event) {
       switch (event.which) {
@@ -212,10 +215,6 @@
     };
     Player.prototype.draw = function(context) {
       var radius;
-      context.font = "bold 12px sans-serif";
-      context.textAlign = "center";
-      context.fillStyle = "#FFF";
-      context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - TILE_HEIGHT);
       radius = (TILE_WIDTH + (WALL_PADDING / 2)) / 2;
       context.beginPath();
       context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
@@ -224,6 +223,12 @@
       context.stroke();
       context.fillStyle = "#FF0";
       return context.fill();
+    };
+    Player.prototype.drawPosition = function(context) {
+      context.font = "bold 12px sans-serif";
+      context.textAlign = "center";
+      context.fillStyle = "#FFF";
+      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - TILE_HEIGHT);
     };
     return Player;
   })();

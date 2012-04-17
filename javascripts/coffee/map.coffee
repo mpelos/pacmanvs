@@ -61,3 +61,19 @@ class Map
     context.closePath()
     context.strokeStyle = "#03F"
     context.stroke()
+
+  drawGrid: (context) ->
+    context.beginPath()
+    for array, i in @matrix
+      for value, j in array
+        x = j * TILE_WIDTH
+        y = i * TILE_HEIGHT
+
+        context.moveTo x, y + TILE_HEIGHT + 0.5
+        context.lineTo x + TILE_WIDTH, y + TILE_HEIGHT + 0.5
+        context.moveTo x + TILE_WIDTH + 0.5, y
+        context.lineTo x + TILE_WIDTH + 0.5, y + TILE_HEIGHT
+
+        context.closePath()
+        context.strokeStyle = "#444"
+        context.stroke()
