@@ -61,6 +61,7 @@ class Game
   draw: ->
     @canvas.player.width = @canvas.player.width
     @pacman.draw(@context.player)
+    @pacman.drawPosition(@context.player)
 
   handleKey: (event) =>
     switch event.which
