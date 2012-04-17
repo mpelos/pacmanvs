@@ -52,8 +52,16 @@ class Game
     @map = new Map(mapMatrix)
 
   update: ->
-    console.log("Update")
+    @pacman.move()
 
   draw: ->
+    @canvas.width = @canvas.width
     @map.draw(@context)
     @pacman.draw(@context)
+
+  handleKey: (event) =>
+    switch event.which
+      when 37 then @pacman.setDirection("left")   # left arrow
+      when 38 then @pacman.setDirection("up")     # up arrow
+      when 39 then @pacman.setDirection("right")  # right arrow
+      when 40 then @pacman.setDirection("bottom") # down arrow

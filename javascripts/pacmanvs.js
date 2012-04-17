@@ -1,7 +1,21 @@
 (function() {
-  var Game, Map, PACMAN, PATH, Player, TILE_HEIGHT, TILE_WIDTH, Tile, WALL, WALL_PADDING;
+  var Coordinate, Game, Map, PACMAN, PATH, Player, TILE_HEIGHT, TILE_WIDTH, Tile, WALL, WALL_PADDING;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  Coordinate = (function() {
+    function Coordinate(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+    Coordinate.prototype.change = function(x, y) {
+      this.x = x;
+      return this.y = y;
+    };
+    return Coordinate;
+  })();
   Game = (function() {
-    function Game() {}
+    function Game() {
+      this.handleKey = __bind(this.handleKey, this);
+    }
     Game.prototype.init = function() {
       var array, i, j, mapMatrix, value, x, y, _len, _len2;
       mapMatrix = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PACMAN, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL], [WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL]];
@@ -24,11 +38,28 @@
       return this.map = new Map(mapMatrix);
     };
     Game.prototype.update = function() {
-      return console.log("Update");
+      var i, j, pacmanTile;
+      i = Math.floor(this.pacman.position.x / TILE_WIDTH);
+      j = Math.floor(this.pacman.position.y / TILE_HEIGHT);
+      pacmanTile = new Tile(this.map, i, j);
+      return this.pacman.move();
     };
     Game.prototype.draw = function() {
+      this.canvas.width = this.canvas.width;
       this.map.draw(this.context);
       return this.pacman.draw(this.context);
+    };
+    Game.prototype.handleKey = function(event) {
+      switch (event.which) {
+        case 37:
+          return this.pacman.setDirection("left");
+        case 38:
+          return this.pacman.setDirection("up");
+        case 39:
+          return this.pacman.setDirection("right");
+        case 40:
+          return this.pacman.setDirection("bottom");
+      }
     };
     return Game;
   })();
@@ -38,45 +69,16 @@
   TILE_WIDTH = 20;
   TILE_HEIGHT = 20;
   WALL_PADDING = 6;
-  window.onload = function() {
+  jQuery(function($) {
     var game;
     game = new Game;
+    $(document).bind("keydown", game.handleKey);
     game.init();
     return setInterval(function() {
       game.update();
       return game.draw();
-    }, 6);
-  };
-  Array.prototype.all = function(conditionalFunction) {
-    var result, value, _i, _len;
-    result = true;
-    for (_i = 0, _len = this.length; _i < _len; _i++) {
-      value = this[_i];
-      if (typeof conditionalFunction === "function") {
-        value = conditionalFunction(value);
-      }
-      if (!value) {
-        result = false;
-        break;
-      }
-    }
-    return result;
-  };
-  Array.prototype.any = function(conditionalFunction) {
-    var result, value, _i, _len;
-    result = false;
-    for (_i = 0, _len = this.length; _i < _len; _i++) {
-      value = this[_i];
-      if (typeof conditionalFunction === "function") {
-        value = conditionalFunction(value);
-      }
-      if (value) {
-        result = true;
-        break;
-      }
-    }
-    return result;
-  };
+    }, 30);
+  });
   Map = (function() {
     function Map(matrix) {
       this.matrix = matrix;
@@ -92,6 +94,11 @@
           x = j * TILE_WIDTH;
           y = i * TILE_HEIGHT;
           tile = new Tile(this, i, j);
+          context.font = "bold 12px sans-serif";
+          context.fillStyle = "#FFF";
+          if (j === 0) {
+            context.fillText(i, x, y);
+          }
           if (tile.isWall()) {
             startX = tile.isWallLeftCorner() ? x + WALL_PADDING : x;
             endX = tile.isWallRightCorner() ? x + TILE_WIDTH - WALL_PADDING : x + TILE_WIDTH;
@@ -146,24 +153,70 @@
       context.strokeStyle = "#03F";
       return context.stroke();
     };
+    Map.prototype.drawGrid = function(context) {
+      var array, i, j, value, x, y, _len, _ref, _results;
+      context.beginPath();
+      _ref = this.matrix;
+      _results = [];
+      for (i = 0, _len = _ref.length; i < _len; i++) {
+        array = _ref[i];
+        _results.push((function() {
+          var _len2, _results2;
+          _results2 = [];
+          for (j = 0, _len2 = array.length; j < _len2; j++) {
+            value = array[j];
+            x = j * TILE_WIDTH;
+            y = i * TILE_HEIGHT;
+            context.moveTo(x, y + TILE_HEIGHT + 0.5);
+            context.lineTo(x + TILE_WIDTH, y + TILE_HEIGHT + 0.5);
+            context.moveTo(x + TILE_WIDTH + 0.5, y);
+            context.lineTo(x + TILE_WIDTH + 0.5, y + TILE_HEIGHT);
+            context.closePath();
+            context.strokeStyle = "#444";
+            _results2.push(context.stroke());
+          }
+          return _results2;
+        })());
+      }
+      return _results;
+    };
     return Map;
   })();
   Player = (function() {
     function Player(x, y) {
-      this.x = x;
-      this.y = y;
-      this.startX = this.x;
-      this.startY = this.y;
+      this.position = new Coordinate(x, y);
+      this.startPosition = this.position;
+      this.direction = new Coordinate(-1, 0);
     }
+    Player.prototype.move = function(x, y) {
+      this.position.x += this.direction.x * 2;
+      return this.position.y += this.direction.y * 2;
+    };
+    Player.prototype.setDirection = function(direction) {
+      switch (direction) {
+        case "left":
+          return this.direction.change(-1, 0);
+        case "up":
+          return this.direction.change(0, -1);
+        case "right":
+          return this.direction.change(1, 0);
+        case "bottom":
+          return this.direction.change(0, 1);
+      }
+    };
     Player.prototype.draw = function(context) {
       var radius;
+      context.font = "bold 12px sans-serif";
+      context.textAlign = "center";
+      context.fillStyle = "#FFF";
+      context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - TILE_HEIGHT);
       radius = (TILE_WIDTH + (WALL_PADDING / 2)) / 2;
       context.beginPath();
-      context.arc(this.x, this.y, radius, 0, Math.PI * 2, false);
+      context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
       context.closePath();
-      context.strokeStyle = "#FFFF00";
+      context.strokeStyle = "#FF0";
       context.stroke();
-      context.fillStyle = "#FFFF00";
+      context.fillStyle = "#FF0";
       return context.fill();
     };
     return Player;
