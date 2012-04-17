@@ -34,11 +34,14 @@ class Game
         [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL]
       ]
 
-    @canvas = document.getElementById("pacman_canvas")
-    @canvas.width  = mapMatrix[0].length * TILE_WIDTH
-    @canvas.height = mapMatrix.length    * TILE_HEIGHT
-
-    @context = @canvas.getContext("2d")
+    @canvas = {}
+    @context = {}
+    for canvas in $("canvas")
+      name = canvas.id.replace("_canvas", "")
+      @canvas[name] = document.getElementById(canvas.id)
+      @canvas[name].width  = mapMatrix[0].length * TILE_WIDTH
+      @canvas[name].height = mapMatrix.length    * TILE_HEIGHT
+      @context[name] = @canvas[name].getContext("2d")
 
     for array, i in mapMatrix
       for value, j in array
@@ -50,14 +53,14 @@ class Game
           mapMatrix[i][j] = PATH
 
     @map = new Map(mapMatrix)
+    @map.draw(@context.map)
 
   update: ->
     @pacman.move()
 
   draw: ->
-    @canvas.width = @canvas.width
-    @map.draw(@context)
-    @pacman.draw(@context)
+    @canvas.player.width = @canvas.player.width
+    @pacman.draw(@context.player)
 
   handleKey: (event) =>
     switch event.which
