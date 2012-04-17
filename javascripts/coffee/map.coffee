@@ -3,13 +3,11 @@ class Map
 
   draw: (context) ->
     context.beginPath()
-
     for array, i in @matrix
       for value, j in array
         x = j * TILE_WIDTH
         y = i * TILE_HEIGHT
         tile = new Tile(this, i, j)
-
 
         if tile.isWall()
           startX = if tile.isWallLeftCorner()  then (x + WALL_PADDING)               else x
@@ -77,3 +75,15 @@ class Map
         context.closePath()
         context.strokeStyle = "#444"
         context.stroke()
+
+        context.font = "bold 12px sans-serif"
+        context.textBaseline = "middle"
+        context.fillStyle = "#FFF"
+
+        if j is 0
+          context.textAlign = "left"
+          context.fillText i, x, y + (TILE_HEIGHT / 2)
+
+        if i is 0
+          context.textAlign = "center"
+          context.fillText j, x + (TILE_WIDTH / 2), y + 6

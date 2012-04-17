@@ -103,11 +103,6 @@
           x = j * TILE_WIDTH;
           y = i * TILE_HEIGHT;
           tile = new Tile(this, i, j);
-          context.font = "bold 12px sans-serif";
-          context.fillStyle = "#FFF";
-          if (j === 0) {
-            context.fillText(i, x, y);
-          }
           if (tile.isWall()) {
             startX = tile.isWallLeftCorner() ? x + WALL_PADDING : x;
             endX = tile.isWallRightCorner() ? x + TILE_WIDTH - WALL_PADDING : x + TILE_WIDTH;
@@ -182,7 +177,15 @@
             context.lineTo(x + TILE_WIDTH + 0.5, y + TILE_HEIGHT);
             context.closePath();
             context.strokeStyle = "#444";
-            _results2.push(context.stroke());
+            context.stroke();
+            context.font = "bold 12px sans-serif";
+            context.textBaseline = "middle";
+            context.fillStyle = "#FFF";
+            if (j === 0) {
+              context.textAlign = "left";
+              context.fillText(i, x, y + (TILE_HEIGHT / 2));
+            }
+            _results2.push(i === 0 ? (context.textAlign = "center", context.fillText(j, x + (TILE_WIDTH / 2), y + 6)) : void 0);
           }
           return _results2;
         })());
