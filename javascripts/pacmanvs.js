@@ -14,13 +14,12 @@
   })();
   Game = (function() {
     var FPS;
-    function Game() {
-      this.handleKey = __bind(this.handleKey, this);
-    }
     FPS = 60;
+    function Game() {
+      this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
+    }
     Game.prototype.init = function() {
       var array, canvas, i, j, name, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
-      this.map = new Map;
       _ref = this.map.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
@@ -199,6 +198,10 @@
   jQuery(function($) {
     var game;
     game = new Game;
+    $(".wrapper").css({
+      "width": "" + game.map.width + "px",
+      "height": "" + game.map.height + "px"
+    });
     $(document).bind("keydown", game.handleKey);
     return game.init();
   });

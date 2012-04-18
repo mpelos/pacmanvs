@@ -1,9 +1,10 @@
 class Game
   FPS = 60
 
-  init: ->
+  constructor: ->
     @map = new Map
 
+  init: ->
     for array, i in @map.matrix
       for value, j in array
         x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
