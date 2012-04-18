@@ -10,5 +10,10 @@
 }
 
 #map_canvas {
+  z-index: 0;
   background-color: black;
+}
+
+#player_canvas {
+  z-index: 1;
 }
