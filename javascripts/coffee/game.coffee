@@ -2,25 +2,26 @@ class Game
   FPS = 60
 
   init: ->
-    @canvas = {}
-    @context = {}
-    for canvas in $("canvas")
-      name = canvas.id.replace("_canvas", "")
-      @canvas[name] = document.getElementById(canvas.id)
-      @canvas[name].width  = Map.MATRIX[0].length * Map.TILE_WIDTH
-      @canvas[name].height = Map.MATRIX.length    * Map.TILE_HEIGHT
-      @context[name] = @canvas[name].getContext("2d")
+    @map = new Map
 
-    for array, i in Map.MATRIX
+    for array, i in @map.matrix
       for value, j in array
         x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
         y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
 
         if value is Map.PACMAN
           @pacman = new Player(x, y)
-          Map.MATRIX[i][j] = Map.PATH
+          @map.matrix[i][j] = Map.PATH
 
-    @map = new Map(Map.MATRIX)
+    @canvas = {}
+    @context = {}
+    for canvas in $("canvas")
+      name = canvas.id.replace("_canvas", "")
+      @canvas[name] = document.getElementById(canvas.id)
+      @canvas[name].width  = @map.matrix[0].length * Map.TILE_WIDTH
+      @canvas[name].height = @map.matrix.length    * Map.TILE_HEIGHT
+      @context[name] = @canvas[name].getContext("2d")
+
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
 
@@ -33,7 +34,7 @@ class Game
     @pacman.move()
 
   draw: ->
-    @canvas.player.width = @canvas.player.width
+    @canvas.player.width = @canvas.player.width # clear player canvas
     @pacman.draw(@context.player)
     @pacman.drawPosition(@context.player)
 

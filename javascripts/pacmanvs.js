@@ -1,21 +1,6 @@
 (function() {
   var Coordinate, Game, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  Map = (function() {
-    var o, p, w;
-    function Map() {}
-    Map.TILE_WIDTH = 20;
-    Map.TILE_HEIGHT = 20;
-    Map.WALL_PADDING = 6;
-    Map.WALL = 1;
-    Map.PATH = 0;
-    Map.PACMAN = 3;
-    w = Map.WALL;
-    p = Map.PATH;
-    o = Map.PACMAN;
-    Map.MATRIX = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [p, p, p, p, p, p, p, p, p, p, w, w, w, w, w, w, w, w, p, p, p, p, p, p, p, p, p, p], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, w, w, p, p, p, p, p, p, p, p, o, p, p, p, p, p, p, p, w, w, p, p, p, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
-    return Map;
-  })();
   Coordinate = (function() {
     function Coordinate(x, y) {
       this.x = x;
@@ -35,31 +20,31 @@
     FPS = 60;
     Game.prototype.init = function() {
       var array, canvas, i, j, name, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
-      this.canvas = {};
-      this.context = {};
-      _ref = $("canvas");
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        canvas = _ref[_i];
-        name = canvas.id.replace("_canvas", "");
-        this.canvas[name] = document.getElementById(canvas.id);
-        this.canvas[name].width = Map.MATRIX[0].length * Map.TILE_WIDTH;
-        this.canvas[name].height = Map.MATRIX.length * Map.TILE_HEIGHT;
-        this.context[name] = this.canvas[name].getContext("2d");
-      }
-      _ref2 = Map.MATRIX;
-      for (i = 0, _len2 = _ref2.length; i < _len2; i++) {
-        array = _ref2[i];
-        for (j = 0, _len3 = array.length; j < _len3; j++) {
+      this.map = new Map;
+      _ref = this.map.matrix;
+      for (i = 0, _len = _ref.length; i < _len; i++) {
+        array = _ref[i];
+        for (j = 0, _len2 = array.length; j < _len2; j++) {
           value = array[j];
           x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
           y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2);
           if (value === Map.PACMAN) {
             this.pacman = new Player(x, y);
-            Map.MATRIX[i][j] = Map.PATH;
+            this.map.matrix[i][j] = Map.PATH;
           }
         }
       }
-      this.map = new Map(Map.MATRIX);
+      this.canvas = {};
+      this.context = {};
+      _ref2 = $("canvas");
+      for (_i = 0, _len3 = _ref2.length; _i < _len3; _i++) {
+        canvas = _ref2[_i];
+        name = canvas.id.replace("_canvas", "");
+        this.canvas[name] = document.getElementById(canvas.id);
+        this.canvas[name].width = this.map.matrix[0].length * Map.TILE_WIDTH;
+        this.canvas[name].height = this.map.matrix.length * Map.TILE_HEIGHT;
+        this.context[name] = this.canvas[name].getContext("2d");
+      }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
       return this.loop();
@@ -104,19 +89,22 @@
     Map.WALL = w = 1;
     Map.PATH = p = 0;
     Map.PACMAN = P = 3;
-    Map.MATRIX = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [p, p, p, p, p, p, p, p, p, p, w, w, w, w, w, w, w, w, p, p, p, p, p, p, p, p, p, p], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, w, w, p, p, p, p, p, p, p, p, P, p, p, p, p, p, p, p, w, w, p, p, p, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
-    function Map() {}
+    function Map() {
+      this.matrix = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [p, p, p, p, p, p, p, p, p, p, w, w, w, w, w, w, w, w, p, p, p, p, p, p, p, p, p, p], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, w, w, p, p, p, p, p, p, p, p, P, p, p, p, p, p, p, p, w, w, p, p, p, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
+      this.width = this.matrix[0].length * Map.TILE_WIDTH;
+      this.height = this.matrix.length * Map.TILE_HEIGHT;
+    }
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _x, _y;
       context.beginPath();
-      _ref = Map.MATRIX;
+      _ref = this.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
         for (j = 0, _len2 = array.length; j < _len2; j++) {
           value = array[j];
           x = j * Map.TILE_WIDTH;
           y = i * Map.TILE_HEIGHT;
-          tile = new Tile(i, j);
+          tile = new Tile(this, i, j);
           if (tile.isWall()) {
             startX = tile.isWallLeftCorner() ? x + Map.WALL_PADDING : x;
             endX = tile.isWallRightCorner() ? x + Map.TILE_WIDTH - Map.WALL_PADDING : x + Map.TILE_WIDTH;
@@ -174,7 +162,7 @@
     Map.prototype.drawGrid = function(context) {
       var array, i, j, value, x, y, _len, _ref, _results;
       context.beginPath();
-      _ref = Map.MATRIX;
+      _ref = this.matrix;
       _results = [];
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
@@ -258,40 +246,41 @@
   Tile = (function() {
     var INVALID;
     INVALID = "Invalid tile";
-    function Tile(i, j) {
+    function Tile(map, i, j) {
+      this.map = map;
       this.i = i;
       this.j = j;
     }
     Tile.prototype.current = function() {
-      if ((Map.MATRIX[this.i] != null) && (Map.MATRIX[this.i][this.j] != null)) {
-        return Map.MATRIX[this.i][this.j];
+      if ((this.map.matrix[this.i] != null) && (this.map.matrix[this.i][this.j] != null)) {
+        return this.map.matrix[this.i][this.j];
       } else {
         return INVALID;
       }
     };
     Tile.prototype.above = function() {
-      return new Tile(this.i - 1, this.j);
+      return new Tile(this.map, this.i - 1, this.j);
     };
     Tile.prototype.aboveRight = function() {
-      return new Tile(this.i - 1, this.j + 1);
+      return new Tile(this.map, this.i - 1, this.j + 1);
     };
     Tile.prototype.right = function() {
-      return new Tile(this.i, this.j + 1);
+      return new Tile(this.map, this.i, this.j + 1);
     };
     Tile.prototype.belowRight = function() {
-      return new Tile(this.i + 1, this.j + 1);
+      return new Tile(this.map, this.i + 1, this.j + 1);
     };
     Tile.prototype.below = function() {
-      return new Tile(this.i + 1, this.j);
+      return new Tile(this.map, this.i + 1, this.j);
     };
     Tile.prototype.belowLeft = function() {
-      return new Tile(this.i + 1, this.j - 1);
+      return new Tile(this.map, this.i + 1, this.j - 1);
     };
     Tile.prototype.left = function() {
-      return new Tile(this.i, this.j - 1);
+      return new Tile(this.map, this.i, this.j - 1);
     };
     Tile.prototype.aboveLeft = function() {
-      return new Tile(this.i - 1, this.j - 1);
+      return new Tile(this.map, this.i - 1, this.j - 1);
     };
     Tile.prototype.isWall = function() {
       return this.current() === Map.WALL || this.current() === INVALID;
