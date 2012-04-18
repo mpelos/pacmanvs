@@ -1,44 +1,44 @@
 class Tile
   INVALID = "Invalid tile"
 
-  constructor: (@map, @i, @j) ->
+  constructor: (@i, @j) ->
 
   current: ->
-    if @map.matrix[@i]? and @map.matrix[@i][@j]?
-      @map.matrix[@i][@j]
+    if Map.MATRIX[@i]? and Map.MATRIX[@i][@j]?
+      Map.MATRIX[@i][@j]
     else
       INVALID
 
   above: ->
-    new Tile(@map, @i - 1, @j)
+    new Tile(@i - 1, @j)
 
   aboveRight: ->
-    new Tile(@map, @i - 1, @j + 1)
+    new Tile(@i - 1, @j + 1)
 
   right: ->
-    new Tile(@map, @i, @j + 1)
+    new Tile(@i, @j + 1)
 
   belowRight: ->
-    new Tile(@map, @i + 1, @j + 1)
+    new Tile(@i + 1, @j + 1)
 
   below: ->
-    new Tile(@map, @i + 1, @j)
+    new Tile(@i + 1, @j)
 
   belowLeft: ->
-    new Tile(@map, @i + 1, @j - 1)
+    new Tile(@i + 1, @j - 1)
 
   left: ->
-    new Tile(@map, @i, @j - 1)
+    new Tile(@i, @j - 1)
 
   aboveLeft: ->
-    new Tile(@map, @i - 1, @j - 1)
+    new Tile(@i - 1, @j - 1)
 
   isWall: ->
-    this.current() is WALL or this.current() is INVALID
+    this.current() is Map.WALL or this.current() is INVALID
 
   isPath: ->
     if this.current() isnt INVALID
-      this.current() is PATH
+      this.current() is Map.PATH
 
   isWallUpCorner: ->
     this.above().isPath() and this.below().isWall()

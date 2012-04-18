@@ -1,6 +1,21 @@
 (function() {
-  var Coordinate, Game, Map, PACMAN, PATH, Player, TILE_HEIGHT, TILE_WIDTH, Tile, WALL, WALL_PADDING;
+  var Coordinate, Game, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  Map = (function() {
+    var o, p, w;
+    function Map() {}
+    Map.TILE_WIDTH = 20;
+    Map.TILE_HEIGHT = 20;
+    Map.WALL_PADDING = 6;
+    Map.WALL = 1;
+    Map.PATH = 0;
+    Map.PACMAN = 3;
+    w = Map.WALL;
+    p = Map.PATH;
+    o = Map.PACMAN;
+    Map.MATRIX = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [p, p, p, p, p, p, p, p, p, p, w, w, w, w, w, w, w, w, p, p, p, p, p, p, p, p, p, p], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, w, w, p, p, p, p, p, p, p, p, o, p, p, p, p, p, p, p, w, w, p, p, p, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
+    return Map;
+  })();
   Coordinate = (function() {
     function Coordinate(x, y) {
       this.x = x;
@@ -13,12 +28,13 @@
     return Coordinate;
   })();
   Game = (function() {
+    var FPS;
     function Game() {
       this.handleKey = __bind(this.handleKey, this);
     }
+    FPS = 60;
     Game.prototype.init = function() {
-      var array, canvas, i, j, mapMatrix, name, value, x, y, _i, _len, _len2, _len3, _ref;
-      mapMatrix = [[WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PACMAN, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL], [WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, WALL, WALL, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL, WALL, PATH, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, PATH, WALL], [WALL, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, PATH, WALL], [WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL]];
+      var array, canvas, i, j, name, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
       this.canvas = {};
       this.context = {};
       _ref = $("canvas");
@@ -26,30 +42,32 @@
         canvas = _ref[_i];
         name = canvas.id.replace("_canvas", "");
         this.canvas[name] = document.getElementById(canvas.id);
-        this.canvas[name].width = mapMatrix[0].length * TILE_WIDTH;
-        this.canvas[name].height = mapMatrix.length * TILE_HEIGHT;
+        this.canvas[name].width = Map.MATRIX[0].length * Map.TILE_WIDTH;
+        this.canvas[name].height = Map.MATRIX.length * Map.TILE_HEIGHT;
         this.context[name] = this.canvas[name].getContext("2d");
       }
-      for (i = 0, _len2 = mapMatrix.length; i < _len2; i++) {
-        array = mapMatrix[i];
+      _ref2 = Map.MATRIX;
+      for (i = 0, _len2 = _ref2.length; i < _len2; i++) {
+        array = _ref2[i];
         for (j = 0, _len3 = array.length; j < _len3; j++) {
           value = array[j];
-          x = (j * TILE_WIDTH) + (TILE_WIDTH / 2);
-          y = (i * TILE_HEIGHT) + (TILE_HEIGHT / 2);
-          if (value === PACMAN) {
+          x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
+          y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2);
+          if (value === Map.PACMAN) {
             this.pacman = new Player(x, y);
-            mapMatrix[i][j] = PATH;
+            Map.MATRIX[i][j] = Map.PATH;
           }
         }
       }
-      this.map = new Map(mapMatrix);
+      this.map = new Map(Map.MATRIX);
       this.map.draw(this.context.map);
-      return this.map.drawGrid(this.context.map);
+      this.map.drawGrid(this.context.map);
+      return this.loop();
     };
     Game.prototype.update = function() {
       var i, j, pacmanTile;
-      i = Math.floor(this.pacman.position.x / TILE_WIDTH);
-      j = Math.floor(this.pacman.position.y / TILE_HEIGHT);
+      i = Math.floor(this.pacman.position.x / Map.TILE_WIDTH);
+      j = Math.floor(this.pacman.position.y / Map.TILE_HEIGHT);
       pacmanTile = new Tile(this.map, i, j);
       return this.pacman.move();
     };
@@ -70,84 +88,80 @@
           return this.pacman.setDirection("bottom");
       }
     };
+    Game.prototype.loop = function() {
+      return setInterval(__bind(function() {
+        this.update();
+        return this.draw();
+      }, this), 1000 / FPS);
+    };
     return Game;
   })();
-  WALL = 1;
-  PATH = 0;
-  PACMAN = 3;
-  TILE_WIDTH = 20;
-  TILE_HEIGHT = 20;
-  WALL_PADDING = 6;
-  jQuery(function($) {
-    var game;
-    game = new Game;
-    $(document).bind("keydown", game.handleKey);
-    game.init();
-    return setInterval(function() {
-      game.update();
-      return game.draw();
-    }, 30);
-  });
   Map = (function() {
-    function Map(matrix) {
-      this.matrix = matrix;
-    }
+    var P, p, w;
+    Map.TILE_WIDTH = 20;
+    Map.TILE_HEIGHT = 20;
+    Map.WALL_PADDING = 6;
+    Map.WALL = w = 1;
+    Map.PATH = p = 0;
+    Map.PACMAN = P = 3;
+    Map.MATRIX = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, p, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [p, p, p, p, p, p, p, p, p, p, w, w, w, w, w, w, w, w, p, p, p, p, p, p, p, p, p, p], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, p, p, p, p, p, p, p, p, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, w, w, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, w, w, w, w, p, w, w, w, w, w, p, w, w, p, w, w, w, w, w, p, w, w, w, w, p, w], [w, p, p, p, w, w, p, p, p, p, p, p, p, p, P, p, p, p, p, p, p, p, w, w, p, p, p, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, w, w, p, w, w, p, w, w, p, w, w, w, w, w, w, w, w, p, w, w, p, w, w, p, w, w, w], [w, p, p, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, w, w, p, p, p, p, p, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, w, w, w, w, w, w, w, w, w, w, p, w, w, p, w, w, w, w, w, w, w, w, w, w, p, w], [w, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
+    function Map() {}
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _x, _y;
       context.beginPath();
-      _ref = this.matrix;
+      _ref = Map.MATRIX;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
         for (j = 0, _len2 = array.length; j < _len2; j++) {
           value = array[j];
-          x = j * TILE_WIDTH;
-          y = i * TILE_HEIGHT;
-          tile = new Tile(this, i, j);
+          x = j * Map.TILE_WIDTH;
+          y = i * Map.TILE_HEIGHT;
+          tile = new Tile(i, j);
           if (tile.isWall()) {
-            startX = tile.isWallLeftCorner() ? x + WALL_PADDING : x;
-            endX = tile.isWallRightCorner() ? x + TILE_WIDTH - WALL_PADDING : x + TILE_WIDTH;
-            startY = tile.isWallUpCorner() ? y + WALL_PADDING : y;
-            endY = tile.isWallDownCorner() ? y + TILE_HEIGHT - WALL_PADDING : y + TILE_HEIGHT;
+            startX = tile.isWallLeftCorner() ? x + Map.WALL_PADDING : x;
+            endX = tile.isWallRightCorner() ? x + Map.TILE_WIDTH - Map.WALL_PADDING : x + Map.TILE_WIDTH;
+            startY = tile.isWallUpCorner() ? y + Map.WALL_PADDING : y;
+            endY = tile.isWallDownCorner() ? y + Map.TILE_HEIGHT - Map.WALL_PADDING : y + Map.TILE_HEIGHT;
             if (tile.above().isPath()) {
-              _y = y + WALL_PADDING + 0.5;
+              _y = y + Map.WALL_PADDING + 0.5;
               context.moveTo(startX, _y);
               context.lineTo(endX, _y);
             }
             if (tile.right().isPath()) {
-              _x = x + TILE_WIDTH - WALL_PADDING - 0.5;
+              _x = x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5;
               context.moveTo(_x, startY);
               context.lineTo(_x, endY);
             }
             if (tile.below().isPath()) {
-              _y = y + TILE_HEIGHT - WALL_PADDING - 0.5;
+              _y = y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5;
               context.moveTo(startX, _y);
               context.lineTo(endX, _y);
             }
             if (tile.left().isPath()) {
-              _x = x + WALL_PADDING + 0.5;
+              _x = x + Map.WALL_PADDING + 0.5;
               context.moveTo(_x, startY);
               context.lineTo(_x, endY);
             }
             if (tile.above().isWall() && tile.right().isWall() && tile.below().isWall() && tile.left().isWall()) {
               if (tile.aboveRight().isPath()) {
-                context.moveTo(x + TILE_WIDTH, y + WALL_PADDING + 0.5);
-                context.lineTo(x + TILE_WIDTH - WALL_PADDING - 0.5, y + WALL_PADDING + 0.5);
-                context.lineTo(x + TILE_WIDTH - WALL_PADDING - 0.5, y);
+                context.moveTo(x + Map.TILE_WIDTH, y + Map.WALL_PADDING + 0.5);
+                context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.WALL_PADDING + 0.5);
+                context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y);
               }
               if (tile.belowRight().isPath()) {
-                context.moveTo(x + TILE_WIDTH, y + TILE_HEIGHT - WALL_PADDING - 0.5);
-                context.lineTo(x + TILE_WIDTH - WALL_PADDING - 0.5, y + TILE_HEIGHT - WALL_PADDING - 0.5);
-                context.lineTo(x + TILE_WIDTH - WALL_PADDING - 0.5, y + TILE_HEIGHT);
+                context.moveTo(x + Map.TILE_WIDTH, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
+                context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
+                context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.TILE_HEIGHT);
               }
               if (tile.belowLeft().isPath()) {
-                context.moveTo(x, y + TILE_HEIGHT - WALL_PADDING - 0.5);
-                context.lineTo(x + WALL_PADDING + 0.5, y + TILE_HEIGHT - WALL_PADDING - 0.5);
-                context.lineTo(x + WALL_PADDING + 0.5, y + TILE_HEIGHT);
+                context.moveTo(x, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
+                context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
+                context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.TILE_HEIGHT);
               }
               if (tile.aboveLeft().isPath()) {
-                context.moveTo(x, y + WALL_PADDING + 0.5);
-                context.lineTo(x + WALL_PADDING + 0.5, y + WALL_PADDING + 0.5);
-                context.lineTo(x + WALL_PADDING + 0.5, y);
+                context.moveTo(x, y + Map.WALL_PADDING + 0.5);
+                context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.WALL_PADDING + 0.5);
+                context.lineTo(x + Map.WALL_PADDING + 0.5, y);
               }
             }
           }
@@ -160,7 +174,7 @@
     Map.prototype.drawGrid = function(context) {
       var array, i, j, value, x, y, _len, _ref, _results;
       context.beginPath();
-      _ref = this.matrix;
+      _ref = Map.MATRIX;
       _results = [];
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
@@ -169,12 +183,12 @@
           _results2 = [];
           for (j = 0, _len2 = array.length; j < _len2; j++) {
             value = array[j];
-            x = j * TILE_WIDTH;
-            y = i * TILE_HEIGHT;
-            context.moveTo(x, y + TILE_HEIGHT + 0.5);
-            context.lineTo(x + TILE_WIDTH, y + TILE_HEIGHT + 0.5);
-            context.moveTo(x + TILE_WIDTH + 0.5, y);
-            context.lineTo(x + TILE_WIDTH + 0.5, y + TILE_HEIGHT);
+            x = j * Map.TILE_WIDTH;
+            y = i * Map.TILE_HEIGHT;
+            context.moveTo(x, y + Map.TILE_HEIGHT + 0.5);
+            context.lineTo(x + Map.TILE_WIDTH, y + Map.TILE_HEIGHT + 0.5);
+            context.moveTo(x + Map.TILE_WIDTH + 0.5, y);
+            context.lineTo(x + Map.TILE_WIDTH + 0.5, y + Map.TILE_HEIGHT);
             context.closePath();
             context.strokeStyle = "#444";
             context.stroke();
@@ -183,9 +197,9 @@
             context.fillStyle = "#FFF";
             if (j === 0) {
               context.textAlign = "left";
-              context.fillText(i, x, y + (TILE_HEIGHT / 2));
+              context.fillText(i, x, y + (Map.TILE_HEIGHT / 2));
             }
-            _results2.push(i === 0 ? (context.textAlign = "center", context.fillText(j, x + (TILE_WIDTH / 2), y + 6)) : void 0);
+            _results2.push(i === 0 ? (context.textAlign = "center", context.fillText(j, x + (Map.TILE_WIDTH / 2), y + 6)) : void 0);
           }
           return _results2;
         })());
@@ -194,6 +208,12 @@
     };
     return Map;
   })();
+  jQuery(function($) {
+    var game;
+    game = new Game;
+    $(document).bind("keydown", game.handleKey);
+    return game.init();
+  });
   Player = (function() {
     function Player(x, y) {
       this.position = new Coordinate(x, y);
@@ -218,7 +238,7 @@
     };
     Player.prototype.draw = function(context) {
       var radius;
-      radius = (TILE_WIDTH + (WALL_PADDING / 2)) / 2;
+      radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.beginPath();
       context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
       context.closePath();
@@ -231,55 +251,54 @@
       context.font = "bold 12px sans-serif";
       context.textAlign = "center";
       context.fillStyle = "#FFF";
-      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - TILE_HEIGHT);
+      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
     };
     return Player;
   })();
   Tile = (function() {
     var INVALID;
     INVALID = "Invalid tile";
-    function Tile(map, i, j) {
-      this.map = map;
+    function Tile(i, j) {
       this.i = i;
       this.j = j;
     }
     Tile.prototype.current = function() {
-      if ((this.map.matrix[this.i] != null) && (this.map.matrix[this.i][this.j] != null)) {
-        return this.map.matrix[this.i][this.j];
+      if ((Map.MATRIX[this.i] != null) && (Map.MATRIX[this.i][this.j] != null)) {
+        return Map.MATRIX[this.i][this.j];
       } else {
         return INVALID;
       }
     };
     Tile.prototype.above = function() {
-      return new Tile(this.map, this.i - 1, this.j);
+      return new Tile(this.i - 1, this.j);
     };
     Tile.prototype.aboveRight = function() {
-      return new Tile(this.map, this.i - 1, this.j + 1);
+      return new Tile(this.i - 1, this.j + 1);
     };
     Tile.prototype.right = function() {
-      return new Tile(this.map, this.i, this.j + 1);
+      return new Tile(this.i, this.j + 1);
     };
     Tile.prototype.belowRight = function() {
-      return new Tile(this.map, this.i + 1, this.j + 1);
+      return new Tile(this.i + 1, this.j + 1);
     };
     Tile.prototype.below = function() {
-      return new Tile(this.map, this.i + 1, this.j);
+      return new Tile(this.i + 1, this.j);
     };
     Tile.prototype.belowLeft = function() {
-      return new Tile(this.map, this.i + 1, this.j - 1);
+      return new Tile(this.i + 1, this.j - 1);
     };
     Tile.prototype.left = function() {
-      return new Tile(this.map, this.i, this.j - 1);
+      return new Tile(this.i, this.j - 1);
     };
     Tile.prototype.aboveLeft = function() {
-      return new Tile(this.map, this.i - 1, this.j - 1);
+      return new Tile(this.i - 1, this.j - 1);
     };
     Tile.prototype.isWall = function() {
-      return this.current() === WALL || this.current() === INVALID;
+      return this.current() === Map.WALL || this.current() === INVALID;
     };
     Tile.prototype.isPath = function() {
       if (this.current() !== INVALID) {
-        return this.current() === PATH;
+        return this.current() === Map.PATH;
       }
     };
     Tile.prototype.isWallUpCorner = function() {

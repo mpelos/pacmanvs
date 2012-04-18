@@ -16,7 +16,7 @@ class Player
       when "bottom" then @direction.change(0, 1)
 
   draw: (context) ->
-    radius = (TILE_WIDTH + (WALL_PADDING / 2)) / 2
+    radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
     context.beginPath()
     context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
     context.closePath()
@@ -29,4 +29,4 @@ class Player
     context.font = "bold 12px sans-serif"
     context.textAlign = "center"
     context.fillStyle = "#FFF"
-    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - TILE_HEIGHT)
+    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
