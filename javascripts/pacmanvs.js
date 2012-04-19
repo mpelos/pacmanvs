@@ -49,10 +49,6 @@
       return this.loop();
     };
     Game.prototype.update = function() {
-      var i, j, pacmanTile;
-      i = Math.floor(this.pacman.position.x / Map.TILE_WIDTH);
-      j = Math.floor(this.pacman.position.y / Map.TILE_HEIGHT);
-      pacmanTile = new Tile(this.map, i, j);
       return this.pacman.move();
     };
     Game.prototype.draw = function() {
