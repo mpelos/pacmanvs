@@ -28,8 +28,8 @@
           x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
           y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2);
           if (value === Map.PACMAN) {
-            this.pacman = new Player(x, y);
             this.map.matrix[i][j] = Map.PATH;
+            this.pacman = new Player(this.map, x, y);
           }
         }
       }
@@ -206,15 +206,12 @@
     return game.init();
   });
   Player = (function() {
-    function Player(x, y) {
+    function Player(map, x, y) {
+      this.map = map;
       this.position = new Coordinate(x, y);
       this.startPosition = this.position;
       this.direction = new Coordinate(-1, 0);
     }
-    Player.prototype.move = function(x, y) {
-      this.position.x += this.direction.x;
-      return this.position.y += this.direction.y;
-    };
     Player.prototype.setDirection = function(direction) {
       switch (direction) {
         case "left":
@@ -225,6 +222,24 @@
           return this.direction.change(1, 0);
         case "bottom":
           return this.direction.change(0, 1);
+      }
+    };
+    Player.prototype.currentTile = function() {
+      var i, j;
+      i = Math.floor(this.position.y / Map.TILE_HEIGHT);
+      j = Math.floor(this.position.x / Map.TILE_WIDTH);
+      return new Tile(this.map, i, j);
+    };
+    Player.prototype.tileAhead = function() {
+      var i, j;
+      i = this.currentTile().i + this.direction.y;
+      j = this.currentTile().j + this.direction.x;
+      return new Tile(this.map, i, j);
+    };
+    Player.prototype.move = function(x, y) {
+      if (this.tileAhead().isPath()) {
+        this.position.x += this.direction.x;
+        return this.position.y += this.direction.y;
       }
     };
     Player.prototype.draw = function(context) {

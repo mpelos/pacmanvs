@@ -1,12 +1,8 @@
 class Player
-  constructor: (x, y) ->
+  constructor: (@map, x, y) ->
     @position = new Coordinate(x, y)
     @startPosition = @position
     @direction = new Coordinate(-1, 0) # Initial direction: left
-
-  move: (x, y) ->
-    @position.x += @direction.x
-    @position.y += @direction.y
 
   setDirection: (direction) ->
     switch direction
@@ -14,6 +10,21 @@ class Player
       when "up"     then @direction.change(0, -1)
       when "right"  then @direction.change(1, 0)
       when "bottom" then @direction.change(0, 1)
+
+  currentTile: ->
+    i = Math.floor(@position.y / Map.TILE_HEIGHT)
+    j = Math.floor(@position.x / Map.TILE_WIDTH)
+    new Tile(@map, i, j)
+
+  tileAhead: ->
+    i = this.currentTile().i + @direction.y
+    j = this.currentTile().j + @direction.x
+    new Tile(@map, i, j)
+
+  move: (x, y) ->
+    if this.tileAhead().isPath()
+      @position.x += @direction.x
+      @position.y += @direction.y
 
   draw: (context) ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2

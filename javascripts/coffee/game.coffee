@@ -11,8 +11,8 @@ class Game
         y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
 
         if value is Map.PACMAN
-          @pacman = new Player(x, y)
           @map.matrix[i][j] = Map.PATH
+          @pacman = new Player(@map, x, y)
 
     @canvas = {}
     @context = {}
