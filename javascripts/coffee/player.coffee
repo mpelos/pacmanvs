@@ -7,10 +7,10 @@ class Player
 
   setDirection: (direction) ->
     switch direction
-      when "left"   then @direction.change(-1, 0)
-      when "up"     then @direction.change(0, -1)
-      when "right"  then @direction.change(1, 0)
-      when "bottom" then @direction.change(0, 1)
+      when "left"   then @directionIntent.change(-1, 0)
+      when "up"     then @directionIntent.change(0, -1)
+      when "right"  then @directionIntent.change(1, 0)
+      when "bottom" then @directionIntent.change(0, 1)
 
   currentTile: ->
     x = @position.x - (@direction.x * (Map.TILE_WIDTH / 2))
@@ -21,10 +21,23 @@ class Player
     j = Math.floor(x / Map.TILE_WIDTH)
     new Tile(@map, i, j)
 
+  intentTile: ->
+    i = this.currentTile().i + @directionIntent.y
+    j = this.currentTile().j + @directionIntent.x
+    new Tile(@map, i, j)
+
   tileAhead: ->
     i = this.currentTile().i + @direction.y
     j = this.currentTile().j + @direction.x
     new Tile(@map, i, j)
+
+  canChangeDirection: ->
+    if @directionIntent.x isnt 0
+      isAxisCenter = @position.y is this.currentTile().centerCoordinate().y
+    else
+      isAxisCenter = @position.x is this.currentTile().centerCoordinate().x
+
+    this.intentTile().isPath() and isAxisCenter
 
   canMove: ->
     if @direction.x isnt 0
@@ -35,6 +48,10 @@ class Player
     this.tileAhead().isPath() and isAxisCenter
 
   move: (x, y) ->
+    if @directionIntent.x? and @directionIntent.y? and this.canChangeDirection()
+      @direction.change(@directionIntent.x, @directionIntent.y)
+      @directionIntent.change(null, null)
+
     if this.canMove()
       @position.x += @direction.x
       @position.y += @direction.y

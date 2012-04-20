@@ -208,17 +208,18 @@
       this.position = new Coordinate(x, y);
       this.startPosition = this.position;
       this.direction = new Coordinate(-1, 0);
+      this.directionIntent = new Coordinate;
     }
     Player.prototype.setDirection = function(direction) {
       switch (direction) {
         case "left":
-          return this.direction.change(-1, 0);
+          return this.directionIntent.change(-1, 0);
         case "up":
-          return this.direction.change(0, -1);
+          return this.directionIntent.change(0, -1);
         case "right":
-          return this.direction.change(1, 0);
+          return this.directionIntent.change(1, 0);
         case "bottom":
-          return this.direction.change(0, 1);
+          return this.directionIntent.change(0, 1);
       }
     };
     Player.prototype.currentTile = function() {
@@ -235,11 +236,26 @@
       j = Math.floor(x / Map.TILE_WIDTH);
       return new Tile(this.map, i, j);
     };
+    Player.prototype.intentTile = function() {
+      var i, j;
+      i = this.currentTile().i + this.directionIntent.y;
+      j = this.currentTile().j + this.directionIntent.x;
+      return new Tile(this.map, i, j);
+    };
     Player.prototype.tileAhead = function() {
       var i, j;
       i = this.currentTile().i + this.direction.y;
       j = this.currentTile().j + this.direction.x;
       return new Tile(this.map, i, j);
+    };
+    Player.prototype.canChangeDirection = function() {
+      var isAxisCenter;
+      if (this.directionIntent.x !== 0) {
+        isAxisCenter = this.position.y === this.currentTile().centerCoordinate().y;
+      } else {
+        isAxisCenter = this.position.x === this.currentTile().centerCoordinate().x;
+      }
+      return this.intentTile().isPath() && isAxisCenter;
     };
     Player.prototype.canMove = function() {
       var isAxisCenter;
@@ -251,6 +267,10 @@
       return this.tileAhead().isPath() && isAxisCenter;
     };
     Player.prototype.move = function(x, y) {
+      if ((this.directionIntent.x != null) && (this.directionIntent.y != null) && this.canChangeDirection()) {
+        this.direction.change(this.directionIntent.x, this.directionIntent.y);
+        this.directionIntent.change(null, null);
+      }
       if (this.canMove()) {
         this.position.x += this.direction.x;
         return this.position.y += this.direction.y;
