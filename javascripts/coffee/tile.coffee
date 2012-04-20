@@ -9,6 +9,11 @@ class Tile
     else
       INVALID
 
+  centerCoordinate: ->
+    x = (@j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
+    y = (@i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+    new Coordinate(x, y)
+
   above: ->
     new Tile(@map, @i - 1, @j)
 

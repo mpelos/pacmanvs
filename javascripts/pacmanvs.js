@@ -19,14 +19,15 @@
       this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
     }
     Game.prototype.init = function() {
-      var array, canvas, i, j, name, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
+      var array, canvas, i, j, name, tile, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
       _ref = this.map.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
         for (j = 0, _len2 = array.length; j < _len2; j++) {
           value = array[j];
-          x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
-          y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2);
+          tile = new Tile(this.map, i, j);
+          x = tile.centerCoordinate().x;
+          y = tile.centerCoordinate().y;
           if (value === Map.PACMAN) {
             this.map.matrix[i][j] = Map.PATH;
             this.pacman = new Player(this.map, x, y);
@@ -221,9 +222,17 @@
       }
     };
     Player.prototype.currentTile = function() {
-      var i, j;
-      i = Math.floor(this.position.y / Map.TILE_HEIGHT);
-      j = Math.floor(this.position.x / Map.TILE_WIDTH);
+      var i, j, x, y;
+      x = this.position.x - (this.direction.x * (Map.TILE_WIDTH / 2));
+      y = this.position.y - (this.direction.y * (Map.TILE_HEIGHT / 2));
+      if (this.direction.x < 0 && this.direction.y === 0) {
+        x -= 1;
+      }
+      if (this.direction.y < 0 && this.direction.x === 0) {
+        y -= 1;
+      }
+      i = Math.floor(y / Map.TILE_HEIGHT);
+      j = Math.floor(x / Map.TILE_WIDTH);
       return new Tile(this.map, i, j);
     };
     Player.prototype.tileAhead = function() {
@@ -232,8 +241,17 @@
       j = this.currentTile().j + this.direction.x;
       return new Tile(this.map, i, j);
     };
+    Player.prototype.canMove = function() {
+      var isAxisCenter;
+      if (this.direction.x !== 0) {
+        isAxisCenter = this.position.y === this.currentTile().centerCoordinate().y;
+      } else {
+        isAxisCenter = this.position.x === this.currentTile().centerCoordinate().x;
+      }
+      return this.tileAhead().isPath() && isAxisCenter;
+    };
     Player.prototype.move = function(x, y) {
-      if (this.tileAhead().isPath()) {
+      if (this.canMove()) {
         this.position.x += this.direction.x;
         return this.position.y += this.direction.y;
       }
@@ -271,6 +289,12 @@
       } else {
         return INVALID;
       }
+    };
+    Tile.prototype.centerCoordinate = function() {
+      var x, y;
+      x = (this.j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
+      y = (this.i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2);
+      return new Coordinate(x, y);
     };
     Tile.prototype.above = function() {
       return new Tile(this.map, this.i - 1, this.j);

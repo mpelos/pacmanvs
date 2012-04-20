@@ -3,6 +3,7 @@ class Player
     @position = new Coordinate(x, y)
     @startPosition = @position
     @direction = new Coordinate(-1, 0) # Initial direction: left
+    @directionIntent = new Coordinate
 
   setDirection: (direction) ->
     switch direction
@@ -12,8 +13,12 @@ class Player
       when "bottom" then @direction.change(0, 1)
 
   currentTile: ->
-    i = Math.floor(@position.y / Map.TILE_HEIGHT)
-    j = Math.floor(@position.x / Map.TILE_WIDTH)
+    x = @position.x - (@direction.x * (Map.TILE_WIDTH / 2))
+    y = @position.y - (@direction.y * (Map.TILE_HEIGHT / 2))
+    x -= 1 if @direction.x < 0 and @direction.y is 0
+    y -= 1 if @direction.y < 0 and @direction.x is 0
+    i = Math.floor(y / Map.TILE_HEIGHT)
+    j = Math.floor(x / Map.TILE_WIDTH)
     new Tile(@map, i, j)
 
   tileAhead: ->
@@ -21,8 +26,16 @@ class Player
     j = this.currentTile().j + @direction.x
     new Tile(@map, i, j)
 
+  canMove: ->
+    if @direction.x isnt 0
+      isAxisCenter = @position.y is this.currentTile().centerCoordinate().y
+    else
+      isAxisCenter = @position.x is this.currentTile().centerCoordinate().x
+
+    this.tileAhead().isPath() and isAxisCenter
+
   move: (x, y) ->
-    if this.tileAhead().isPath()
+    if this.canMove()
       @position.x += @direction.x
       @position.y += @direction.y
 

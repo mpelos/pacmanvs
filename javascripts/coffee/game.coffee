@@ -7,8 +7,9 @@ class Game
   init: ->
     for array, i in @map.matrix
       for value, j in array
-        x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
-        y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+        tile = new Tile(@map, i, j)
+        x = tile.centerCoordinate().x
+        y = tile.centerCoordinate().y
 
         if value is Map.PACMAN
           @map.matrix[i][j] = Map.PATH
