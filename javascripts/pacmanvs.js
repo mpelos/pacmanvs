@@ -1,6 +1,17 @@
 (function() {
-  var Coordinate, Game, Map, Player, Tile;
+  var CollisionLimit, Coordinate, Game, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  CollisionLimit = (function() {
+    function CollisionLimit(position, width, height) {
+      this.position = position;
+      this.width = width;
+      this.height = height;
+    }
+    CollisionLimit.prototype.verticesPositions = function() {
+      return new Array(new Coordinate(this.position.x - this.width / 2, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y + this.height / 2 - 0.5), new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5));
+    };
+    return CollisionLimit;
+  })();
   Coordinate = (function() {
     function Coordinate(x, y) {
       this.x = x;
@@ -208,68 +219,60 @@
       this.position = new Coordinate(x, y);
       this.startPosition = this.position;
       this.direction = new Coordinate(-1, 0);
-      this.directionIntent = new Coordinate;
+      this.intentDirection = new Coordinate(null, null);
+      this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
     }
     Player.prototype.setDirection = function(direction) {
+      console.log(direction);
       switch (direction) {
         case "left":
-          return this.directionIntent.change(-1, 0);
+          return this.intentDirection.change(-1, 0);
         case "up":
-          return this.directionIntent.change(0, -1);
+          return this.intentDirection.change(0, -1);
         case "right":
-          return this.directionIntent.change(1, 0);
+          return this.intentDirection.change(1, 0);
         case "bottom":
-          return this.directionIntent.change(0, 1);
+          return this.intentDirection.change(0, 1);
       }
     };
-    Player.prototype.currentTile = function() {
-      var i, j, x, y;
-      x = this.position.x - (this.direction.x * (Map.TILE_WIDTH / 2));
-      y = this.position.y - (this.direction.y * (Map.TILE_HEIGHT / 2));
-      if (this.direction.x < 0 && this.direction.y === 0) {
-        x -= 1;
+    Player.prototype.currentTile = function(referencePoint) {
+      var i, j;
+      if (referencePoint == null) {
+        referencePoint = this.position;
       }
-      if (this.direction.y < 0 && this.direction.x === 0) {
-        y -= 1;
-      }
-      i = Math.floor(y / Map.TILE_HEIGHT);
-      j = Math.floor(x / Map.TILE_WIDTH);
+      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
+      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
       return new Tile(this.map, i, j);
     };
-    Player.prototype.intentTile = function() {
+    Player.prototype.lookAhead = function(referencePoint, direction) {
       var i, j;
-      i = this.currentTile().i + this.directionIntent.y;
-      j = this.currentTile().j + this.directionIntent.x;
-      return new Tile(this.map, i, j);
-    };
-    Player.prototype.tileAhead = function() {
-      var i, j;
-      i = this.currentTile().i + this.direction.y;
-      j = this.currentTile().j + this.direction.x;
+      if (referencePoint == null) {
+        referencePoint = this.position;
+      }
+      if (direction == null) {
+        direction = this.direction;
+      }
+      referencePoint.x += 1 * direction.x;
+      referencePoint.y += 1 * direction.y;
+      i = this.currentTile(referencePoint).i;
+      j = this.currentTile(referencePoint).j;
       return new Tile(this.map, i, j);
     };
     Player.prototype.canChangeDirection = function() {
-      var isAxisCenter;
-      if (this.directionIntent.x !== 0) {
-        isAxisCenter = this.position.y === this.currentTile().centerCoordinate().y;
-      } else {
-        isAxisCenter = this.position.x === this.currentTile().centerCoordinate().x;
-      }
-      return this.intentTile().isPath() && isAxisCenter;
+      return this.collisionLimit.verticesPositions().every(__bind(function(position) {
+        return this.lookAhead(position, this.intentDirection).isPath();
+      }, this));
     };
     Player.prototype.canMove = function() {
-      var isAxisCenter;
-      if (this.direction.x !== 0) {
-        isAxisCenter = this.position.y === this.currentTile().centerCoordinate().y;
-      } else {
-        isAxisCenter = this.position.x === this.currentTile().centerCoordinate().x;
-      }
-      return this.tileAhead().isPath() && isAxisCenter;
+      return this.collisionLimit.verticesPositions().every(__bind(function(position) {
+        return this.lookAhead(position).isPath();
+      }, this));
     };
     Player.prototype.move = function(x, y) {
-      if ((this.directionIntent.x != null) && (this.directionIntent.y != null) && this.canChangeDirection()) {
-        this.direction.change(this.directionIntent.x, this.directionIntent.y);
-        this.directionIntent.change(null, null);
+      if ((this.intentDirection.x != null) && (this.intentDirection.y != null) && this.canChangeDirection()) {
+        this.direction.x = this.intentDirection.x;
+        this.direction.y = this.intentDirection.y;
+        this.intentDirection.change(null, null);
       }
       if (this.canMove()) {
         this.position.x += this.direction.x;
