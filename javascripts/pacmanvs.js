@@ -224,7 +224,6 @@
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
     }
     Player.prototype.setDirection = function(direction) {
-      console.log(direction);
       switch (direction) {
         case "left":
           return this.intentDirection.change(-1, 0);

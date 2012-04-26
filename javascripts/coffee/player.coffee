@@ -7,7 +7,6 @@ class Player
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
   setDirection: (direction) ->
-    console.log direction
     switch direction
       when "left"   then @intentDirection.change(-1, 0)
       when "up"     then @intentDirection.change(0, -1)
