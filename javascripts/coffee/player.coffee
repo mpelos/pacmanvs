@@ -1,5 +1,5 @@
 class Player
-  constructor: (@map, x, y) ->
+  constructor: (x, y, @map, @context) ->
     @position = new Coordinate(x, y)
     @startPosition = @position
     @direction = new Coordinate(-1, 0) # Initial direction: left
@@ -43,18 +43,18 @@ class Player
       @position.x += @direction.x
       @position.y += @direction.y
 
-  draw: (context) ->
+  draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
-    context.beginPath()
-    context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
-    context.closePath()
-    context.strokeStyle = "#FF0"
-    context.stroke()
-    context.fillStyle = "#FF0"
-    context.fill()
+    @context.beginPath()
+    @context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
+    @context.closePath()
+    @context.strokeStyle = "#FF0"
+    @context.stroke()
+    @context.fillStyle = "#FF0"
+    @context.fill()
 
-  drawPosition: (context) ->
-    context.font = "bold 12px sans-serif"
-    context.textAlign = "center"
-    context.fillStyle = "#FFF"
-    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
+  drawPosition: ->
+    @context.font = "bold 12px sans-serif"
+    @context.textAlign = "center"
+    @context.fillStyle = "#FFF"
+    @context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)

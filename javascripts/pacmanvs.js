@@ -31,30 +31,30 @@
     }
     Game.prototype.init = function() {
       var array, canvas, i, j, name, tile, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
-      _ref = this.map.matrix;
-      for (i = 0, _len = _ref.length; i < _len; i++) {
-        array = _ref[i];
-        for (j = 0, _len2 = array.length; j < _len2; j++) {
+      this.canvas = {};
+      this.context = {};
+      _ref = $("canvas");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        canvas = _ref[_i];
+        name = canvas.id.replace("_canvas", "");
+        this.canvas[name] = document.getElementById(canvas.id);
+        this.canvas[name].width = this.map.matrix[0].length * Map.TILE_WIDTH;
+        this.canvas[name].height = this.map.matrix.length * Map.TILE_HEIGHT;
+        this.context[name] = this.canvas[name].getContext("2d");
+      }
+      _ref2 = this.map.matrix;
+      for (i = 0, _len2 = _ref2.length; i < _len2; i++) {
+        array = _ref2[i];
+        for (j = 0, _len3 = array.length; j < _len3; j++) {
           value = array[j];
           tile = new Tile(this.map, i, j);
           x = tile.centerCoordinate().x;
           y = tile.centerCoordinate().y;
           if (value === Map.PACMAN) {
             this.map.matrix[i][j] = Map.PATH;
-            this.pacman = new Player(this.map, x, y);
+            this.pacman = new Player(x, y, this.map, this.context.player);
           }
         }
-      }
-      this.canvas = {};
-      this.context = {};
-      _ref2 = $("canvas");
-      for (_i = 0, _len3 = _ref2.length; _i < _len3; _i++) {
-        canvas = _ref2[_i];
-        name = canvas.id.replace("_canvas", "");
-        this.canvas[name] = document.getElementById(canvas.id);
-        this.canvas[name].width = this.map.matrix[0].length * Map.TILE_WIDTH;
-        this.canvas[name].height = this.map.matrix.length * Map.TILE_HEIGHT;
-        this.context[name] = this.canvas[name].getContext("2d");
       }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
@@ -65,8 +65,8 @@
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
-      this.pacman.draw(this.context.player);
-      return this.pacman.drawPosition(this.context.player);
+      this.pacman.draw();
+      return this.pacman.drawPosition();
     };
     Game.prototype.handleKey = function(event) {
       switch (event.which) {
@@ -215,8 +215,9 @@
     return game.init();
   });
   Player = (function() {
-    function Player(map, x, y) {
+    function Player(x, y, map, context) {
       this.map = map;
+      this.context = context;
       this.position = new Coordinate(x, y);
       this.startPosition = this.position;
       this.direction = new Coordinate(-1, 0);
@@ -279,22 +280,22 @@
         return this.position.y += this.direction.y;
       }
     };
-    Player.prototype.draw = function(context) {
+    Player.prototype.draw = function() {
       var radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
-      context.beginPath();
-      context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
-      context.closePath();
-      context.strokeStyle = "#FF0";
-      context.stroke();
-      context.fillStyle = "#FF0";
-      return context.fill();
+      this.context.beginPath();
+      this.context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
+      this.context.closePath();
+      this.context.strokeStyle = "#FF0";
+      this.context.stroke();
+      this.context.fillStyle = "#FF0";
+      return this.context.fill();
     };
-    Player.prototype.drawPosition = function(context) {
-      context.font = "bold 12px sans-serif";
-      context.textAlign = "center";
-      context.fillStyle = "#FFF";
-      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
+    Player.prototype.drawPosition = function() {
+      this.context.font = "bold 12px sans-serif";
+      this.context.textAlign = "center";
+      this.context.fillStyle = "#FFF";
+      return this.context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
     };
     return Player;
   })();

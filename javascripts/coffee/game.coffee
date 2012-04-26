@@ -5,16 +5,6 @@ class Game
     @map = new Map
 
   init: ->
-    for array, i in @map.matrix
-      for value, j in array
-        tile = new Tile(@map, i, j)
-        x = tile.centerCoordinate().x
-        y = tile.centerCoordinate().y
-
-        if value is Map.PACMAN
-          @map.matrix[i][j] = Map.PATH
-          @pacman = new Player(@map, x, y)
-
     @canvas = {}
     @context = {}
     for canvas in $("canvas")
@@ -23,6 +13,16 @@ class Game
       @canvas[name].width  = @map.matrix[0].length * Map.TILE_WIDTH
       @canvas[name].height = @map.matrix.length    * Map.TILE_HEIGHT
       @context[name] = @canvas[name].getContext("2d")
+
+    for array, i in @map.matrix
+      for value, j in array
+        tile = new Tile(@map, i, j)
+        x = tile.centerCoordinate().x
+        y = tile.centerCoordinate().y
+
+        if value is Map.PACMAN
+          @map.matrix[i][j] = Map.PATH
+          @pacman = new Player(x, y, @map, @context.player)
 
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
@@ -34,8 +34,8 @@ class Game
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
-    @pacman.draw(@context.player)
-    @pacman.drawPosition(@context.player)
+    @pacman.draw()
+    @pacman.drawPosition()
 
   handleKey: (event) =>
     switch event.which
