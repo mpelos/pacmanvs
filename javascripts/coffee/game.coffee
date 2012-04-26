@@ -45,7 +45,8 @@ class Game
       when 40 then @pacman.setDirection("bottom") # down arrow
 
   loop: ->
-    setInterval( =>
+    setTimeout( =>
       this.update()
       this.draw()
+      this.loop()
     1000/FPS)

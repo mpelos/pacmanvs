@@ -81,9 +81,10 @@
       }
     };
     Game.prototype.loop = function() {
-      return setInterval(__bind(function() {
+      return setTimeout(__bind(function() {
         this.update();
-        return this.draw();
+        this.draw();
+        return this.loop();
       }, this), 1000 / FPS);
     };
     return Game;
