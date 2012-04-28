@@ -15,8 +15,10 @@ class Direction
         when "0, -1" then Math.PI * 0.5
         when "-1, 0" then Math.PI
         when "0, 1"  then Math.PI * 1.5
-    else
+    else if typeof direction is "number"
       angle = direction
+    else
+      angle = null
 
     return angle
 

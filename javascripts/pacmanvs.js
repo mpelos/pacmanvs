@@ -1,5 +1,5 @@
 (function() {
-  var CollisionLimit, Coordinate, Game, Map, Player, Tile;
+  var CollisionLimit, Coordinate, Direction, Game, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   CollisionLimit = (function() {
     function CollisionLimit(position, width, height) {
@@ -21,7 +21,78 @@
       this.x = x;
       return this.y = y;
     };
+    Coordinate.prototype.toString = function() {
+      return "" + this.x + ", " + this.y;
+    };
     return Coordinate;
+  })();
+  Direction = (function() {
+    function Direction(direction) {
+      this.angle = this.parse(direction);
+    }
+    Direction.prototype.parse = function(direction) {
+      var angle;
+      if (typeof direction === "string") {
+        angle = (function() {
+          switch (direction.toLowerCase()) {
+            case "right":
+              return 0;
+            case "down":
+              return Math.PI * 0.5;
+            case "left":
+              return Math.PI;
+            case "up":
+              return Math.PI * 1.5;
+          }
+        })();
+      } else if (typeof direction === "coordinate") {
+        angle = (function() {
+          switch (direction.toString()) {
+            case "1, 0":
+              return 0;
+            case "0, -1":
+              return Math.PI * 0.5;
+            case "-1, 0":
+              return Math.PI;
+            case "0, 1":
+              return Math.PI * 1.5;
+          }
+        })();
+      } else if (typeof direction === "number") {
+        angle = direction;
+      } else {
+        angle = null;
+      }
+      return angle;
+    };
+    Direction.prototype.set = function(direction) {
+      return this.angle = this.parse(direction);
+    };
+    Direction.prototype.toCoordinate = function() {
+      switch (this.angle) {
+        case 0:
+          return new Coordinate(1, 0);
+        case Math.PI * 0.5:
+          return new Coordinate(0, 1);
+        case Math.PI:
+          return new Coordinate(-1, 0);
+        case Math.PI * 1.5:
+          return new Coordinate(0, -1);
+      }
+    };
+    Direction.prototype.toString = function() {
+      switch (this.angle) {
+        case 0:
+          return "right";
+        case Math.PI * 0.5:
+          return "down";
+        case Math.PI:
+          return "left";
+        case Math.PI * 1.5:
+          return "up";
+      }
+    };
+    return Direction;
   })();
   Game = (function() {
     var FPS;
@@ -71,13 +142,13 @@
     Game.prototype.handleKey = function(event) {
       switch (event.which) {
         case 37:
-          return this.pacman.setDirection("left");
+          return this.pacman.intentDirection.set("left");
         case 38:
-          return this.pacman.setDirection("up");
+          return this.pacman.intentDirection.set("up");
         case 39:
-          return this.pacman.setDirection("right");
+          return this.pacman.intentDirection.set("right");
         case 40:
-          return this.pacman.setDirection("bottom");
+          return this.pacman.intentDirection.set("down");
       }
     };
     Game.prototype.loop = function() {
@@ -220,22 +291,11 @@
       this.context = context;
       this.position = new Coordinate(x, y);
       this.startPosition = this.position;
-      this.direction = new Coordinate(-1, 0);
-      this.intentDirection = new Coordinate(null, null);
+      this.direction = new Direction("left");
+      this.intentDirection = new Direction;
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
+      this.animationIndex = 0;
     }
-    Player.prototype.setDirection = function(direction) {
-      switch (direction) {
-        case "left":
-          return this.intentDirection.change(-1, 0);
-        case "up":
-          return this.intentDirection.change(0, -1);
-        case "right":
-          return this.intentDirection.change(1, 0);
-        case "bottom":
-          return this.intentDirection.change(0, 1);
-      }
-    };
     Player.prototype.currentTile = function(referencePoint) {
       var i, j;
       if (referencePoint == null) {
@@ -253,8 +313,8 @@
       if (direction == null) {
         direction = this.direction;
       }
-      referencePoint.x += 1 * direction.x;
-      referencePoint.y += 1 * direction.y;
+      referencePoint.x += 1 * direction.toCoordinate().x;
+      referencePoint.y += 1 * direction.toCoordinate().y;
       i = this.currentTile(referencePoint).i;
       j = this.currentTile(referencePoint).j;
       return new Tile(this.map, i, j);
@@ -270,26 +330,53 @@
       }, this));
     };
     Player.prototype.move = function(x, y) {
-      if ((this.intentDirection.x != null) && (this.intentDirection.y != null) && this.canChangeDirection()) {
-        this.direction.x = this.intentDirection.x;
-        this.direction.y = this.intentDirection.y;
-        this.intentDirection.change(null, null);
+      if ((this.intentDirection.angle != null) && this.canChangeDirection()) {
+        this.direction.set(this.intentDirection.angle);
+        this.intentDirection.set(null);
       }
       if (this.canMove()) {
-        this.position.x += this.direction.x;
-        return this.position.y += this.direction.y;
+        this.position.x += this.direction.toCoordinate().x;
+        return this.position.y += this.direction.toCoordinate().y;
       }
     };
     Player.prototype.draw = function() {
-      var radius;
+      var animations, radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       this.context.beginPath();
-      this.context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
-      this.context.closePath();
-      this.context.strokeStyle = "#FF0";
-      this.context.stroke();
       this.context.fillStyle = "#FF0";
-      return this.context.fill();
+      animations = new Array;
+      animations[0] = __bind(function() {
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.3, this.direction.angle + Math.PI * 1.3, false);
+        this.context.fill();
+        this.context.beginPath();
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.7, this.direction.angle + Math.PI * 1.7, false);
+        return this.context.fill();
+      }, this);
+      animations[1] = __bind(function() {
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.2, this.direction.angle + Math.PI * 1.2, false);
+        this.context.fill();
+        this.context.beginPath();
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.8, this.direction.angle + Math.PI * 1.8, false);
+        return this.context.fill();
+      }, this);
+      animations[2] = __bind(function() {
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.1, this.direction.angle + Math.PI * 1.1, false);
+        this.context.fill();
+        this.context.beginPath();
+        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.9, this.direction.angle + Math.PI * 1.9, false);
+        return this.context.fill();
+      }, this);
+      animations[3] = __bind(function() {
+        this.context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
+        return this.context.fill();
+      }, this);
+      animations[4] = animations[2];
+      animations[5] = animations[1];
+      animations[6] = animations[0];
+      if (this.canMove()) {
+        this.animationIndex += 1;
+      }
+      return animations.at(this.animationIndex)();
     };
     Player.prototype.drawPosition = function() {
       this.context.font = "bold 12px sans-serif";
