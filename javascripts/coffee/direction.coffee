@@ -6,9 +6,9 @@ class Direction
     if typeof direction is "string"
       angle =  switch direction.toLowerCase()
         when "right" then 0
-        when "up"    then Math.PI * 0.5
+        when "down"  then Math.PI * 0.5
         when "left"  then Math.PI
-        when "down"  then Math.PI * 1.5
+        when "up"    then Math.PI * 1.5
     else if typeof direction is "coordinate"
       angle = switch direction.toString()
         when "1, 0"  then 0
@@ -26,13 +26,13 @@ class Direction
   toCoordinate: ->
     switch @angle
       when 0             then new Coordinate(1, 0)
-      when Math.PI * 0.5 then new Coordinate(0, -1)
+      when Math.PI * 0.5 then new Coordinate(0, 1)
       when Math.PI       then new Coordinate(-1, 0)
-      when Math.PI * 1.5 then new Coordinate(0, 1)
+      when Math.PI * 1.5 then new Coordinate(0, -1)
 
   toString: ->
     switch @angle
       when 0             then "right"
-      when Math.PI * 0.5 then "up"
+      when Math.PI * 0.5 then "down"
       when Math.PI       then "left"
-      when Math.PI * 1.5 then "down"
+      when Math.PI * 1.5 then "up"
