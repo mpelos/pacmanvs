@@ -2,16 +2,10 @@ class Player
   constructor: (x, y, @map, @context) ->
     @position = new Coordinate(x, y)
     @startPosition = @position
-    @direction = new Coordinate(-1, 0) # Initial direction: left
-    @intentDirection = new Coordinate(null, null)
+    @direction = new Direction("left")
+    @intentDirection = new Direction(null)
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
-
-  setDirection: (direction) ->
-    switch direction
-      when "left"   then @intentDirection.change(-1, 0)
-      when "up"     then @intentDirection.change(0, -1)
-      when "right"  then @intentDirection.change(1, 0)
-      when "bottom" then @intentDirection.change(0, 1)
+    @animationIndex = 0
 
   currentTile: (referencePoint = @position) ->
     i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
@@ -19,8 +13,8 @@ class Player
     new Tile(@map, i, j)
 
   lookAhead: (referencePoint = @position, direction = @direction) ->
-    referencePoint.x += 1 * direction.x
-    referencePoint.y += 1 * direction.y
+    referencePoint.x += 1 * direction.toCoordinate().x
+    referencePoint.y += 1 * direction.toCoordinate().y
     i = this.currentTile(referencePoint).i
     j = this.currentTile(referencePoint).j
     new Tile(@map, i, j)
@@ -34,14 +28,13 @@ class Player
       this.lookAhead(position).isPath()
 
   move: (x, y) ->
-    if @intentDirection.x? and @intentDirection.y? and this.canChangeDirection()
-      @direction.x = @intentDirection.x
-      @direction.y = @intentDirection.y
-      @intentDirection.change(null, null)
+    if @intentDirection.angle? and this.canChangeDirection()
+      @direction.set(@intentDirection.angle)
+      @intentDirection.set(null)
 
     if this.canMove()
-      @position.x += @direction.x
-      @position.y += @direction.y
+      @position.x += @direction.toCoordinate().x
+      @position.y += @direction.toCoordinate().y
 
   draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2

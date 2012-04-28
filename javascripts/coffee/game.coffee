@@ -39,10 +39,10 @@ class Game
 
   handleKey: (event) =>
     switch event.which
-      when 37 then @pacman.setDirection("left")   # left arrow
-      when 38 then @pacman.setDirection("up")     # up arrow
-      when 39 then @pacman.setDirection("right")  # right arrow
-      when 40 then @pacman.setDirection("bottom") # down arrow
+      when 37 then @pacman.intentDirection.set("left")  # left arrow
+      when 38 then @pacman.intentDirection.set("up")    # up arrow
+      when 39 then @pacman.intentDirection.set("right") # right arrow
+      when 40 then @pacman.intentDirection.set("down")  # down arrow
 
   loop: ->
     setTimeout( =>
