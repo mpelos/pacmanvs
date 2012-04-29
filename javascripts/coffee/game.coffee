@@ -27,14 +27,13 @@ class Game
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
 
-    @initialTime = new Date
+    @gameTime = new GameTime
     @framesCounter = 0
     this.loop() # starts the game loop
 
   fps: ->
     @framesCounter += 1
-    @spentTime = new Date - @initialTime
-    Math.round(@framesCounter / (@spentTime / 1000))
+    Math.round(@framesCounter / @gameTime.spentSeconds())
 
   drawFps: ->
     @context.player.font = "bold 12px sans-serif"
