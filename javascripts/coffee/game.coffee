@@ -27,7 +27,20 @@ class Game
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
 
+    @initialTime = new Date
+    @framesCounter = 0
     this.loop() # starts the game loop
+
+  fps: ->
+    @framesCounter += 1
+    @spentTime = new Date - @initialTime
+    Math.round(@framesCounter / (@spentTime / 1000))
+
+  drawFps: ->
+    @context.player.font = "bold 12px sans-serif"
+    @context.player.textAlign = "right"
+    @context.player.fillStyle = "#FFF"
+    @context.player.fillText "#{this.fps()} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
 
   update: ->
     @pacman.move()
@@ -36,6 +49,7 @@ class Game
     @canvas.player.width = @canvas.player.width # clear player canvas
     @pacman.draw()
     @pacman.drawPosition()
+    this.drawFps()
 
   handleKey: (event) =>
     switch event.which

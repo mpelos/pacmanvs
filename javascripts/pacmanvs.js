@@ -129,7 +129,20 @@
       }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
+      this.initialTime = new Date;
+      this.framesCounter = 0;
       return this.loop();
+    };
+    Game.prototype.fps = function() {
+      this.framesCounter += 1;
+      this.spentTime = new Date - this.initialTime;
+      return Math.round(this.framesCounter / (this.spentTime / 1000));
+    };
+    Game.prototype.drawFps = function() {
+      this.context.player.font = "bold 12px sans-serif";
+      this.context.player.textAlign = "right";
+      this.context.player.fillStyle = "#FFF";
+      return this.context.player.fillText("" + (this.fps()) + " FPS", this.canvas.map.width - 5, this.canvas.map.height - 5);
     };
     Game.prototype.update = function() {
       return this.pacman.move();
@@ -137,7 +150,8 @@
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
       this.pacman.draw();
-      return this.pacman.drawPosition();
+      this.pacman.drawPosition();
+      return this.drawFps();
     };
     Game.prototype.handleKey = function(event) {
       switch (event.which) {
