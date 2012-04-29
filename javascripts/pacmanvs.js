@@ -1,5 +1,5 @@
 (function() {
-  var CollisionLimit, Coordinate, Direction, Game, GameTime, Map, Player, Tile;
+  var CollisionLimit, Coordinate, Cronometer, Direction, Game, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   CollisionLimit = (function() {
     function CollisionLimit(position, width, height) {
@@ -25,6 +25,18 @@
       return "" + this.x + ", " + this.y;
     };
     return Coordinate;
+  })();
+  Cronometer = (function() {
+    function Cronometer() {
+      this.startTime = new Date;
+    }
+    Cronometer.prototype.spentMiliseconds = function() {
+      return new Date - this.startTime;
+    };
+    Cronometer.prototype.spentSeconds = function() {
+      return this.spentMiliseconds() / 1000;
+    };
+    return Cronometer;
   })();
   Direction = (function() {
     function Direction(direction) {
@@ -129,7 +141,7 @@
       }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
-      this.gameTime = new GameTime;
+      this.gameTime = new Cronometer;
       this.framesCounter = 0;
       return this.loop();
     };
@@ -176,18 +188,6 @@
       }, this), this.delay);
     };
     return Game;
-  })();
-  GameTime = (function() {
-    function GameTime() {
-      this.initial = new Date;
-    }
-    GameTime.prototype.spentMiliseconds = function() {
-      return new Date - this.initial;
-    };
-    GameTime.prototype.spentSeconds = function() {
-      return this.spentMiliseconds() / 1000;
-    };
-    return GameTime;
   })();
   Map = (function() {
     var P, p, w;

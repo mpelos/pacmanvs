@@ -27,7 +27,7 @@ class Game
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
 
-    @gameTime = new GameTime
+    @gameTime = new Cronometer
     @framesCounter = 0
     this.loop() # starts the game loop
 

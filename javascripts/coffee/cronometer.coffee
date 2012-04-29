@@ -1,9 +1,9 @@
-class GameTime
+class Cronometer
   constructor: ->
-    @initial = new Date
+    @startTime = new Date
 
   spentMiliseconds: ->
-    new Date - @initial
+    new Date - @startTime
 
   spentSeconds: ->
     this.spentMiliseconds() / 1000
