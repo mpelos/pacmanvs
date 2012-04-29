@@ -95,8 +95,8 @@
     return Direction;
   })();
   Game = (function() {
-    var FPS;
-    FPS = 60;
+    var MAX_FPS;
+    MAX_FPS = 60;
     function Game() {
       this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
     }
@@ -153,10 +153,14 @@
     };
     Game.prototype.loop = function() {
       return setTimeout(__bind(function() {
+        var endTime, startTime;
+        startTime = new Date;
         this.update();
         this.draw();
-        return this.loop();
-      }, this), 1000 / FPS);
+        this.loop();
+        endTime = new Date;
+        return this.delay = (1000 / MAX_FPS) - (endTime - startTime);
+      }, this), this.delay);
     };
     return Game;
   })();

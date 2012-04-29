@@ -1,5 +1,5 @@
 class Game
-  FPS = 60
+  MAX_FPS = 60
 
   constructor: ->
     @map = new Map
@@ -46,7 +46,10 @@ class Game
 
   loop: ->
     setTimeout( =>
+      startTime = new Date
       this.update()
       this.draw()
       this.loop()
-    1000/FPS)
+      endTime = new Date
+      @delay = (1000/MAX_FPS) - (endTime - startTime)
+    @delay)
