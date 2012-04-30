@@ -1,7 +1,7 @@
 class Player
   constructor: (x, y, @map, @context) ->
     @position = new Coordinate(x, y)
-    @startPosition = @position
+    @startPosition = Object.clone(@position)
     @direction = new Direction("left")
     @intentDirection = new Direction
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)

@@ -319,7 +319,7 @@
       this.map = map;
       this.context = context;
       this.position = new Coordinate(x, y);
-      this.startPosition = this.position;
+      this.startPosition = Object.clone(this.position);
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
