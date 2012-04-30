@@ -29,21 +29,30 @@ class Game
     @map.drawGrid(@context.map)
 
     @gameTime = new Cronometer
-    @framesCounter = 0
     this.loop() # starts the game loop
 
-  fps: ->
+  calculateFps: ->
+    @framesCounter ?= 0
+    @fps ?= MAX_FPS
+
+    @fpsCronometer ?= new Cronometer
+    unless @fpsCronometer.spentMiliseconds() < 1000
+      delete @fpsCronometer
+      @fps = @framesCounter
+      @framesCounter = 0
+
     @framesCounter += 1
-    Math.round(@framesCounter / @gameTime.spentSeconds())
+    @fps
 
   drawFps: ->
     @context.player.font = "bold 12px sans-serif"
     @context.player.textAlign = "right"
     @context.player.fillStyle = "#FFF"
-    @context.player.fillText "#{this.fps()} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
+    @context.player.fillText "#{@fps} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
 
   update: ->
-    @pacman.move(@delay)
+    this.calculateFps()
+    @pacman.move(@fps)
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas

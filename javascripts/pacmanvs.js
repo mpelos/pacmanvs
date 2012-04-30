@@ -154,21 +154,42 @@
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
       this.gameTime = new Cronometer;
-      this.framesCounter = 0;
       return this.loop();
     };
-    Game.prototype.fps = function() {
+    Game.prototype.calculateFps = function() {
+      var _ref, _ref2, _ref3;
+            if ((_ref = this.framesCounter) != null) {
+        _ref;
+      } else {
+        this.framesCounter = 0;
+      };
+            if ((_ref2 = this.fps) != null) {
+        _ref2;
+      } else {
+        this.fps = MAX_FPS;
+      };
+            if ((_ref3 = this.fpsCronometer) != null) {
+        _ref3;
+      } else {
+        this.fpsCronometer = new Cronometer;
+      };
+      if (!(this.fpsCronometer.spentMiliseconds() < 1000)) {
+        delete this.fpsCronometer;
+        this.fps = this.framesCounter;
+        this.framesCounter = 0;
+      }
       this.framesCounter += 1;
-      return Math.round(this.framesCounter / this.gameTime.spentSeconds());
+      return this.fps;
     };
     Game.prototype.drawFps = function() {
       this.context.player.font = "bold 12px sans-serif";
       this.context.player.textAlign = "right";
       this.context.player.fillStyle = "#FFF";
-      return this.context.player.fillText("" + (this.fps()) + " FPS", this.canvas.map.width - 5, this.canvas.map.height - 5);
+      return this.context.player.fillText("" + this.fps + " FPS", this.canvas.map.width - 5, this.canvas.map.height - 5);
     };
     Game.prototype.update = function() {
-      return this.pacman.move(this.delay);
+      this.calculateFps();
+      return this.pacman.move(this.fps);
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
@@ -336,7 +357,7 @@
       this.intentDirection = new Direction;
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
       this.animationIndex = 0;
-      this.speed = 20;
+      this.speed = 60;
     }
     Player.prototype.currentTile = function(referencePoint) {
       var i, j;
@@ -384,8 +405,10 @@
         this.position.y += this.direction.toCoordinate().y * displacement;
         tileCenter = this.currentTile().centerCoordinate();
         if (tileCenter.betweenAxis(this.position, previousPosition) || !this.canMove()) {
-          return this.position.change(tileCenter.x, tileCenter.y);
+          this.position.change(tileCenter.x, tileCenter.y);
         }
+        delete previousPosition;
+        return this.position;
       }
     };
     Player.prototype.draw = function() {
