@@ -45,6 +45,9 @@ class Player
       if tileCenter.betweenAxis(@position, previousPosition) or not this.canMove()
         @position.change(tileCenter.x, tileCenter.y)
 
+      delete previousPosition
+      @position
+
   draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
     @context.beginPath()
