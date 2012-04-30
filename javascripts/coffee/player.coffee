@@ -6,7 +6,7 @@ class Player
     @intentDirection = new Direction
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
     @animationIndex = 0
-    @speed = 20 # pixels per second
+    @speed = 60 # pixels per second
 
   currentTile: (referencePoint = @position) ->
     i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
