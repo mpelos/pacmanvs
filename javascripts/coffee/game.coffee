@@ -21,6 +21,9 @@ class Game
         x = tile.centerCoordinate().x
         y = tile.centerCoordinate().y
 
+        if value is Map.FOOD
+          @map.matrix[i][j] = Map.PATH
+
         if value is Map.PACMAN
           @map.matrix[i][j] = Map.PATH
           @pacman = new Player(x, y, @map, @context.player, this)
