@@ -144,17 +144,18 @@
   })();
   Food = (function() {
     __extends(Food, Entity);
-    function Food() {
+    function Food(x, y, map, context) {
+      this.map = map;
+      this.context = context;
       Food.__super__.constructor.apply(this, arguments);
+      this.width = Math.ceil(Map.TILE_WIDTH / 10);
+      this.height = Math.ceil(Map.TILE_HEIGHT / 10);
+      this.collisionLimit = new CollisionLimit(this.position, this.width, this.height);
     }
     Food.prototype.draw = function() {
-      var height, radius, width;
-      radius = Math.ceil((Map.TILE_WIDTH + Map.TILE_HEIGHT) / 30);
-      width = Math.ceil(Map.TILE_WIDTH / 10);
-      height = Math.ceil(Map.TILE_HEIGHT / 10);
       this.context.fillStyle = "#FFF";
       this.context.beginPath();
-      return this.context.fillRect(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
+      return this.context.fillRect(this.position.x - (this.width / 2), this.position.y - (this.height / 2), this.width, this.height);
     };
     return Food;
   })();
@@ -235,7 +236,7 @@
     };
     Game.prototype.update = function() {
       this.calculateFps();
-      return this.pacman.move(this.fps);
+      return this.pacman.update(this.fps);
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
@@ -409,15 +410,6 @@
       this.animationIndex = 0;
       this.speed = 60;
     }
-    Player.prototype.currentTile = function(referencePoint) {
-      var i, j;
-      if (referencePoint == null) {
-        referencePoint = this.position;
-      }
-      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
-      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
-      return new Tile(this.map, i, j);
-    };
     Player.prototype.lookAhead = function(referencePoint, direction) {
       var i, j;
       if (referencePoint == null) {
@@ -442,12 +434,15 @@
         return this.lookAhead(position).isPath();
       }, this));
     };
-    Player.prototype.move = function(gameFps) {
-      var displacement, previousPosition, tileCenter;
+    Player.prototype.updateDirection = function() {
       if ((this.intentDirection.angle != null) && this.canChangeDirection()) {
         this.direction.set(this.intentDirection.angle);
         this.intentDirection.set(null);
       }
+      return this.direction;
+    };
+    Player.prototype.updatePosition = function(gameFps) {
+      var displacement, previousPosition, tileCenter;
       if (this.canMove()) {
         displacement = this.speed / gameFps;
         previousPosition = Object.clone(this.position);
@@ -458,8 +453,12 @@
           this.position.change(tileCenter.x, tileCenter.y);
         }
         delete previousPosition;
-        return this.position;
       }
+      return this.position;
+    };
+    Player.prototype.update = function(gameFps) {
+      this.updateDirection();
+      return this.updatePosition(gameFps);
     };
     Player.prototype.draw = function() {
       var animations, radius;
