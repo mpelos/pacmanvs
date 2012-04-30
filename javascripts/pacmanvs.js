@@ -402,8 +402,14 @@
       animations[4] = animations[2];
       animations[5] = animations[1];
       animations[6] = animations[0];
-      if (this.canMove()) {
+            if (typeof animationTime !== "undefined" && animationTime !== null) {
+        animationTime;
+      } else {
+        animationTime = new Cronometer;
+      };
+      if (animationTime.spentMiliseconds() >= 15 && this.canMove()) {
         this.animationIndex += 1;
+        delete animationTime;
       }
       return animations.at(this.animationIndex)();
     };

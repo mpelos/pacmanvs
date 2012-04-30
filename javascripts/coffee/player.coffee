@@ -67,8 +67,10 @@ class Player
     animations[5] = animations[1]
     animations[6] = animations[0]
 
-    if this.canMove()
+    animationTime ?= new Cronometer
+    if animationTime.spentMiliseconds() >= 15 and this.canMove()
       @animationIndex += 1
+      delete animationTime
 
     animations.at(@animationIndex)()
 
