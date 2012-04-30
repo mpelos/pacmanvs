@@ -7,11 +7,6 @@ class Player extends Entity
     @animationIndex = 0
     @speed = 60 # pixels per second
 
-  currentTile: (referencePoint = @position) ->
-    i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
-    j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
-    new Tile(@map, i, j)
-
   lookAhead: (referencePoint = @position, direction = @direction) ->
     referencePoint.x += 1 * direction.toCoordinate().x
     referencePoint.y += 1 * direction.toCoordinate().y
@@ -27,11 +22,14 @@ class Player extends Entity
     @collisionLimit.verticesPositions().every (position) =>
       this.lookAhead(position).isPath()
 
-  move: (gameFps) ->
+  updateDirection: ->
     if @intentDirection.angle? and this.canChangeDirection()
       @direction.set(@intentDirection.angle)
       @intentDirection.set(null)
 
+    @direction
+
+  updatePosition: (gameFps) ->
     if this.canMove()
       displacement = @speed / gameFps
       previousPosition = Object.clone(@position)
@@ -45,7 +43,12 @@ class Player extends Entity
         @position.change(tileCenter.x, tileCenter.y)
 
       delete previousPosition
-      @position
+
+    @position
+
+  update: (gameFps) ->
+    this.updateDirection()
+    this.updatePosition(gameFps)
 
   draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
