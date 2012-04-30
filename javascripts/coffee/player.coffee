@@ -80,6 +80,8 @@ class Player
     if animationTime.spentMiliseconds() >= 15 and this.canMove()
       @animationIndex += 1
       delete animationTime
+    else if not this.canMove()
+      @animationIndex = 1
 
     animations.at(@animationIndex)()
 

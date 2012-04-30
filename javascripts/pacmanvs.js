@@ -430,6 +430,8 @@
       if (animationTime.spentMiliseconds() >= 15 && this.canMove()) {
         this.animationIndex += 1;
         delete animationTime;
+      } else if (!this.canMove()) {
+        this.animationIndex = 1;
       }
       return animations.at(this.animationIndex)();
     };
