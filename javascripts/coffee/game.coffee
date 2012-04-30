@@ -15,6 +15,7 @@ class Game
       @canvas[name].height = @map.matrix.length    * Map.TILE_HEIGHT
       @context[name] = @canvas[name].getContext("2d")
 
+    @foods = []
     for array, i in @map.matrix
       for value, j in array
         tile = new Tile(@map, i, j)
@@ -23,6 +24,7 @@ class Game
 
         if value is Map.FOOD
           @map.matrix[i][j] = Map.PATH
+          @foods.add(new Food(x, y, @map, @context.player, this))
 
         if value is Map.PACMAN
           @map.matrix[i][j] = Map.PATH
@@ -59,6 +61,7 @@ class Game
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
+    @foods.each (food) -> food.draw()
     @pacman.draw()
     @pacman.drawPosition()
     this.drawFps()

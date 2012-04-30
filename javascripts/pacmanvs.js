@@ -1,6 +1,13 @@
 (function() {
-  var CollisionLimit, Coordinate, Cronometer, Direction, Game, Map, Player, Tile;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, Map, Player, Tile;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   CollisionLimit = (function() {
     function CollisionLimit(position, width, height) {
       this.position = position;
@@ -117,6 +124,40 @@
     };
     return Direction;
   })();
+  Entity = (function() {
+    function Entity(x, y, map, context) {
+      this.map = map;
+      this.context = context;
+      this.position = new Coordinate(x, y);
+      this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
+    }
+    Entity.prototype.currentTile = function(referencePoint) {
+      var i, j;
+      if (referencePoint == null) {
+        referencePoint = this.position;
+      }
+      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
+      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
+      return new Tile(this.map, i, j);
+    };
+    return Entity;
+  })();
+  Food = (function() {
+    __extends(Food, Entity);
+    function Food() {
+      Food.__super__.constructor.apply(this, arguments);
+    }
+    Food.prototype.draw = function() {
+      var height, radius, width;
+      radius = Math.ceil((Map.TILE_WIDTH + Map.TILE_HEIGHT) / 30);
+      width = Math.ceil(Map.TILE_WIDTH / 10);
+      height = Math.ceil(Map.TILE_HEIGHT / 10);
+      this.context.fillStyle = "#FFF";
+      this.context.beginPath();
+      return this.context.fillRect(this.position.x - (width / 2), this.position.y - (height / 2), width, height);
+    };
+    return Food;
+  })();
   Game = (function() {
     var MAX_FPS;
     MAX_FPS = 60;
@@ -137,6 +178,7 @@
         this.canvas[name].height = this.map.matrix.length * Map.TILE_HEIGHT;
         this.context[name] = this.canvas[name].getContext("2d");
       }
+      this.foods = [];
       _ref2 = this.map.matrix;
       for (i = 0, _len2 = _ref2.length; i < _len2; i++) {
         array = _ref2[i];
@@ -147,6 +189,7 @@
           y = tile.centerCoordinate().y;
           if (value === Map.FOOD) {
             this.map.matrix[i][j] = Map.PATH;
+            this.foods.add(new Food(x, y, this.map, this.context.player, this));
           }
           if (value === Map.PACMAN) {
             this.map.matrix[i][j] = Map.PATH;
@@ -196,6 +239,9 @@
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
+      this.foods.each(function(food) {
+        return food.draw();
+      });
       this.pacman.draw();
       this.pacman.drawPosition();
       return this.drawFps();
@@ -352,14 +398,14 @@
     return game.init();
   });
   Player = (function() {
+    __extends(Player, Entity);
     function Player(x, y, map, context) {
       this.map = map;
       this.context = context;
-      this.position = new Coordinate(x, y);
+      Player.__super__.constructor.apply(this, arguments);
       this.startPosition = Object.clone(this.position);
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
-      this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
       this.animationIndex = 0;
       this.speed = 60;
     }
