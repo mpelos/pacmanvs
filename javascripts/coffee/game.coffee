@@ -3,6 +3,7 @@ class Game
 
   constructor: ->
     @map = new Map
+    @delay = 1000 / MAX_FPS
 
   init: ->
     @canvas = {}
@@ -22,7 +23,7 @@ class Game
 
         if value is Map.PACMAN
           @map.matrix[i][j] = Map.PATH
-          @pacman = new Player(x, y, @map, @context.player)
+          @pacman = new Player(x, y, @map, @context.player, this)
 
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
@@ -42,7 +43,7 @@ class Game
     @context.player.fillText "#{this.fps()} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
 
   update: ->
-    @pacman.move()
+    @pacman.move(@delay)
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas

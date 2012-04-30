@@ -21,6 +21,17 @@
       this.x = x;
       return this.y = y;
     };
+    Coordinate.prototype.betweenAxisX = function(x1, x2) {
+      var _ref, _ref2;
+      return (x1 < (_ref = this.x) && _ref < x2) || (x1 > (_ref2 = this.x) && _ref2 > x2);
+    };
+    Coordinate.prototype.betweenAxisY = function(y1, y2) {
+      var _ref, _ref2;
+      return (y1 < (_ref = this.y) && _ref < y2) || (y1 > (_ref2 = this.y) && _ref2 > y2);
+    };
+    Coordinate.prototype.betweenAxis = function(coordinate1, coordinate2) {
+      return this.betweenAxisX(coordinate1.x, coordinate2.x) || this.betweenAxisY(coordinate1.y, coordinate2.y);
+    };
     Coordinate.prototype.toString = function() {
       return "" + this.x + ", " + this.y;
     };
@@ -111,6 +122,7 @@
     MAX_FPS = 60;
     function Game() {
       this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
+      this.delay = 1000 / MAX_FPS;
     }
     Game.prototype.init = function() {
       var array, canvas, i, j, name, tile, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
@@ -135,7 +147,7 @@
           y = tile.centerCoordinate().y;
           if (value === Map.PACMAN) {
             this.map.matrix[i][j] = Map.PATH;
-            this.pacman = new Player(x, y, this.map, this.context.player);
+            this.pacman = new Player(x, y, this.map, this.context.player, this);
           }
         }
       }
@@ -156,7 +168,7 @@
       return this.context.player.fillText("" + (this.fps()) + " FPS", this.canvas.map.width - 5, this.canvas.map.height - 5);
     };
     Game.prototype.update = function() {
-      return this.pacman.move();
+      return this.pacman.move(this.delay);
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
@@ -324,6 +336,7 @@
       this.intentDirection = new Direction;
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
       this.animationIndex = 0;
+      this.speed = 20;
     }
     Player.prototype.currentTile = function(referencePoint) {
       var i, j;
@@ -358,14 +371,21 @@
         return this.lookAhead(position).isPath();
       }, this));
     };
-    Player.prototype.move = function(x, y) {
+    Player.prototype.move = function(gameFps) {
+      var displacement, previousPosition, tileCenter;
       if ((this.intentDirection.angle != null) && this.canChangeDirection()) {
         this.direction.set(this.intentDirection.angle);
         this.intentDirection.set(null);
       }
       if (this.canMove()) {
-        this.position.x += this.direction.toCoordinate().x;
-        return this.position.y += this.direction.toCoordinate().y;
+        displacement = this.speed / gameFps;
+        previousPosition = Object.clone(this.position);
+        this.position.x += this.direction.toCoordinate().x * displacement;
+        this.position.y += this.direction.toCoordinate().y * displacement;
+        tileCenter = this.currentTile().centerCoordinate();
+        if (tileCenter.betweenAxis(this.position, previousPosition) || !this.canMove()) {
+          return this.position.change(tileCenter.x, tileCenter.y);
+        }
       }
     };
     Player.prototype.draw = function() {

@@ -6,6 +6,7 @@ class Player
     @intentDirection = new Direction
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
     @animationIndex = 0
+    @speed = 20 # pixels per second
 
   currentTile: (referencePoint = @position) ->
     i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
@@ -27,14 +28,22 @@ class Player
     @collisionLimit.verticesPositions().every (position) =>
       this.lookAhead(position).isPath()
 
-  move: (x, y) ->
+  move: (gameFps) ->
     if @intentDirection.angle? and this.canChangeDirection()
       @direction.set(@intentDirection.angle)
       @intentDirection.set(null)
 
     if this.canMove()
-      @position.x += @direction.toCoordinate().x
-      @position.y += @direction.toCoordinate().y
+      displacement = @speed / gameFps
+      previousPosition = Object.clone(@position)
+
+      @position.x += @direction.toCoordinate().x * displacement
+      @position.y += @direction.toCoordinate().y * displacement
+
+      # ensure that the player always pass through the center of the tile
+      tileCenter = this.currentTile().centerCoordinate()
+      if tileCenter.betweenAxis(@position, previousPosition) or not this.canMove()
+        @position.change(tileCenter.x, tileCenter.y)
 
   draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
