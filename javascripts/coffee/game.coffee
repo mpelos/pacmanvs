@@ -57,7 +57,7 @@ class Game
 
   update: ->
     this.calculateFps()
-    @pacman.update(@fps)
+    @pacman.update(this)
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas

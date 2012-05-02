@@ -46,9 +46,17 @@ class Player extends Entity
 
     @position
 
-  update: (gameFps) ->
+  eatFood: (game) ->
+    for food, i in game.foods
+      if @collisionLimit.collidesWith food.collisionLimit
+        foodIndex = i
+
+    game.foods.removeAt(foodIndex)
+
+  update: (game) ->
     this.updateDirection()
-    this.updatePosition(gameFps)
+    this.updatePosition(game.fps)
+    this.eatFood(game)
 
   draw: ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2

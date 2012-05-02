@@ -1,13 +1,13 @@
 (function() {
   var CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, Map, Player, Tile;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  };
   CollisionLimit = (function() {
     function CollisionLimit(position, width, height) {
       this.position = position;
@@ -16,6 +16,21 @@
     }
     CollisionLimit.prototype.verticesPositions = function() {
       return new Array(new Coordinate(this.position.x - this.width / 2, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y + this.height / 2 - 0.5), new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5));
+    };
+    CollisionLimit.prototype.intersectOnXAxis = function(otherCollisionLimit) {
+      return otherCollisionLimit.verticesPositions().some(__bind(function(position) {
+        var _ref;
+        return (this.verticesPositions()[0].x < (_ref = position.x) && _ref < this.verticesPositions()[1].x);
+      }, this));
+    };
+    CollisionLimit.prototype.intersectOnYAxis = function(otherCollisionLimit) {
+      return otherCollisionLimit.verticesPositions().some(__bind(function(position) {
+        var _ref;
+        return (this.verticesPositions()[1].y < (_ref = position.y) && _ref < this.verticesPositions()[2].y);
+      }, this));
+    };
+    CollisionLimit.prototype.collidesWith = function(otherCollisionLimit) {
+      return this.intersectOnXAxis(otherCollisionLimit) && this.intersectOnYAxis(otherCollisionLimit);
     };
     return CollisionLimit;
   })();
@@ -236,7 +251,7 @@
     };
     Game.prototype.update = function() {
       this.calculateFps();
-      return this.pacman.update(this.fps);
+      return this.pacman.update(this);
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
@@ -456,9 +471,21 @@
       }
       return this.position;
     };
-    Player.prototype.update = function(gameFps) {
+    Player.prototype.eatFood = function(game) {
+      var food, foodIndex, i, _len, _ref;
+      _ref = game.foods;
+      for (i = 0, _len = _ref.length; i < _len; i++) {
+        food = _ref[i];
+        if (this.collisionLimit.collidesWith(food.collisionLimit)) {
+          foodIndex = i;
+        }
+      }
+      return game.foods.removeAt(foodIndex);
+    };
+    Player.prototype.update = function(game) {
       this.updateDirection();
-      return this.updatePosition(gameFps);
+      this.updatePosition(game.fps);
+      return this.eatFood(game);
     };
     Player.prototype.draw = function() {
       var animations, radius;
