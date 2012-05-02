@@ -33,7 +33,6 @@ class Game
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
 
-    @gameTime = new Cronometer
     this.loop() # starts the game loop
 
   calculateFps: ->
