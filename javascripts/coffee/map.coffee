@@ -3,46 +3,13 @@ class Map
   this.TILE_HEIGHT  = 20
   this.WALL_PADDING = 6
 
-  this.WALL         = w = 1
-  this.PATH         = p = 0
-  this.FOOD         = f = 3
-  this.PACMAN       = P = 9
+  this.WALL   = "w"
+  this.PATH   = "p"
+  this.FOOD   = "f"
+  this.PACMAN = "P"
 
   constructor: ->
-    @matrix = [
-      [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w],
-      [w, f, f, f, f, f, f, f, f, f, f, f, f, w, w, f, f, f, f, f, f, f, f, f, f, f, f, w],
-      [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w],
-      [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w],
-      [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w],
-      [w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w],
-      [w, f, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, f, w],
-      [w, f, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, f, w],
-      [w, f, f, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, f, f, w],
-      [w, w, w, w, w, w, f, w, w, w, w, w, p, w, w, p, w, w, w, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, w, w, w, p, w, w, p, w, w, w, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, p, p, p, p, p, p, p, p, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [p, p, p, p, p, p, f, p, p, p, w, w, w, w, w, w, w, w, p, p, p, f, p, p, p, p, p, p],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, p, p, p, p, p, p, p, p, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w],
-      [w, f, f, f, f, f, f, f, f, f, f, f, f, w, w, f, f, f, f, f, f, f, f, f, f, f, f, w],
-      [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w],
-      [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w],
-      [w, f, f, f, w, w, f, f, f, f, f, f, f, f, P, f, f, f, f, f, f, f, w, w, f, f, f, w],
-      [w, w, w, f, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, f, w, w, w],
-      [w, w, w, f, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, f, w, w, w],
-      [w, f, f, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, f, f, w],
-      [w, f, w, w, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, w, w, f, w],
-      [w, f, w, w, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, w, w, f, w],
-      [w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w],
-      [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]
-    ]
-
+    @matrix = MAPS_MATRIX[0]
     @width  = @matrix[0].length * Map.TILE_WIDTH
     @height = @matrix.length    * Map.TILE_HEIGHT
 

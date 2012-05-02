@@ -1,5 +1,5 @@
 (function() {
-  var CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, Map, Player, Tile;
+  var CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Player, Tile;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -288,16 +288,15 @@
     return Game;
   })();
   Map = (function() {
-    var P, f, p, w;
     Map.TILE_WIDTH = 20;
     Map.TILE_HEIGHT = 20;
     Map.WALL_PADDING = 6;
-    Map.WALL = w = 1;
-    Map.PATH = p = 0;
-    Map.FOOD = f = 3;
-    Map.PACMAN = P = 9;
+    Map.WALL = "w";
+    Map.PATH = "p";
+    Map.FOOD = "f";
+    Map.PACMAN = "P";
     function Map() {
-      this.matrix = [[w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w], [w, f, f, f, f, f, f, f, f, f, f, f, f, w, w, f, f, f, f, f, f, f, f, f, f, f, f, w], [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w], [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w], [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w], [w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w], [w, f, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, f, w], [w, f, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, f, w], [w, f, f, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, f, f, w], [w, w, w, w, w, w, f, w, w, w, w, w, p, w, w, p, w, w, w, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, w, w, w, p, w, w, p, w, w, w, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, p, p, p, p, p, p, p, p, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [p, p, p, p, p, p, f, p, p, p, w, w, w, w, w, w, w, w, p, p, p, f, p, p, p, p, p, p], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, p, p, p, p, p, p, p, p, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [w, w, w, w, w, w, f, w, w, p, w, w, w, w, w, w, w, w, p, w, w, f, w, w, w, w, w, w], [w, f, f, f, f, f, f, f, f, f, f, f, f, w, w, f, f, f, f, f, f, f, f, f, f, f, f, w], [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w], [w, f, w, w, w, w, f, w, w, w, w, w, f, w, w, f, w, w, w, w, w, f, w, w, w, w, f, w], [w, f, f, f, w, w, f, f, f, f, f, f, f, f, P, f, f, f, f, f, f, f, w, w, f, f, f, w], [w, w, w, f, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, f, w, w, w], [w, w, w, f, w, w, f, w, w, f, w, w, w, w, w, w, w, w, f, w, w, f, w, w, f, w, w, w], [w, f, f, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, w, w, f, f, f, f, f, f, w], [w, f, w, w, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, w, w, f, w], [w, f, w, w, w, w, w, w, w, w, w, w, f, w, w, f, w, w, w, w, w, w, w, w, w, w, f, w], [w, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, f, w], [w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w, w]];
+      this.matrix = MAPS_MATRIX[0];
       this.width = this.matrix[0].length * Map.TILE_WIDTH;
       this.height = this.matrix.length * Map.TILE_HEIGHT;
     }
@@ -403,6 +402,8 @@
     };
     return Map;
   })();
+  MAPS_MATRIX = [];
+  MAPS_MATRIX[0] = [['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['p', 'p', 'p', 'p', 'p', 'p', 'f', 'p', 'p', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'p', 'p', 'f', 'p', 'p', 'p', 'p', 'p', 'p'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'p', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'p', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'P', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'w'], ['w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w'], ['w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'w', 'w', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w', 'w', 'f', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'f', 'w'], ['w', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'w'], ['w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w']];
   jQuery(function($) {
     var game;
     game = new Game;
@@ -423,7 +424,7 @@
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
       this.animationIndex = 0;
-      this.speed = 60;
+      this.speed = 80;
     }
     Player.prototype.lookAhead = function(referencePoint, direction) {
       var i, j;
