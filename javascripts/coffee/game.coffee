@@ -17,7 +17,6 @@ class Game
       @context[name] = @canvas[name].getContext("2d")
 
     @map.draw(@context.map)
-    @map.drawGrid(@context.map)
 
     this.loop() # starts the game loop
 
@@ -47,7 +46,6 @@ class Game
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
     player.draw(@context.player) for player in @map.entities.players
-    player.drawPosition(@context.player) for player in @map.entities.players
     food.draw(@context.player) for food in @map.entities.foods
     this.drawFps()
 

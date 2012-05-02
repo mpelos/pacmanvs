@@ -31,6 +31,7 @@ class Map
           @entities.players.add(new Player(x, y, this))
 
   draw: (context) ->
+    this.drawGrid(context)
     context.beginPath()
     for array, i in @matrix
       for value, j in array

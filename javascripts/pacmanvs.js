@@ -194,7 +194,6 @@
         this.context[name] = this.canvas[name].getContext("2d");
       }
       this.map.draw(this.context.map);
-      this.map.drawGrid(this.context.map);
       return this.loop();
     };
     Game.prototype.calculateFps = function() {
@@ -233,21 +232,16 @@
       return this.pacman.update(this.fps);
     };
     Game.prototype.draw = function() {
-      var food, player, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3;
+      var food, player, _i, _j, _len, _len2, _ref, _ref2;
       this.canvas.player.width = this.canvas.player.width;
       _ref = this.map.entities.players;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         player = _ref[_i];
         player.draw(this.context.player);
       }
-      _ref2 = this.map.entities.players;
+      _ref2 = this.map.entities.foods;
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        player = _ref2[_j];
-        player.drawPosition(this.context.player);
-      }
-      _ref3 = this.map.entities.foods;
-      for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
-        food = _ref3[_k];
+        food = _ref2[_j];
         food.draw(this.context.player);
       }
       return this.drawFps();
@@ -315,6 +309,7 @@
     }
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _x, _y;
+      this.drawGrid(context);
       context.beginPath();
       _ref = this.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
@@ -502,6 +497,7 @@
     };
     Player.prototype.draw = function(context) {
       var animations, radius;
+      this.drawPosition(context);
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.beginPath();
       context.fillStyle = "#FF0";
