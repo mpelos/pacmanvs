@@ -5,7 +5,7 @@ class Player extends Entity
     @direction = new Direction("left")
     @intentDirection = new Direction
     @animationIndex = 0
-    @speed = 60 # pixels per second
+    @speed = 80 # pixels per second
 
   lookAhead: (referencePoint = @position, direction = @direction) ->
     referencePoint.x += 1 * direction.toCoordinate().x
