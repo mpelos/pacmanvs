@@ -140,9 +140,8 @@
     return Direction;
   })();
   Entity = (function() {
-    function Entity(x, y, map, context) {
+    function Entity(x, y, map) {
       this.map = map;
-      this.context = context;
       this.position = new Coordinate(x, y);
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
     }
@@ -159,18 +158,17 @@
   })();
   Food = (function() {
     __extends(Food, Entity);
-    function Food(x, y, map, context) {
+    function Food(x, y, map) {
       this.map = map;
-      this.context = context;
       Food.__super__.constructor.apply(this, arguments);
       this.width = Math.ceil(Map.TILE_WIDTH / 10);
       this.height = Math.ceil(Map.TILE_HEIGHT / 10);
       this.collisionLimit = new CollisionLimit(this.position, this.width, this.height);
     }
-    Food.prototype.draw = function() {
-      this.context.fillStyle = "#FFF";
-      this.context.beginPath();
-      return this.context.fillRect(this.position.x - (this.width / 2), this.position.y - (this.height / 2), this.width, this.height);
+    Food.prototype.draw = function(context) {
+      context.fillStyle = "#FFF";
+      context.beginPath();
+      return context.fillRect(this.position.x - (this.width / 2), this.position.y - (this.height / 2), this.width, this.height);
     };
     return Food;
   })();
@@ -215,7 +213,6 @@
       }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
-      this.gameTime = new Cronometer;
       return this.loop();
     };
     Game.prototype.calculateFps = function() {
@@ -255,11 +252,11 @@
     };
     Game.prototype.draw = function() {
       this.canvas.player.width = this.canvas.player.width;
-      this.foods.each(function(food) {
-        return food.draw();
-      });
-      this.pacman.draw();
-      this.pacman.drawPosition();
+      this.foods.each(__bind(function(food) {
+        return food.draw(this.context.player);
+      }, this));
+      this.pacman.draw(this.context.player);
+      this.pacman.drawPosition(this.context.player);
       return this.drawFps();
     };
     Game.prototype.handleKey = function(event) {
@@ -416,9 +413,8 @@
   });
   Player = (function() {
     __extends(Player, Entity);
-    function Player(x, y, map, context) {
+    function Player(x, y, map) {
       this.map = map;
-      this.context = context;
       Player.__super__.constructor.apply(this, arguments);
       this.startPosition = Object.clone(this.position);
       this.direction = new Direction("left");
@@ -488,36 +484,36 @@
       this.updatePosition(game.fps);
       return this.eatFood(game);
     };
-    Player.prototype.draw = function() {
+    Player.prototype.draw = function(context) {
       var animations, radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
-      this.context.beginPath();
-      this.context.fillStyle = "#FF0";
+      context.beginPath();
+      context.fillStyle = "#FF0";
       animations = new Array;
       animations[0] = __bind(function() {
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.3, this.direction.angle + Math.PI * 1.3, false);
-        this.context.fill();
-        this.context.beginPath();
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.7, this.direction.angle + Math.PI * 1.7, false);
-        return this.context.fill();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.3, this.direction.angle + Math.PI * 1.3, false);
+        context.fill();
+        context.beginPath();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.7, this.direction.angle + Math.PI * 1.7, false);
+        return context.fill();
       }, this);
       animations[1] = __bind(function() {
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.2, this.direction.angle + Math.PI * 1.2, false);
-        this.context.fill();
-        this.context.beginPath();
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.8, this.direction.angle + Math.PI * 1.8, false);
-        return this.context.fill();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.2, this.direction.angle + Math.PI * 1.2, false);
+        context.fill();
+        context.beginPath();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.8, this.direction.angle + Math.PI * 1.8, false);
+        return context.fill();
       }, this);
       animations[2] = __bind(function() {
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.1, this.direction.angle + Math.PI * 1.1, false);
-        this.context.fill();
-        this.context.beginPath();
-        this.context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.9, this.direction.angle + Math.PI * 1.9, false);
-        return this.context.fill();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.1, this.direction.angle + Math.PI * 1.1, false);
+        context.fill();
+        context.beginPath();
+        context.arc(this.position.x, this.position.y, radius, this.direction.angle + Math.PI * 0.9, this.direction.angle + Math.PI * 1.9, false);
+        return context.fill();
       }, this);
       animations[3] = __bind(function() {
-        this.context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
-        return this.context.fill();
+        context.arc(this.position.x, this.position.y, radius, 0, Math.PI * 2, false);
+        return context.fill();
       }, this);
       animations[4] = animations[2];
       animations[5] = animations[1];
@@ -535,11 +531,11 @@
       }
       return animations.at(this.animationIndex)();
     };
-    Player.prototype.drawPosition = function() {
-      this.context.font = "bold 12px sans-serif";
-      this.context.textAlign = "center";
-      this.context.fillStyle = "#FFF";
-      return this.context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
+    Player.prototype.drawPosition = function(context) {
+      context.font = "bold 12px sans-serif";
+      context.textAlign = "center";
+      context.fillStyle = "#FFF";
+      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
     };
     return Player;
   })();

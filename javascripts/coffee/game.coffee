@@ -60,9 +60,9 @@ class Game
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
-    @foods.each (food) -> food.draw()
-    @pacman.draw()
-    @pacman.drawPosition()
+    @foods.each (food) => food.draw(@context.player)
+    @pacman.draw(@context.player)
+    @pacman.drawPosition(@context.player)
     this.drawFps()
 
   handleKey: (event) =>

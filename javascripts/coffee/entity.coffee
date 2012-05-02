@@ -1,5 +1,5 @@
 class Entity
-  constructor: (x, y, @map, @context) ->
+  constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 

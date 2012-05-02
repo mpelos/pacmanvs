@@ -1,5 +1,5 @@
 class Player extends Entity
-  constructor: (x, y, @map, @context) ->
+  constructor: (x, y, @map) ->
     super
     @startPosition = Object.clone(@position)
     @direction = new Direction("left")
@@ -58,33 +58,33 @@ class Player extends Entity
     this.updatePosition(game.fps)
     this.eatFood(game)
 
-  draw: ->
+  draw: (context) ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
-    @context.beginPath()
-    @context.fillStyle = "#FF0"
+    context.beginPath()
+    context.fillStyle = "#FF0"
 
     animations = new Array
     animations[0] = =>
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.3, @direction.angle + Math.PI * 1.3, false
-      @context.fill()
-      @context.beginPath()
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.7, @direction.angle + Math.PI * 1.7, false
-      @context.fill()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.3, @direction.angle + Math.PI * 1.3, false
+      context.fill()
+      context.beginPath()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.7, @direction.angle + Math.PI * 1.7, false
+      context.fill()
     animations[1] = =>
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.2, @direction.angle + Math.PI * 1.2, false
-      @context.fill()
-      @context.beginPath()
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.8, @direction.angle + Math.PI * 1.8, false
-      @context.fill()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.2, @direction.angle + Math.PI * 1.2, false
+      context.fill()
+      context.beginPath()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.8, @direction.angle + Math.PI * 1.8, false
+      context.fill()
     animations[2] = =>
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.1, @direction.angle + Math.PI * 1.1, false
-      @context.fill()
-      @context.beginPath()
-      @context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.9, @direction.angle + Math.PI * 1.9, false
-      @context.fill()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.1, @direction.angle + Math.PI * 1.1, false
+      context.fill()
+      context.beginPath()
+      context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.9, @direction.angle + Math.PI * 1.9, false
+      context.fill()
     animations[3] = =>
-      @context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
-      @context.fill()
+      context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
+      context.fill()
     animations[4] = animations[2]
     animations[5] = animations[1]
     animations[6] = animations[0]
@@ -98,8 +98,8 @@ class Player extends Entity
 
     animations.at(@animationIndex)()
 
-  drawPosition: ->
-    @context.font = "bold 12px sans-serif"
-    @context.textAlign = "center"
-    @context.fillStyle = "#FFF"
-    @context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
+  drawPosition: (context) ->
+    context.font = "bold 12px sans-serif"
+    context.textAlign = "center"
+    context.fillStyle = "#FFF"
+    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
