@@ -4,9 +4,7 @@ class Game
   constructor: ->
     @map = new Map
     @pacman = @map.entities.players.first()
-    @delay = 1000 / MAX_FPS
 
-  init: ->
     @canvas = {}
     @context = {}
     for canvas in $("canvas")
@@ -17,8 +15,7 @@ class Game
       @context[name] = @canvas[name].getContext("2d")
 
     @map.draw(@context.map)
-
-    this.loop() # starts the game loop
+    this.loop(1000/MAX_FPS) # starts the game loop
 
   calculateFps: ->
     @framesCounter ?= 0
@@ -56,12 +53,15 @@ class Game
       when 39 then @pacman.intentDirection.set("right") # right arrow
       when 40 then @pacman.intentDirection.set("down")  # down arrow
 
-  loop: ->
+  loop: (initialDelay) ->
+    @delay ?= initialDelay
+
     setTimeout( =>
       startTime = new Date
       this.update()
       this.draw()
-      this.loop()
       endTime = new Date
+
       @delay = (1000/MAX_FPS) - (endTime - startTime)
+      this.loop()
     @delay)

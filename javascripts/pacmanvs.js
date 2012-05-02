@@ -176,12 +176,9 @@
     var MAX_FPS;
     MAX_FPS = 60;
     function Game() {
-      this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
+      this.handleKey = __bind(this.handleKey, this);      var canvas, name, _i, _len, _ref;
+      this.map = new Map;
       this.pacman = this.map.entities.players.first();
-      this.delay = 1000 / MAX_FPS;
-    }
-    Game.prototype.init = function() {
-      var canvas, name, _i, _len, _ref;
       this.canvas = {};
       this.context = {};
       _ref = $("canvas");
@@ -194,8 +191,8 @@
         this.context[name] = this.canvas[name].getContext("2d");
       }
       this.map.draw(this.context.map);
-      return this.loop();
-    };
+      this.loop(1000 / MAX_FPS);
+    }
     Game.prototype.calculateFps = function() {
       var _ref, _ref2, _ref3;
             if ((_ref = this.framesCounter) != null) {
@@ -258,15 +255,21 @@
           return this.pacman.intentDirection.set("down");
       }
     };
-    Game.prototype.loop = function() {
+    Game.prototype.loop = function(initialDelay) {
+      var _ref;
+            if ((_ref = this.delay) != null) {
+        _ref;
+      } else {
+        this.delay = initialDelay;
+      };
       return setTimeout(__bind(function() {
         var endTime, startTime;
         startTime = new Date;
         this.update();
         this.draw();
-        this.loop();
         endTime = new Date;
-        return this.delay = (1000 / MAX_FPS) - (endTime - startTime);
+        this.delay = (1000 / MAX_FPS) - (endTime - startTime);
+        return this.loop();
       }, this), this.delay);
     };
     return Game;
@@ -419,8 +422,7 @@
       "width": "" + game.map.width + "px",
       "height": "" + game.map.height + "px"
     });
-    $(document).bind("keydown", game.handleKey);
-    return game.init();
+    return $(document).bind("keydown", game.handleKey);
   });
   Player = (function() {
     __extends(Player, Entity);
