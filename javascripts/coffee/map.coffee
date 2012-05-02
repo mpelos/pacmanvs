@@ -12,6 +12,23 @@ class Map
     @matrix = MAPS_MATRIX[0]
     @width  = @matrix[0].length * Map.TILE_WIDTH
     @height = @matrix.length    * Map.TILE_HEIGHT
+    @entities =
+      players: []
+      foods: []
+
+    for array, i in @matrix
+      for value, j in array
+        tile = new Tile(this, i, j)
+        x = tile.centerCoordinate().x
+        y = tile.centerCoordinate().y
+
+        if value is Map.FOOD
+          @matrix[i][j] = Map.PATH
+          @entities.foods.add(new Food(x, y, this))
+
+        if value is Map.PACMAN
+          @matrix[i][j] = Map.PATH
+          @entities.players.add(new Player(x, y, this))
 
   draw: (context) ->
     context.beginPath()
@@ -22,9 +39,9 @@ class Map
         tile = new Tile(this, i, j)
 
         if tile.isWall()
-          startX = if tile.isWallLeftCorner()  then (x + Map.WALL_PADDING)               else x
+          startX = if tile.isWallLeftCorner()  then (x + Map.WALL_PADDING)                   else x
           endX   = if tile.isWallRightCorner() then (x + Map.TILE_WIDTH - Map.WALL_PADDING)  else (x + Map.TILE_WIDTH)
-          startY = if tile.isWallUpCorner()    then (y + Map.WALL_PADDING)               else y
+          startY = if tile.isWallUpCorner()    then (y + Map.WALL_PADDING)                   else y
           endY   = if tile.isWallDownCorner()  then (y + Map.TILE_HEIGHT - Map.WALL_PADDING) else (y + Map.TILE_HEIGHT)
 
           if tile.above().isPath()

@@ -177,10 +177,11 @@
     MAX_FPS = 60;
     function Game() {
       this.handleKey = __bind(this.handleKey, this);      this.map = new Map;
+      this.pacman = this.map.entities.players.first();
       this.delay = 1000 / MAX_FPS;
     }
     Game.prototype.init = function() {
-      var array, canvas, i, j, name, tile, value, x, y, _i, _len, _len2, _len3, _ref, _ref2;
+      var canvas, name, _i, _len, _ref;
       this.canvas = {};
       this.context = {};
       _ref = $("canvas");
@@ -191,25 +192,6 @@
         this.canvas[name].width = this.map.matrix[0].length * Map.TILE_WIDTH;
         this.canvas[name].height = this.map.matrix.length * Map.TILE_HEIGHT;
         this.context[name] = this.canvas[name].getContext("2d");
-      }
-      this.foods = [];
-      _ref2 = this.map.matrix;
-      for (i = 0, _len2 = _ref2.length; i < _len2; i++) {
-        array = _ref2[i];
-        for (j = 0, _len3 = array.length; j < _len3; j++) {
-          value = array[j];
-          tile = new Tile(this.map, i, j);
-          x = tile.centerCoordinate().x;
-          y = tile.centerCoordinate().y;
-          if (value === Map.FOOD) {
-            this.map.matrix[i][j] = Map.PATH;
-            this.foods.add(new Food(x, y, this.map, this.context.player, this));
-          }
-          if (value === Map.PACMAN) {
-            this.map.matrix[i][j] = Map.PATH;
-            this.pacman = new Player(x, y, this.map, this.context.player, this);
-          }
-        }
       }
       this.map.draw(this.context.map);
       this.map.drawGrid(this.context.map);
@@ -248,15 +230,26 @@
     };
     Game.prototype.update = function() {
       this.calculateFps();
-      return this.pacman.update(this);
+      return this.pacman.update(this.fps);
     };
     Game.prototype.draw = function() {
+      var food, player, _i, _j, _k, _len, _len2, _len3, _ref, _ref2, _ref3;
       this.canvas.player.width = this.canvas.player.width;
-      this.foods.each(__bind(function(food) {
-        return food.draw(this.context.player);
-      }, this));
-      this.pacman.draw(this.context.player);
-      this.pacman.drawPosition(this.context.player);
+      _ref = this.map.entities.players;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        player = _ref[_i];
+        player.draw(this.context.player);
+      }
+      _ref2 = this.map.entities.players;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        player = _ref2[_j];
+        player.drawPosition(this.context.player);
+      }
+      _ref3 = this.map.entities.foods;
+      for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
+        food = _ref3[_k];
+        food.draw(this.context.player);
+      }
       return this.drawFps();
     };
     Game.prototype.handleKey = function(event) {
@@ -293,9 +286,32 @@
     Map.FOOD = "f";
     Map.PACMAN = "P";
     function Map() {
+      var array, i, j, tile, value, x, y, _len, _len2, _ref;
       this.matrix = MAPS_MATRIX[0];
       this.width = this.matrix[0].length * Map.TILE_WIDTH;
       this.height = this.matrix.length * Map.TILE_HEIGHT;
+      this.entities = {
+        players: [],
+        foods: []
+      };
+      _ref = this.matrix;
+      for (i = 0, _len = _ref.length; i < _len; i++) {
+        array = _ref[i];
+        for (j = 0, _len2 = array.length; j < _len2; j++) {
+          value = array[j];
+          tile = new Tile(this, i, j);
+          x = tile.centerCoordinate().x;
+          y = tile.centerCoordinate().y;
+          if (value === Map.FOOD) {
+            this.matrix[i][j] = Map.PATH;
+            this.entities.foods.add(new Food(x, y, this));
+          }
+          if (value === Map.PACMAN) {
+            this.matrix[i][j] = Map.PATH;
+            this.entities.players.add(new Player(x, y, this));
+          }
+        }
+      }
     }
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _x, _y;
@@ -468,21 +484,21 @@
       }
       return this.position;
     };
-    Player.prototype.eatFood = function(game) {
+    Player.prototype.eatFood = function() {
       var food, foodIndex, i, _len, _ref;
-      _ref = game.foods;
+      _ref = this.map.entities.foods;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         food = _ref[i];
         if (this.collisionLimit.collidesWith(food.collisionLimit)) {
           foodIndex = i;
         }
       }
-      return game.foods.removeAt(foodIndex);
+      return this.map.entities.foods.removeAt(foodIndex);
     };
-    Player.prototype.update = function(game) {
+    Player.prototype.update = function(gameFps) {
       this.updateDirection();
-      this.updatePosition(game.fps);
-      return this.eatFood(game);
+      this.updatePosition(gameFps);
+      return this.eatFood();
     };
     Player.prototype.draw = function(context) {
       var animations, radius;

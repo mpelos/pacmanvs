@@ -3,6 +3,7 @@ class Game
 
   constructor: ->
     @map = new Map
+    @pacman = @map.entities.players.first()
     @delay = 1000 / MAX_FPS
 
   init: ->
@@ -14,21 +15,6 @@ class Game
       @canvas[name].width  = @map.matrix[0].length * Map.TILE_WIDTH
       @canvas[name].height = @map.matrix.length    * Map.TILE_HEIGHT
       @context[name] = @canvas[name].getContext("2d")
-
-    @foods = []
-    for array, i in @map.matrix
-      for value, j in array
-        tile = new Tile(@map, i, j)
-        x = tile.centerCoordinate().x
-        y = tile.centerCoordinate().y
-
-        if value is Map.FOOD
-          @map.matrix[i][j] = Map.PATH
-          @foods.add(new Food(x, y, @map, @context.player, this))
-
-        if value is Map.PACMAN
-          @map.matrix[i][j] = Map.PATH
-          @pacman = new Player(x, y, @map, @context.player, this)
 
     @map.draw(@context.map)
     @map.drawGrid(@context.map)
@@ -56,13 +42,13 @@ class Game
 
   update: ->
     this.calculateFps()
-    @pacman.update(this)
+    @pacman.update(@fps)
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
-    @foods.each (food) => food.draw(@context.player)
-    @pacman.draw(@context.player)
-    @pacman.drawPosition(@context.player)
+    player.draw(@context.player) for player in @map.entities.players
+    player.drawPosition(@context.player) for player in @map.entities.players
+    food.draw(@context.player) for food in @map.entities.foods
     this.drawFps()
 
   handleKey: (event) =>
