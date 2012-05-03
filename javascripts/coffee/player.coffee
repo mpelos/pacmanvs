@@ -12,7 +12,7 @@ class Player extends Entity
     referencePoint.y += 1 * direction.toCoordinate().y
     i = this.currentTile(referencePoint).i
     j = this.currentTile(referencePoint).j
-    new Tile(@map, i, j)
+    @map.tiles[i][j]
 
   canChangeDirection: ->
     @collisionLimit.verticesPositions().every (position) =>

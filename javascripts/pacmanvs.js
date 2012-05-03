@@ -152,7 +152,7 @@
       }
       i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
       j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
-      return new Tile(this.map, i, j);
+      return this.map.tiles[i][j];
     };
     return Entity;
   })();
@@ -283,10 +283,11 @@
     Map.FOOD = "f";
     Map.PACMAN = "P";
     function Map() {
-      var array, i, j, tile, value, x, y, _len, _len2, _ref;
+      var array, i, j, value, x, y, _len, _len2, _ref;
       this.matrix = MAPS_MATRIX[0];
       this.width = this.matrix[0].length * Map.TILE_WIDTH;
       this.height = this.matrix.length * Map.TILE_HEIGHT;
+      this.tiles = [];
       this.entities = {
         players: [],
         foods: []
@@ -294,24 +295,25 @@
       _ref = this.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
         array = _ref[i];
+        this.tiles[i] = [];
         for (j = 0, _len2 = array.length; j < _len2; j++) {
           value = array[j];
-          tile = new Tile(this, i, j);
-          x = tile.centerCoordinate().x;
-          y = tile.centerCoordinate().y;
+          this.tiles[i][j] = new Tile(this, i, j, value);
+          x = this.tiles[i][j].centerCoordinate().x;
+          y = this.tiles[i][j].centerCoordinate().y;
           if (value === Map.FOOD) {
-            this.matrix[i][j] = Map.PATH;
+            this.tiles[i][j].type = Map.PATH;
             this.entities.foods.add(new Food(x, y, this));
           }
           if (value === Map.PACMAN) {
-            this.matrix[i][j] = Map.PATH;
+            this.tiles[i][j].type = Map.PATH;
             this.entities.players.add(new Player(x, y, this));
           }
         }
       }
     }
     Map.prototype.draw = function(context) {
-      var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _x, _y;
+      var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _x, _y;
       this.drawGrid(context);
       context.beginPath();
       _ref = this.matrix;
@@ -321,49 +323,49 @@
           value = array[j];
           x = j * Map.TILE_WIDTH;
           y = i * Map.TILE_HEIGHT;
-          tile = new Tile(this, i, j);
+          tile = this.tiles[i][j];
           if (tile.isWall()) {
             startX = tile.isWallLeftCorner() ? x + Map.WALL_PADDING : x;
             endX = tile.isWallRightCorner() ? x + Map.TILE_WIDTH - Map.WALL_PADDING : x + Map.TILE_WIDTH;
             startY = tile.isWallUpCorner() ? y + Map.WALL_PADDING : y;
             endY = tile.isWallDownCorner() ? y + Map.TILE_HEIGHT - Map.WALL_PADDING : y + Map.TILE_HEIGHT;
-            if (tile.above().isPath()) {
+            if ((_ref2 = tile.above()) != null ? _ref2.isPath() : void 0) {
               _y = y + Map.WALL_PADDING + 0.5;
               context.moveTo(startX, _y);
               context.lineTo(endX, _y);
             }
-            if (tile.right().isPath()) {
+            if ((_ref3 = tile.right()) != null ? _ref3.isPath() : void 0) {
               _x = x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5;
               context.moveTo(_x, startY);
               context.lineTo(_x, endY);
             }
-            if (tile.below().isPath()) {
+            if ((_ref4 = tile.below()) != null ? _ref4.isPath() : void 0) {
               _y = y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5;
               context.moveTo(startX, _y);
               context.lineTo(endX, _y);
             }
-            if (tile.left().isPath()) {
+            if ((_ref5 = tile.left()) != null ? _ref5.isPath() : void 0) {
               _x = x + Map.WALL_PADDING + 0.5;
               context.moveTo(_x, startY);
               context.lineTo(_x, endY);
             }
-            if (tile.above().isWall() && tile.right().isWall() && tile.below().isWall() && tile.left().isWall()) {
-              if (tile.aboveRight().isPath()) {
+            if ((((_ref6 = tile.above()) != null ? _ref6.isWall() : void 0) || !(tile.above() != null)) && (((_ref7 = tile.right()) != null ? _ref7.isWall() : void 0) || !(tile.right() != null)) && (((_ref8 = tile.below()) != null ? _ref8.isWall() : void 0) || !(tile.below() != null)) && (((_ref9 = tile.left()) != null ? _ref9.isWall() : void 0) || !(tile.left() != null))) {
+              if ((_ref10 = tile.aboveRight()) != null ? _ref10.isPath() : void 0) {
                 context.moveTo(x + Map.TILE_WIDTH, y + Map.WALL_PADDING + 0.5);
                 context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.WALL_PADDING + 0.5);
                 context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y);
               }
-              if (tile.belowRight().isPath()) {
+              if ((_ref11 = tile.belowRight()) != null ? _ref11.isPath() : void 0) {
                 context.moveTo(x + Map.TILE_WIDTH, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
                 context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
                 context.lineTo(x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5, y + Map.TILE_HEIGHT);
               }
-              if (tile.belowLeft().isPath()) {
+              if ((_ref12 = tile.belowLeft()) != null ? _ref12.isPath() : void 0) {
                 context.moveTo(x, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
                 context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5);
                 context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.TILE_HEIGHT);
               }
-              if (tile.aboveLeft().isPath()) {
+              if ((_ref13 = tile.aboveLeft()) != null ? _ref13.isPath() : void 0) {
                 context.moveTo(x, y + Map.WALL_PADDING + 0.5);
                 context.lineTo(x + Map.WALL_PADDING + 0.5, y + Map.WALL_PADDING + 0.5);
                 context.lineTo(x + Map.WALL_PADDING + 0.5, y);
@@ -447,7 +449,7 @@
       referencePoint.y += 1 * direction.toCoordinate().y;
       i = this.currentTile(referencePoint).i;
       j = this.currentTile(referencePoint).j;
-      return new Tile(this.map, i, j);
+      return this.map.tiles[i][j];
     };
     Player.prototype.canChangeDirection = function() {
       return this.collisionLimit.verticesPositions().every(__bind(function(position) {
@@ -554,20 +556,12 @@
     return Player;
   })();
   Tile = (function() {
-    var INVALID;
-    INVALID = "Invalid tile";
-    function Tile(map, i, j) {
+    function Tile(map, i, j, type) {
       this.map = map;
       this.i = i;
       this.j = j;
+      this.type = type;
     }
-    Tile.prototype.current = function() {
-      if ((this.map.matrix[this.i] != null) && (this.map.matrix[this.i][this.j] != null)) {
-        return this.map.matrix[this.i][this.j];
-      } else {
-        return INVALID;
-      }
-    };
     Tile.prototype.centerCoordinate = function() {
       var x, y;
       x = (this.j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2);
@@ -575,48 +569,56 @@
       return new Coordinate(x, y);
     };
     Tile.prototype.above = function() {
-      return new Tile(this.map, this.i - 1, this.j);
+      var _ref;
+      return (_ref = this.map.tiles[this.i - 1]) != null ? _ref[this.j] : void 0;
     };
     Tile.prototype.aboveRight = function() {
-      return new Tile(this.map, this.i - 1, this.j + 1);
+      var _ref;
+      return (_ref = this.map.tiles[this.i - 1]) != null ? _ref[this.j + 1] : void 0;
     };
     Tile.prototype.right = function() {
-      return new Tile(this.map, this.i, this.j + 1);
+      return this.map.tiles[this.i][this.j + 1];
     };
     Tile.prototype.belowRight = function() {
-      return new Tile(this.map, this.i + 1, this.j + 1);
+      var _ref;
+      return (_ref = this.map.tiles[this.i + 1]) != null ? _ref[this.j + 1] : void 0;
     };
     Tile.prototype.below = function() {
-      return new Tile(this.map, this.i + 1, this.j);
+      var _ref;
+      return (_ref = this.map.tiles[this.i + 1]) != null ? _ref[this.j] : void 0;
     };
     Tile.prototype.belowLeft = function() {
-      return new Tile(this.map, this.i + 1, this.j - 1);
+      var _ref;
+      return (_ref = this.map.tiles[this.i + 1]) != null ? _ref[this.j - 1] : void 0;
     };
     Tile.prototype.left = function() {
-      return new Tile(this.map, this.i, this.j - 1);
+      return this.map.tiles[this.i][this.j - 1];
     };
     Tile.prototype.aboveLeft = function() {
-      return new Tile(this.map, this.i - 1, this.j - 1);
+      var _ref;
+      return (_ref = this.map.tiles[this.i - 1]) != null ? _ref[this.j - 1] : void 0;
     };
     Tile.prototype.isWall = function() {
-      return this.current() === Map.WALL || this.current() === INVALID;
+      return this.type === Map.WALL;
     };
     Tile.prototype.isPath = function() {
-      if (this.current() !== INVALID) {
-        return this.current() === Map.PATH;
-      }
+      return this.type === Map.PATH;
     };
     Tile.prototype.isWallUpCorner = function() {
-      return this.above().isPath() && this.below().isWall();
+      var _ref, _ref2;
+      return ((_ref = this.above()) != null ? _ref.isPath() : void 0) && ((_ref2 = this.below()) != null ? _ref2.isWall() : void 0);
     };
     Tile.prototype.isWallRightCorner = function() {
-      return this.right().isPath() && this.left().isWall();
+      var _ref, _ref2;
+      return ((_ref = this.right()) != null ? _ref.isPath() : void 0) && ((_ref2 = this.left()) != null ? _ref2.isWall() : void 0);
     };
     Tile.prototype.isWallDownCorner = function() {
-      return this.below().isPath() && this.above().isWall();
+      var _ref, _ref2;
+      return ((_ref = this.below()) != null ? _ref.isPath() : void 0) && ((_ref2 = this.above()) != null ? _ref2.isWall() : void 0);
     };
     Tile.prototype.isWallLeftCorner = function() {
-      return this.left().isPath() && this.right().isWall();
+      var _ref, _ref2;
+      return ((_ref = this.left()) != null ? _ref.isPath() : void 0) && ((_ref2 = this.right()) != null ? _ref2.isWall() : void 0);
     };
     return Tile;
   })();

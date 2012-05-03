@@ -12,22 +12,24 @@ class Map
     @matrix = MAPS_MATRIX[0]
     @width  = @matrix[0].length * Map.TILE_WIDTH
     @height = @matrix.length    * Map.TILE_HEIGHT
+    @tiles = []
     @entities =
       players: []
       foods: []
 
     for array, i in @matrix
+      @tiles[i] = []
       for value, j in array
-        tile = new Tile(this, i, j)
-        x = tile.centerCoordinate().x
-        y = tile.centerCoordinate().y
+        @tiles[i][j] = new Tile(this, i, j, value)
+        x = @tiles[i][j].centerCoordinate().x
+        y = @tiles[i][j].centerCoordinate().y
 
         if value is Map.FOOD
-          @matrix[i][j] = Map.PATH
+          @tiles[i][j].type = Map.PATH
           @entities.foods.add(new Food(x, y, this))
 
         if value is Map.PACMAN
-          @matrix[i][j] = Map.PATH
+          @tiles[i][j].type = Map.PATH
           @entities.players.add(new Player(x, y, this))
 
   draw: (context) ->
@@ -37,7 +39,7 @@ class Map
       for value, j in array
         x = j * Map.TILE_WIDTH
         y = i * Map.TILE_HEIGHT
-        tile = new Tile(this, i, j)
+        tile = @tiles[i][j]
 
         if tile.isWall()
           startX = if tile.isWallLeftCorner()  then (x + Map.WALL_PADDING)                   else x
@@ -45,43 +47,43 @@ class Map
           startY = if tile.isWallUpCorner()    then (y + Map.WALL_PADDING)                   else y
           endY   = if tile.isWallDownCorner()  then (y + Map.TILE_HEIGHT - Map.WALL_PADDING) else (y + Map.TILE_HEIGHT)
 
-          if tile.above().isPath()
+          if tile.above()?.isPath()
             _y = y + Map.WALL_PADDING + 0.5
             context.moveTo startX, _y
             context.lineTo endX, _y
 
-          if tile.right().isPath()
+          if tile.right()?.isPath()
             _x = x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5
             context.moveTo _x, startY
             context.lineTo _x, endY
 
-          if tile.below().isPath()
+          if tile.below()?.isPath()
             _y = y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5
             context.moveTo startX, _y
             context.lineTo endX, _y
 
-          if tile.left().isPath()
+          if tile.left()?.isPath()
             _x = x + Map.WALL_PADDING + 0.5
             context.moveTo _x, startY
             context.lineTo _x, endY
 
-          if tile.above().isWall() and tile.right().isWall() and tile.below().isWall() and tile.left().isWall()
-            if tile.aboveRight().isPath()
+          if (tile.above()?.isWall() or not tile.above()?) and (tile.right()?.isWall() or not tile.right()?) and (tile.below()?.isWall() or not tile.below()?) and (tile.left()?.isWall() or not tile.left()?)
+            if tile.aboveRight()?.isPath()
               context.moveTo (x + Map.TILE_WIDTH), (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), y
 
-            if tile.belowRight().isPath()
+            if tile.belowRight()?.isPath()
               context.moveTo (x + Map.TILE_WIDTH), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
               context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
               context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.TILE_HEIGHT)
 
-            if tile.belowLeft().isPath()
+            if tile.belowLeft()?.isPath()
               context.moveTo x, (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.TILE_HEIGHT)
 
-            if tile.aboveLeft().isPath()
+            if tile.aboveLeft()?.isPath()
               context.moveTo x, (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), y

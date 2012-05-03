@@ -6,4 +6,4 @@ class Entity
   currentTile: (referencePoint = @position) ->
     i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
     j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
-    new Tile(@map, i, j)
+    @map.tiles[i][j]
