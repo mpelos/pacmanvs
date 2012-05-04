@@ -55,15 +55,13 @@ class Game
       when 39 then @pacman.intentDirection.set("right") # right arrow
       when 40 then @pacman.intentDirection.set("down")  # down arrow
 
-  loop: (initialDelay) ->
-    @delay ?= initialDelay
-
+  loop: (delay) ->
     setTimeout( =>
       startTime = new Date
       this.update()
       this.draw()
       endTime = new Date
 
-      @delay = (1000/MAX_FPS) - (endTime - startTime)
-      this.loop()
-    @delay)
+      delay = (1000/MAX_FPS) - (endTime - startTime)
+      this.loop(delay)
+    delay)
