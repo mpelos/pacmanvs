@@ -7,6 +7,9 @@ class Player extends Entity
     @animationIndex = 0
     @speed = 80 # pixels per second
 
+  calculateDisplacement: (gameFps) ->
+    @displacement = @speed / gameFps
+
   lookAhead: (referencePoint = @position, direction = @direction) ->
     referencePoint.x += 1 * direction.toCoordinate().x
     referencePoint.y += 1 * direction.toCoordinate().y
@@ -29,15 +32,14 @@ class Player extends Entity
 
     @direction
 
-  updatePosition: (gameFps) ->
+  updatePosition: () ->
     this.excludeFromTile()
 
     if this.canMove()
-      displacement = @speed / gameFps
       previousPosition = Object.clone(@position)
 
-      @position.x += @direction.toCoordinate().x * displacement
-      @position.y += @direction.toCoordinate().y * displacement
+      @position.x += @direction.toCoordinate().x * @displacement
+      @position.y += @direction.toCoordinate().y * @displacement
 
       # ensure that the player always pass through the center of the tile
       tileCenter = this.currentTile().centerCoordinate()
@@ -50,8 +52,9 @@ class Player extends Entity
     @position
 
   update: (gameFps) ->
+    this.calculateDisplacement(gameFps)
     this.updateDirection()
-    this.updatePosition(gameFps)
+    this.updatePosition()
 
   collidesWith: (entity) ->
     this.collidesWithFood(entity) if entity instanceof Food
