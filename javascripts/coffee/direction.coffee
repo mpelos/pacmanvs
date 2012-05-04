@@ -9,7 +9,7 @@ class Direction
         when "down"  then Math.PI * 0.5
         when "left"  then Math.PI
         when "up"    then Math.PI * 1.5
-    else if typeof direction is "coordinate"
+    else if direction instanceof Coordinate
       angle = switch direction.toString()
         when "1, 0"  then 0
         when "0, -1" then Math.PI * 0.5
