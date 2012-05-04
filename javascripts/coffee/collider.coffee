@@ -18,6 +18,6 @@ class Collider
 
   makeCollisions: ->
     for player in @entities.players
-      for food in @entities.foods
-        if player.currentTile() == food.currentTile() and this.collisionBetween(player, food)
-          player.collidesWith(food)
+      for entity in player.currentTile().entities
+        if entity isnt player and this.collisionBetween(player, entity)
+          player.collidesWith(entity)

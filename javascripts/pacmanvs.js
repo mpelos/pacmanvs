@@ -24,18 +24,18 @@
       return this.intersectionOnXAxis(player, entity) && this.intersectionOnYAxis(player, entity);
     };
     Collider.prototype.makeCollisions = function() {
-      var food, player, _i, _len, _ref, _results;
+      var entity, player, _i, _len, _ref, _results;
       _ref = this.entities.players;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         player = _ref[_i];
         _results.push((function() {
           var _j, _len2, _ref2, _results2;
-          _ref2 = this.entities.foods;
+          _ref2 = player.currentTile().entities;
           _results2 = [];
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            food = _ref2[_j];
-            _results2.push(player.currentTile() === food.currentTile() && this.collisionBetween(player, food) ? player.collidesWith(food) : void 0);
+            entity = _ref2[_j];
+            _results2.push(entity !== player && this.collisionBetween(player, entity) ? player.collidesWith(entity) : void 0);
           }
           return _results2;
         }).call(this));
@@ -175,6 +175,18 @@
       j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
       return this.map.tiles[i][j];
     };
+    Entity.prototype.excludeFromTile = function() {
+      var entity, i, tileEntities, _len, _ref;
+      tileEntities = [];
+      _ref = this.currentTile().entities;
+      for (i = 0, _len = _ref.length; i < _len; i++) {
+        entity = _ref[i];
+        if (entity !== this) {
+          tileEntities.push(entity);
+        }
+      }
+      return this.currentTile().entities = tileEntities;
+    };
     return Entity;
   })();
   Food = (function() {
@@ -306,7 +318,7 @@
     Map.FOOD = "f";
     Map.PACMAN = "P";
     function Map() {
-      var array, i, j, value, x, y, _len, _len2, _ref;
+      var array, food, i, j, value, x, y, _len, _len2, _ref;
       this.matrix = MAPS_MATRIX[0];
       this.width = this.matrix[0].length * Map.TILE_WIDTH;
       this.height = this.matrix.length * Map.TILE_HEIGHT;
@@ -325,8 +337,10 @@
           x = this.tiles[i][j].centerCoordinate().x;
           y = this.tiles[i][j].centerCoordinate().y;
           if (value === Map.FOOD) {
+            food = new Food(x, y, this);
             this.tiles[i][j].type = Map.PATH;
-            this.entities.foods.push(new Food(x, y, this));
+            this.tiles[i][j].entities.push(food);
+            this.entities.foods.push(food);
           }
           if (value === Map.PACMAN) {
             this.tiles[i][j].type = Map.PATH;
@@ -494,6 +508,7 @@
     };
     Player.prototype.updatePosition = function(gameFps) {
       var displacement, previousPosition, tileCenter;
+      this.excludeFromTile();
       if (this.canMove()) {
         displacement = this.speed / gameFps;
         previousPosition = Object.clone(this.position);
@@ -505,6 +520,7 @@
         }
         delete previousPosition;
       }
+      this.currentTile().entities.push(this);
       return this.position;
     };
     Player.prototype.update = function(gameFps) {
@@ -517,6 +533,7 @@
       }
     };
     Player.prototype.collidesWithFood = function(food) {
+      food.excludeFromTile();
       food.position.change(null, null);
       return this.map.foodCounter -= 1;
     };
@@ -582,6 +599,7 @@
       this.i = i;
       this.j = j;
       this.type = type;
+      this.entities = [];
     }
     Tile.prototype.centerCoordinate = function() {
       var x, y;
