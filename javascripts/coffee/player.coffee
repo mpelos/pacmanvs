@@ -10,20 +10,21 @@ class Player extends Entity
   calculateDisplacement: (gameFps) ->
     @displacement = @speed / gameFps
 
-  lookAhead: (referencePoint = @position, direction = @direction) ->
-    referencePoint.x += @displacement * direction.toCoordinate().x
-    referencePoint.y += @displacement * direction.toCoordinate().y
-    i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
-    j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
-    @map.tiles[i][j]
+  tilesAhead: (direction = @direction) ->
+    positionsAhead = []
+    for position in @collisionLimit.verticesPositions()
+      position.x += @displacement * direction.toCoordinate().x
+      position.y += @displacement * direction.toCoordinate().y
+      positionsAhead.push(position)
+
+    this.currentTiles(positionsAhead)
+
+  canMove: (direction = @direction)->
+    this.tilesAhead(direction).every (tile) =>
+      tile.isPath()
 
   canChangeDirection: ->
-    @collisionLimit.verticesPositions().every (position) =>
-      this.lookAhead(position, @intentDirection).isPath()
-
-  canMove: ->
-    @collisionLimit.verticesPositions().every (position) =>
-      this.lookAhead(position).isPath()
+    this.canMove(@intentDirection)
 
   updateDirection: ->
     if @intentDirection.angle? and this.canChangeDirection()

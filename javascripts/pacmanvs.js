@@ -515,29 +515,31 @@
     Player.prototype.calculateDisplacement = function(gameFps) {
       return this.displacement = this.speed / gameFps;
     };
-    Player.prototype.lookAhead = function(referencePoint, direction) {
-      var i, j;
-      if (referencePoint == null) {
-        referencePoint = this.position;
-      }
+    Player.prototype.tilesAhead = function(direction) {
+      var position, positionsAhead, _i, _len, _ref;
       if (direction == null) {
         direction = this.direction;
       }
-      referencePoint.x += this.displacement * direction.toCoordinate().x;
-      referencePoint.y += this.displacement * direction.toCoordinate().y;
-      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
-      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
-      return this.map.tiles[i][j];
+      positionsAhead = [];
+      _ref = this.collisionLimit.verticesPositions();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        position = _ref[_i];
+        position.x += this.displacement * direction.toCoordinate().x;
+        position.y += this.displacement * direction.toCoordinate().y;
+        positionsAhead.push(position);
+      }
+      return this.currentTiles(positionsAhead);
+    };
+    Player.prototype.canMove = function(direction) {
+      if (direction == null) {
+        direction = this.direction;
+      }
+      return this.tilesAhead(direction).every(__bind(function(tile) {
+        return tile.isPath();
+      }, this));
     };
     Player.prototype.canChangeDirection = function() {
-      return this.collisionLimit.verticesPositions().every(__bind(function(position) {
-        return this.lookAhead(position, this.intentDirection).isPath();
-      }, this));
-    };
-    Player.prototype.canMove = function() {
-      return this.collisionLimit.verticesPositions().every(__bind(function(position) {
-        return this.lookAhead(position).isPath();
-      }, this));
+      return this.canMove(this.intentDirection);
     };
     Player.prototype.updateDirection = function() {
       if ((this.intentDirection.angle != null) && this.canChangeDirection()) {
