@@ -65,7 +65,6 @@ class Player extends Entity
     @map.foodCounter -= 1
 
   draw: (context) ->
-    this.drawPosition(context)
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
     context.beginPath()
     context.fillStyle = "#FF0"

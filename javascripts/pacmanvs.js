@@ -387,7 +387,6 @@
     }
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _x, _y;
-      this.drawGrid(context);
       context.beginPath();
       _ref = this.matrix;
       for (i = 0, _len = _ref.length; i < _len; i++) {
@@ -579,7 +578,6 @@
     };
     Player.prototype.draw = function(context) {
       var animations, radius;
-      this.drawPosition(context);
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.beginPath();
       context.fillStyle = "#FF0";

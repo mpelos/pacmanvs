@@ -37,7 +37,6 @@ class Map
     @foodCounter = @entities.foods.length
 
   draw: (context) ->
-    this.drawGrid(context)
     context.beginPath()
     for array, i in @matrix
       for value, j in array
