@@ -15,6 +15,7 @@ class Game
       @context[name] = @canvas[name].getContext("2d")
 
     @map.draw(@context.map)
+    @collider = new Collider(@map.entities)
     this.loop(1000/MAX_FPS) # starts the game loop
 
   calculateFps: ->
@@ -39,6 +40,7 @@ class Game
   update: ->
     this.calculateFps()
     @pacman.update(@fps)
+    @collider.makeCollisions()
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas

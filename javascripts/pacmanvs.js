@@ -1,13 +1,49 @@
 (function() {
-  var CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Player, Tile;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var Collider, CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Player, Tile;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  };
+  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  Collider = (function() {
+    function Collider(entities) {
+      this.entities = entities;
+    }
+    Collider.prototype.intersectionOnXAxis = function(player, entity) {
+      var _ref, _ref2, _ref3, _ref4;
+      return (player.collisionLimit.verticesPositions()[0].x <= (_ref = entity.collisionLimit.verticesPositions()[0].x) && _ref <= player.collisionLimit.verticesPositions()[1].x) || (player.collisionLimit.verticesPositions()[0].x <= (_ref2 = entity.collisionLimit.verticesPositions()[1].x) && _ref2 <= player.collisionLimit.verticesPositions()[1].x) || (entity.collisionLimit.verticesPositions()[0].x <= (_ref3 = player.collisionLimit.verticesPositions()[0].x) && _ref3 <= entity.collisionLimit.verticesPositions()[1].x) || (entity.collisionLimit.verticesPositions()[0].x <= (_ref4 = player.collisionLimit.verticesPositions()[1].x) && _ref4 <= entity.collisionLimit.verticesPositions()[1].x);
+    };
+    Collider.prototype.intersectionOnYAxis = function(player, entity) {
+      var _ref, _ref2, _ref3, _ref4;
+      return (player.collisionLimit.verticesPositions()[1].y <= (_ref = entity.collisionLimit.verticesPositions()[1].y) && _ref <= player.collisionLimit.verticesPositions()[2].y) || (player.collisionLimit.verticesPositions()[1].y <= (_ref2 = entity.collisionLimit.verticesPositions()[2].y) && _ref2 <= player.collisionLimit.verticesPositions()[2].y) || (entity.collisionLimit.verticesPositions()[1].y <= (_ref3 = player.collisionLimit.verticesPositions()[1].y) && _ref3 <= entity.collisionLimit.verticesPositions()[2].y) || (entity.collisionLimit.verticesPositions()[1].y <= (_ref4 = player.collisionLimit.verticesPositions()[2].y) && _ref4 <= entity.collisionLimit.verticesPositions()[2].y);
+    };
+    Collider.prototype.collisionBetween = function(player, entity) {
+      return this.intersectionOnXAxis(player, entity) && this.intersectionOnYAxis(player, entity);
+    };
+    Collider.prototype.makeCollisions = function() {
+      var food, player, _i, _len, _ref, _results;
+      _ref = this.entities.players;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        player = _ref[_i];
+        _results.push((function() {
+          var _j, _len2, _ref2, _results2;
+          _ref2 = this.entities.foods;
+          _results2 = [];
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            food = _ref2[_j];
+            _results2.push(player.currentTile() === food.currentTile() && this.collisionBetween(player, food) ? player.collidesWith(food) : void 0);
+          }
+          return _results2;
+        }).call(this));
+      }
+      return _results;
+    };
+    return Collider;
+  })();
   CollisionLimit = (function() {
     function CollisionLimit(position, width, height) {
       this.position = position;
@@ -16,21 +52,6 @@
     }
     CollisionLimit.prototype.verticesPositions = function() {
       return new Array(new Coordinate(this.position.x - this.width / 2, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y + this.height / 2 - 0.5), new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5));
-    };
-    CollisionLimit.prototype.intersectOnXAxis = function(otherCollisionLimit) {
-      return otherCollisionLimit.verticesPositions().some(__bind(function(position) {
-        var _ref;
-        return (this.verticesPositions()[0].x < (_ref = position.x) && _ref < this.verticesPositions()[1].x);
-      }, this));
-    };
-    CollisionLimit.prototype.intersectOnYAxis = function(otherCollisionLimit) {
-      return otherCollisionLimit.verticesPositions().some(__bind(function(position) {
-        var _ref;
-        return (this.verticesPositions()[1].y < (_ref = position.y) && _ref < this.verticesPositions()[2].y);
-      }, this));
-    };
-    CollisionLimit.prototype.collidesWith = function(otherCollisionLimit) {
-      return this.intersectOnXAxis(otherCollisionLimit) && this.intersectOnYAxis(otherCollisionLimit);
     };
     return CollisionLimit;
   })();
@@ -90,7 +111,7 @@
               return Math.PI * 1.5;
           }
         })();
-      } else if (typeof direction === "coordinate") {
+      } else if (direction instanceof Coordinate) {
         angle = (function() {
           switch (direction.toString()) {
             case "1, 0":
@@ -191,6 +212,7 @@
         this.context[name] = this.canvas[name].getContext("2d");
       }
       this.map.draw(this.context.map);
+      this.collider = new Collider(this.map.entities);
       this.loop(1000 / MAX_FPS);
     }
     Game.prototype.calculateFps = function() {
@@ -226,7 +248,8 @@
     };
     Game.prototype.update = function() {
       this.calculateFps();
-      return this.pacman.update(this.fps);
+      this.pacman.update(this.fps);
+      return this.collider.makeCollisions();
     };
     Game.prototype.draw = function() {
       var food, player, _i, _j, _len, _len2, _ref, _ref2;
@@ -483,21 +506,17 @@
       }
       return this.position;
     };
-    Player.prototype.eatFood = function() {
-      var food, foodIndex, i, _len, _ref;
-      _ref = this.map.entities.foods;
-      for (i = 0, _len = _ref.length; i < _len; i++) {
-        food = _ref[i];
-        if (this.collisionLimit.collidesWith(food.collisionLimit)) {
-          foodIndex = i;
-        }
-      }
-      return this.map.entities.foods.removeAt(foodIndex);
-    };
     Player.prototype.update = function(gameFps) {
       this.updateDirection();
-      this.updatePosition(gameFps);
-      return this.eatFood();
+      return this.updatePosition(gameFps);
+    };
+    Player.prototype.collidesWith = function(entity) {
+      if (entity instanceof Food) {
+        return this.collidesWithFood(entity);
+      }
+    };
+    Player.prototype.collidesWithFood = function(food) {
+      return food.position.change(null, null);
     };
     Player.prototype.draw = function(context) {
       var animations, radius;

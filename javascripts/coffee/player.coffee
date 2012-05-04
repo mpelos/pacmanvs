@@ -46,17 +46,15 @@ class Player extends Entity
 
     @position
 
-  eatFood: ->
-    for food, i in @map.entities.foods
-      if @collisionLimit.collidesWith food.collisionLimit
-        foodIndex = i
-
-    @map.entities.foods.removeAt(foodIndex)
-
   update: (gameFps) ->
     this.updateDirection()
     this.updatePosition(gameFps)
-    this.eatFood()
+
+  collidesWith: (entity) ->
+    this.collidesWithFood(entity) if entity instanceof Food
+
+  collidesWithFood: (food) ->
+    food.position.change(null, null)
 
   draw: (context) ->
     this.drawPosition(context)
