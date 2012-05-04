@@ -325,29 +325,23 @@
           return this.pacman.intentDirection.set("down");
       }
     };
-    Game.prototype.loop = function(initialDelay) {
-      var _ref;
-            if ((_ref = this.delay) != null) {
-        _ref;
-      } else {
-        this.delay = initialDelay;
-      };
+    Game.prototype.loop = function(delay) {
       return setTimeout(__bind(function() {
         var endTime, startTime;
         startTime = new Date;
         this.update();
         this.draw();
         endTime = new Date;
-        this.delay = (1000 / MAX_FPS) - (endTime - startTime);
-        return this.loop();
-      }, this), this.delay);
+        delay = (1000 / MAX_FPS) - (endTime - startTime);
+        return this.loop(delay);
+      }, this), delay);
     };
     return Game;
   })();
   Map = (function() {
     Map.TILE_WIDTH = 20;
     Map.TILE_HEIGHT = 20;
-    Map.WALL_PADDING = 6;
+    Map.WALL_PADDING = 10;
     Map.WALL = "w";
     Map.PATH = "p";
     Map.FOOD = "f";

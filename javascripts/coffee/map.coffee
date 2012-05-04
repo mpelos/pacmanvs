@@ -1,7 +1,7 @@
 class Map
   this.TILE_WIDTH   = 20
   this.TILE_HEIGHT  = 20
-  this.WALL_PADDING = 6
+  this.WALL_PADDING = 10
 
   this.WALL   = "w"
   this.PATH   = "p"
