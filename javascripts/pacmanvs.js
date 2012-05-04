@@ -24,18 +24,29 @@
       return this.intersectionOnXAxis(player, entity) && this.intersectionOnYAxis(player, entity);
     };
     Collider.prototype.makeCollisions = function() {
-      var entity, player, _i, _len, _ref, _results;
+      var entity, player, tile, _i, _len, _ref, _results;
       _ref = this.entities.players;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         player = _ref[_i];
         _results.push((function() {
           var _j, _len2, _ref2, _results2;
-          _ref2 = player.currentTile().entities;
+          _ref2 = player.currentTiles();
           _results2 = [];
           for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            entity = _ref2[_j];
-            _results2.push(entity !== player && this.collisionBetween(player, entity) ? player.collidesWith(entity) : void 0);
+            tile = _ref2[_j];
+            _results2.push((function() {
+              var _k, _len3, _ref3, _results3;
+              _ref3 = tile.entities;
+              _results3 = [];
+              for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
+                entity = _ref3[_k];
+                if (entity !== player) {
+                  _results3.push(this.collisionBetween(player, entity) ? player.collidesWith(entity) : void 0);
+                }
+              }
+              return _results3;
+            }).call(this));
           }
           return _results2;
         }).call(this));
@@ -166,26 +177,52 @@
       this.position = new Coordinate(x, y);
       this.collisionLimit = new CollisionLimit(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
     }
-    Entity.prototype.currentTile = function(referencePoint) {
-      var i, j;
-      if (referencePoint == null) {
-        referencePoint = this.position;
+    Entity.prototype.currentTiles = function(positions) {
+      var i, j, position, tiles, _i, _len;
+      if (positions == null) {
+        positions = this.collisionLimit.verticesPositions();
       }
-      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
-      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
-      return this.map.tiles[i][j];
-    };
-    Entity.prototype.excludeFromTile = function() {
-      var entity, i, tileEntities, _len, _ref;
-      tileEntities = [];
-      _ref = this.currentTile().entities;
-      for (i = 0, _len = _ref.length; i < _len; i++) {
-        entity = _ref[i];
-        if (entity !== this) {
-          tileEntities.push(entity);
+      if (!(positions instanceof Array)) {
+        positions = [positions];
+      }
+      tiles = [];
+      for (_i = 0, _len = positions.length; _i < _len; _i++) {
+        position = positions[_i];
+        i = Math.floor(position.y / Map.TILE_HEIGHT);
+        j = Math.floor(position.x / Map.TILE_WIDTH);
+        if (tiles.last() !== this.map.tiles[i][j]) {
+          tiles.push(this.map.tiles[i][j]);
         }
       }
-      return this.currentTile().entities = tileEntities;
+      return tiles;
+    };
+    Entity.prototype.excludeFromTiles = function() {
+      var entity, tile, tileEntities, _i, _j, _len, _len2, _ref, _ref2, _results;
+      _ref = this.currentTiles();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        tileEntities = [];
+        _ref2 = tile.entities;
+        for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+          entity = _ref2[_j];
+          if (entity !== this) {
+            tileEntities.push(entity);
+          }
+        }
+        _results.push(tile.entities = tileEntities);
+      }
+      return _results;
+    };
+    Entity.prototype.includeIntoTiles = function() {
+      var tile, _i, _len, _ref, _results;
+      _ref = this.currentTiles();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        _results.push(tile.entities.push(this));
+      }
+      return _results;
     };
     return Entity;
   })();
@@ -488,8 +525,8 @@
       }
       referencePoint.x += this.displacement * direction.toCoordinate().x;
       referencePoint.y += this.displacement * direction.toCoordinate().y;
-      i = this.currentTile(referencePoint).i;
-      j = this.currentTile(referencePoint).j;
+      i = Math.floor(referencePoint.y / Map.TILE_HEIGHT);
+      j = Math.floor(referencePoint.x / Map.TILE_WIDTH);
       return this.map.tiles[i][j];
     };
     Player.prototype.canChangeDirection = function() {
@@ -511,18 +548,18 @@
     };
     Player.prototype.updatePosition = function() {
       var previousPosition, tileCenter;
-      this.excludeFromTile();
+      this.excludeFromTiles();
       if (this.canMove()) {
         previousPosition = Object.clone(this.position);
         this.position.x += this.direction.toCoordinate().x * this.displacement;
         this.position.y += this.direction.toCoordinate().y * this.displacement;
-        tileCenter = this.currentTile().centerCoordinate();
+        tileCenter = this.currentTiles(this.position).first().centerCoordinate();
         if (tileCenter.betweenAxis(this.position, previousPosition) || !this.canMove()) {
           this.position.change(tileCenter.x, tileCenter.y);
         }
         delete previousPosition;
       }
-      this.currentTile().entities.push(this);
+      this.includeIntoTiles();
       return this.position;
     };
     Player.prototype.update = function(gameFps) {
@@ -536,7 +573,7 @@
       }
     };
     Player.prototype.collidesWithFood = function(food) {
-      food.excludeFromTile();
+      food.excludeFromTiles();
       food.position.change(null, null);
       return this.map.foodCounter -= 1;
     };

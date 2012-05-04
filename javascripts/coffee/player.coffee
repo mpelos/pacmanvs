@@ -13,8 +13,8 @@ class Player extends Entity
   lookAhead: (referencePoint = @position, direction = @direction) ->
     referencePoint.x += @displacement * direction.toCoordinate().x
     referencePoint.y += @displacement * direction.toCoordinate().y
-    i = this.currentTile(referencePoint).i
-    j = this.currentTile(referencePoint).j
+    i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
+    j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
     @map.tiles[i][j]
 
   canChangeDirection: ->
@@ -33,7 +33,7 @@ class Player extends Entity
     @direction
 
   updatePosition: () ->
-    this.excludeFromTile()
+    this.excludeFromTiles()
 
     if this.canMove()
       previousPosition = Object.clone(@position)
@@ -42,13 +42,13 @@ class Player extends Entity
       @position.y += @direction.toCoordinate().y * @displacement
 
       # ensure that the player always pass through the center of the tile
-      tileCenter = this.currentTile().centerCoordinate()
+      tileCenter = this.currentTiles(@position).first().centerCoordinate()
       if tileCenter.betweenAxis(@position, previousPosition) or not this.canMove()
         @position.change(tileCenter.x, tileCenter.y)
 
       delete previousPosition
 
-    this.currentTile().entities.push(this)
+    this.includeIntoTiles()
     @position
 
   update: (gameFps) ->
@@ -60,7 +60,7 @@ class Player extends Entity
     this.collidesWithFood(entity) if entity instanceof Food
 
   collidesWithFood: (food) ->
-    food.excludeFromTile()
+    food.excludeFromTiles()
     food.position.change(null, null)
     @map.foodCounter -= 1
 

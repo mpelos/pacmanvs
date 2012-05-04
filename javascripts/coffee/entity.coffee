@@ -3,14 +3,23 @@ class Entity
     @position = new Coordinate(x, y)
     @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
-  currentTile: (referencePoint = @position) ->
-    i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
-    j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
-    @map.tiles[i][j]
+  currentTiles: (positions = @collisionLimit.verticesPositions()) ->
+    positions = [positions] unless positions instanceof Array
+    tiles = []
+    for position in positions
+      i = Math.floor(position.y / Map.TILE_HEIGHT)
+      j = Math.floor(position.x / Map.TILE_WIDTH)
+      tiles.push(@map.tiles[i][j]) if tiles.last() isnt @map.tiles[i][j]
 
-  excludeFromTile: ->
-    tileEntities = []
-    for entity, i in this.currentTile().entities
-      tileEntities.push(entity) if entity isnt this
+    tiles
 
-    this.currentTile().entities = tileEntities
+  excludeFromTiles: ->
+    for tile in this.currentTiles()
+      tileEntities = []
+      for entity in tile.entities
+        tileEntities.push(entity) if entity isnt this
+
+      tile.entities = tileEntities
+
+  includeIntoTiles: ->
+    tile.entities.push(this) for tile in this.currentTiles()

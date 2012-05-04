@@ -18,6 +18,6 @@ class Collider
 
   makeCollisions: ->
     for player in @entities.players
-      for entity in player.currentTile().entities
-        if entity isnt player and this.collisionBetween(player, entity)
-          player.collidesWith(entity)
+      for tile in player.currentTiles()
+        for entity in tile.entities when entity isnt player
+          player.collidesWith(entity) if this.collisionBetween(player, entity)
