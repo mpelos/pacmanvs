@@ -1,5 +1,5 @@
 (function() {
-  var Collider, CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Pacman, Player, Tile;
+  var Collider, CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, Ghost, MAPS_MATRIX, Map, Pacman, Player, Tile;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -301,15 +301,15 @@
     Game.prototype.draw = function() {
       var food, player, _i, _j, _len, _len2, _ref, _ref2;
       this.canvas.player.width = this.canvas.player.width;
-      _ref = this.map.entities.players;
+      _ref = this.map.entities.foods;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        player = _ref[_i];
-        player.draw(this.context.player);
-      }
-      _ref2 = this.map.entities.foods;
-      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-        food = _ref2[_j];
+        food = _ref[_i];
         food.draw(this.context.player);
+      }
+      _ref2 = this.map.entities.players;
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        player = _ref2[_j];
+        player.draw(this.context.player);
       }
       return this.drawFps();
     };
@@ -339,8 +339,8 @@
     return Game;
   })();
   Map = (function() {
-    Map.TILE_WIDTH = 20;
-    Map.TILE_HEIGHT = 20;
+    Map.TILE_WIDTH = 80;
+    Map.TILE_HEIGHT = 80;
     Map.WALL_PADDING = 10;
     Map.WALL = "w";
     Map.PATH = "p";
@@ -373,7 +373,7 @@
           }
           if (value === Map.PACMAN) {
             this.tiles[i][j].type = Map.PATH;
-            this.entities.players.push(new Pacman(x, y, this));
+            this.entities.players.push(new Ghost(x, y, this));
           }
         }
       }
@@ -560,6 +560,8 @@
       this.updateDirection();
       return this.updatePosition();
     };
+    Player.prototype.collidesWith = function(entity) {};
+    Player.prototype.draw = function(context) {};
     Player.prototype.drawPosition = function(context) {
       context.font = "bold 12px sans-serif";
       context.textAlign = "center";
@@ -567,6 +569,56 @@
       return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
     };
     return Player;
+  })();
+  Ghost = (function() {
+    __extends(Ghost, Player);
+    function Ghost() {
+      Ghost.__super__.constructor.apply(this, arguments);
+    }
+    Ghost.prototype.drawEyeBall = function(context, x, y) {
+      var radius;
+      context.beginPath();
+      context.fillStyle = "#FFF";
+      radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
+      context.moveTo(x, y);
+      context.bezierCurveTo(x - (radius * 3 / 8), y, x - (radius * 3 / 8), y + (radius * 6 / 8), x, y + (radius * 6 / 8));
+      context.bezierCurveTo(x + (radius * 3 / 8), y + (radius * 6 / 8), x + (radius * 3 / 8), y, x, y);
+      return context.fill();
+    };
+    Ghost.prototype.draw = function(context) {
+      var cpx, cpy, radius;
+      radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
+      context.fillStyle = "#FF3100";
+      context.strokeStyle = "#FF3100";
+      context.beginPath();
+      context.arc(this.position.x, this.position.y, radius, 0, Math.PI, true);
+      context.stroke();
+      context.fill();
+      context.fillRect(this.position.x - radius, this.position.y - 1, radius * 2, radius / 2 + 1);
+      context.strokeRect(this.position.x - radius, this.position.y - 1, radius * 2, radius / 2 + 1);
+      context.beginPath();
+      context.moveTo(this.position.x - radius, this.position.y + (radius / 2));
+      cpx = this.position.x - (radius * 2 / 3);
+      cpy = this.position.y + radius;
+      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x - (radius * 1 / 3), this.position.y + (radius / 2));
+      cpx = this.position.x;
+      cpy = this.position.y + radius;
+      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + (radius * 1 / 3), this.position.y + (radius / 2));
+      cpx = this.position.x + (radius * 2 / 3);
+      cpy = this.position.y + radius;
+      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + radius, this.position.y + (radius / 2));
+      context.lineTo(this.position.x - radius, this.position.y + (radius / 2));
+      context.stroke();
+      context.fill();
+      this.drawEyeBall(context, this.position.x - (radius * 5 / 8), this.position.y - (radius * 4 / 8));
+      this.drawEyeBall(context, this.position.x + (radius * 1 / 8), this.position.y - (radius * 4 / 8));
+      context.beginPath();
+      context.fillStyle = "#3000FF";
+      context.arc(this.position.x - (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius * 1 / 8, 0, Math.PI * 2, false);
+      context.arc(this.position.x, this.position.y - (radius * 1 / 8), radius * 1 / 8, 0, Math.PI * 2, false);
+      return context.fill();
+    };
+    return Ghost;
   })();
   Pacman = (function() {
     __extends(Pacman, Player);
