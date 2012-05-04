@@ -334,6 +334,7 @@
           }
         }
       }
+      this.foodCounter = this.entities.foods.length;
     }
     Map.prototype.draw = function(context) {
       var array, endX, endY, i, j, startX, startY, tile, value, x, y, _len, _len2, _ref, _ref10, _ref11, _ref12, _ref13, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _x, _y;
@@ -516,7 +517,8 @@
       }
     };
     Player.prototype.collidesWithFood = function(food) {
-      return food.position.change(null, null);
+      food.position.change(null, null);
+      return this.map.foodCounter -= 1;
     };
     Player.prototype.draw = function(context) {
       var animations, radius;

@@ -55,6 +55,7 @@ class Player extends Entity
 
   collidesWithFood: (food) ->
     food.position.change(null, null)
+    @map.foodCounter -= 1
 
   draw: (context) ->
     this.drawPosition(context)

@@ -32,6 +32,8 @@ class Map
           @tiles[i][j].type = Map.PATH
           @entities.players.add(new Player(x, y, this))
 
+    @foodCounter = @entities.foods.length
+
   draw: (context) ->
     this.drawGrid(context)
     context.beginPath()
