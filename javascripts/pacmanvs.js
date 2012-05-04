@@ -190,7 +190,7 @@
         position = positions[_i];
         i = Math.floor(position.y / Map.TILE_HEIGHT);
         j = Math.floor(position.x / Map.TILE_WIDTH);
-        if (tiles.last() !== this.map.tiles[i][j]) {
+        if (_.last(tiles) !== this.map.tiles[i][j]) {
           tiles.push(this.map.tiles[i][j]);
         }
       }
@@ -248,7 +248,7 @@
     function Game() {
       this.handleKey = __bind(this.handleKey, this);      var canvas, name, _i, _len, _ref;
       this.map = new Map;
-      this.pacman = this.map.entities.players.first();
+      this.pacman = this.map.entities.players[0];
       this.canvas = {};
       this.context = {};
       _ref = $("canvas");
@@ -506,7 +506,7 @@
     function Player(x, y, map) {
       this.map = map;
       Player.__super__.constructor.apply(this, arguments);
-      this.startPosition = Object.clone(this.position);
+      this.startPosition = _.clone(this.position);
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
       this.animationIndex = 0;
@@ -534,9 +534,9 @@
       if (direction == null) {
         direction = this.direction;
       }
-      return this.tilesAhead(direction).every(__bind(function(tile) {
-        return tile.isPath();
-      }, this));
+      return !_.any(this.tilesAhead(direction), function(tile) {
+        return tile.isWall();
+      });
     };
     Player.prototype.canChangeDirection = function() {
       return this.canMove(this.intentDirection);
@@ -552,10 +552,10 @@
       var previousPosition, tileCenter;
       this.excludeFromTiles();
       if (this.canMove()) {
-        previousPosition = Object.clone(this.position);
+        previousPosition = _.clone(this.position);
         this.position.x += this.direction.toCoordinate().x * this.displacement;
         this.position.y += this.direction.toCoordinate().y * this.displacement;
-        tileCenter = this.currentTiles(this.position).first().centerCoordinate();
+        tileCenter = this.currentTiles(this.position)[0].centerCoordinate();
         if (tileCenter.betweenAxis(this.position, previousPosition) || !this.canMove()) {
           this.position.change(tileCenter.x, tileCenter.y);
         }
@@ -621,11 +621,14 @@
       };
       if (animationTime.spentMiliseconds() >= 15 && this.canMove()) {
         this.animationIndex += 1;
+        if (animations[this.animationIndex] == null) {
+          this.animationIndex = 0;
+        }
         delete animationTime;
       } else if (!this.canMove()) {
         this.animationIndex = 1;
       }
-      return animations.at(this.animationIndex)();
+      return animations[this.animationIndex]();
     };
     Player.prototype.drawPosition = function(context) {
       context.font = "bold 12px sans-serif";

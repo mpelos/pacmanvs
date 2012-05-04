@@ -1,7 +1,7 @@
 class Player extends Entity
   constructor: (x, y, @map) ->
     super
-    @startPosition = Object.clone(@position)
+    @startPosition = _.clone(@position)
     @direction = new Direction("left")
     @intentDirection = new Direction
     @animationIndex = 0
@@ -19,9 +19,8 @@ class Player extends Entity
 
     this.currentTiles(positionsAhead)
 
-  canMove: (direction = @direction)->
-    this.tilesAhead(direction).every (tile) =>
-      tile.isPath()
+  canMove: (direction = @direction) ->
+    not _.any(this.tilesAhead(direction), (tile) -> tile.isWall())
 
   canChangeDirection: ->
     this.canMove(@intentDirection)
@@ -37,13 +36,13 @@ class Player extends Entity
     this.excludeFromTiles()
 
     if this.canMove()
-      previousPosition = Object.clone(@position)
+      previousPosition = _.clone(@position)
 
       @position.x += @direction.toCoordinate().x * @displacement
       @position.y += @direction.toCoordinate().y * @displacement
 
       # ensure that the player always pass through the center of the tile
-      tileCenter = this.currentTiles(@position).first().centerCoordinate()
+      tileCenter = this.currentTiles(@position)[0].centerCoordinate()
       if tileCenter.betweenAxis(@position, previousPosition) or not this.canMove()
         @position.change(tileCenter.x, tileCenter.y)
 
@@ -100,11 +99,12 @@ class Player extends Entity
     animationTime ?= new Cronometer
     if animationTime.spentMiliseconds() >= 15 and this.canMove()
       @animationIndex += 1
+      @animationIndex = 0 unless animations[@animationIndex]?
       delete animationTime
     else if not this.canMove()
       @animationIndex = 1
 
-    animations.at(@animationIndex)()
+    animations[@animationIndex]()
 
   drawPosition: (context) ->
     context.font = "bold 12px sans-serif"

@@ -9,7 +9,7 @@ class Entity
     for position in positions
       i = Math.floor(position.y / Map.TILE_HEIGHT)
       j = Math.floor(position.x / Map.TILE_WIDTH)
-      tiles.push(@map.tiles[i][j]) if tiles.last() isnt @map.tiles[i][j]
+      tiles.push(@map.tiles[i][j]) if _.last(tiles) isnt @map.tiles[i][j]
 
     tiles
 

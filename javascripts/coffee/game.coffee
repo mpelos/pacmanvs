@@ -3,7 +3,7 @@ class Game
 
   constructor: ->
     @map = new Map
-    @pacman = @map.entities.players.first()
+    @pacman = @map.entities.players[0]
 
     @canvas = {}
     @context = {}
