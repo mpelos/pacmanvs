@@ -44,8 +44,8 @@ class Game
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
-    player.draw(@context.player) for player in @map.entities.players
     food.draw(@context.player) for food in @map.entities.foods
+    player.draw(@context.player) for player in @map.entities.players
     this.drawFps()
 
   handleKey: (event) =>
