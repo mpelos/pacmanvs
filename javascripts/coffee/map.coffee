@@ -32,7 +32,7 @@ class Map
 
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH
-          @entities.players.push(new Player(x, y, this))
+          @entities.players.push(new Pacman(x, y, this))
 
     @foodCounter = @entities.foods.length
 

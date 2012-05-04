@@ -1,5 +1,5 @@
 (function() {
-  var Collider, CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Player, Tile;
+  var Collider, CollisionLimit, Coordinate, Cronometer, Direction, Entity, Food, Game, MAPS_MATRIX, Map, Pacman, Player, Tile;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -373,7 +373,7 @@
           }
           if (value === Map.PACMAN) {
             this.tiles[i][j].type = Map.PATH;
-            this.entities.players.push(new Player(x, y, this));
+            this.entities.players.push(new Pacman(x, y, this));
           }
         }
       }
@@ -560,17 +560,30 @@
       this.updateDirection();
       return this.updatePosition();
     };
-    Player.prototype.collidesWith = function(entity) {
+    Player.prototype.drawPosition = function(context) {
+      context.font = "bold 12px sans-serif";
+      context.textAlign = "center";
+      context.fillStyle = "#FFF";
+      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
+    };
+    return Player;
+  })();
+  Pacman = (function() {
+    __extends(Pacman, Player);
+    function Pacman() {
+      Pacman.__super__.constructor.apply(this, arguments);
+    }
+    Pacman.prototype.collidesWith = function(entity) {
       if (entity instanceof Food) {
         return this.collidesWithFood(entity);
       }
     };
-    Player.prototype.collidesWithFood = function(food) {
+    Pacman.prototype.collidesWithFood = function(food) {
       food.excludeFromTiles();
       food.position.change(null, null);
       return this.map.foodCounter -= 1;
     };
-    Player.prototype.draw = function(context) {
+    Pacman.prototype.draw = function(context) {
       var animations, radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.beginPath();
@@ -620,13 +633,7 @@
       }
       return animations[this.animationIndex]();
     };
-    Player.prototype.drawPosition = function(context) {
-      context.font = "bold 12px sans-serif";
-      context.textAlign = "center";
-      context.fillStyle = "#FFF";
-      return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.TILE_HEIGHT);
-    };
-    return Player;
+    return Pacman;
   })();
   Tile = (function() {
     function Tile(map, i, j, type) {
