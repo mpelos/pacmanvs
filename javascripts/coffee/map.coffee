@@ -25,8 +25,10 @@ class Map
         y = @tiles[i][j].centerCoordinate().y
 
         if value is Map.FOOD
+          food = new Food(x, y, this)
           @tiles[i][j].type = Map.PATH
-          @entities.foods.push(new Food(x, y, this))
+          @tiles[i][j].entities.push(food)
+          @entities.foods.push(food)
 
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH

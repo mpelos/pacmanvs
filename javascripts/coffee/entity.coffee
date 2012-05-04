@@ -7,3 +7,10 @@ class Entity
     i = Math.floor(referencePoint.y / Map.TILE_HEIGHT)
     j = Math.floor(referencePoint.x / Map.TILE_WIDTH)
     @map.tiles[i][j]
+
+  excludeFromTile: ->
+    tileEntities = []
+    for entity, i in this.currentTile().entities
+      tileEntities.push(entity) if entity isnt this
+
+    this.currentTile().entities = tileEntities

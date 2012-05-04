@@ -30,6 +30,8 @@ class Player extends Entity
     @direction
 
   updatePosition: (gameFps) ->
+    this.excludeFromTile()
+
     if this.canMove()
       displacement = @speed / gameFps
       previousPosition = Object.clone(@position)
@@ -44,6 +46,7 @@ class Player extends Entity
 
       delete previousPosition
 
+    this.currentTile().entities.push(this)
     @position
 
   update: (gameFps) ->
@@ -54,6 +57,7 @@ class Player extends Entity
     this.collidesWithFood(entity) if entity instanceof Food
 
   collidesWithFood: (food) ->
+    food.excludeFromTile()
     food.position.change(null, null)
     @map.foodCounter -= 1
 

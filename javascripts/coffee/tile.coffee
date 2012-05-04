@@ -1,5 +1,6 @@
 class Tile
   constructor: (@map, @i, @j, @type) ->
+    @entities = []
 
   centerCoordinate: ->
     x = (@j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
