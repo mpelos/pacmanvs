@@ -501,7 +501,7 @@
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
       this.animationIndex = 0;
-      this.speed = 80;
+      this.speed = 120;
     }
     Player.prototype.calculateDisplacement = function(gameFps) {
       return this.displacement = this.speed / gameFps;

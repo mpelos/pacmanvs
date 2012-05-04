@@ -5,7 +5,7 @@ class Player extends Entity
     @direction = new Direction("left")
     @intentDirection = new Direction
     @animationIndex = 0
-    @speed = 80 # pixels per second
+    @speed = 120 # pixels per second
 
   calculateDisplacement: (gameFps) ->
     @displacement = @speed / gameFps
