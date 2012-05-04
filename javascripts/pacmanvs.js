@@ -501,10 +501,10 @@
       this.direction = new Direction("left");
       this.intentDirection = new Direction;
       this.animationIndex = 0;
-      this.speed = 120;
+      this.speed = 6;
     }
     Player.prototype.calculateDisplacement = function(gameFps) {
-      return this.displacement = this.speed / gameFps;
+      return this.displacement = (this.speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps;
     };
     Player.prototype.tilesAhead = function(direction) {
       var position, positionsAhead, _i, _len, _ref;

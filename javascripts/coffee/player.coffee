@@ -5,10 +5,10 @@ class Player extends Entity
     @direction = new Direction("left")
     @intentDirection = new Direction
     @animationIndex = 0
-    @speed = 120 # pixels per second
+    @speed = 6 # tiles per second
 
   calculateDisplacement: (gameFps) ->
-    @displacement = @speed / gameFps
+    @displacement = (@speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps
 
   tilesAhead: (direction = @direction) ->
     positionsAhead = []
