@@ -326,11 +326,11 @@
           y = this.tiles[i][j].centerCoordinate().y;
           if (value === Map.FOOD) {
             this.tiles[i][j].type = Map.PATH;
-            this.entities.foods.add(new Food(x, y, this));
+            this.entities.foods.push(new Food(x, y, this));
           }
           if (value === Map.PACMAN) {
             this.tiles[i][j].type = Map.PATH;
-            this.entities.players.add(new Player(x, y, this));
+            this.entities.players.push(new Player(x, y, this));
           }
         }
       }

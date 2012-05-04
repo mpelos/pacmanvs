@@ -26,11 +26,11 @@ class Map
 
         if value is Map.FOOD
           @tiles[i][j].type = Map.PATH
-          @entities.foods.add(new Food(x, y, this))
+          @entities.foods.push(new Food(x, y, this))
 
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH
-          @entities.players.add(new Player(x, y, this))
+          @entities.players.push(new Player(x, y, this))
 
     @foodCounter = @entities.foods.length
 
