@@ -190,11 +190,9 @@
         position = positions[_i];
         i = Math.floor(position.y / Map.TILE_HEIGHT);
         j = Math.floor(position.x / Map.TILE_WIDTH);
-        if (_.last(tiles) !== this.map.tiles[i][j]) {
-          tiles.push(this.map.tiles[i][j]);
-        }
+        tiles.push(this.map.tiles[i][j]);
       }
-      return tiles;
+      return _.uniq(tiles);
     };
     Entity.prototype.excludeFromTiles = function() {
       var entity, tile, tileEntities, _i, _j, _len, _len2, _ref, _ref2, _results;
