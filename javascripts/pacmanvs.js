@@ -475,6 +475,9 @@
       this.animationIndex = 0;
       this.speed = 80;
     }
+    Player.prototype.calculateDisplacement = function(gameFps) {
+      return this.displacement = this.speed / gameFps;
+    };
     Player.prototype.lookAhead = function(referencePoint, direction) {
       var i, j;
       if (referencePoint == null) {
@@ -483,8 +486,8 @@
       if (direction == null) {
         direction = this.direction;
       }
-      referencePoint.x += 1 * direction.toCoordinate().x;
-      referencePoint.y += 1 * direction.toCoordinate().y;
+      referencePoint.x += this.displacement * direction.toCoordinate().x;
+      referencePoint.y += this.displacement * direction.toCoordinate().y;
       i = this.currentTile(referencePoint).i;
       j = this.currentTile(referencePoint).j;
       return this.map.tiles[i][j];
@@ -506,14 +509,13 @@
       }
       return this.direction;
     };
-    Player.prototype.updatePosition = function(gameFps) {
-      var displacement, previousPosition, tileCenter;
+    Player.prototype.updatePosition = function() {
+      var previousPosition, tileCenter;
       this.excludeFromTile();
       if (this.canMove()) {
-        displacement = this.speed / gameFps;
         previousPosition = Object.clone(this.position);
-        this.position.x += this.direction.toCoordinate().x * displacement;
-        this.position.y += this.direction.toCoordinate().y * displacement;
+        this.position.x += this.direction.toCoordinate().x * this.displacement;
+        this.position.y += this.direction.toCoordinate().y * this.displacement;
         tileCenter = this.currentTile().centerCoordinate();
         if (tileCenter.betweenAxis(this.position, previousPosition) || !this.canMove()) {
           this.position.change(tileCenter.x, tileCenter.y);
@@ -524,8 +526,9 @@
       return this.position;
     };
     Player.prototype.update = function(gameFps) {
+      this.calculateDisplacement(gameFps);
       this.updateDirection();
-      return this.updatePosition(gameFps);
+      return this.updatePosition();
     };
     Player.prototype.collidesWith = function(entity) {
       if (entity instanceof Food) {

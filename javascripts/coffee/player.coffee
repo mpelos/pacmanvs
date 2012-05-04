@@ -11,8 +11,8 @@ class Player extends Entity
     @displacement = @speed / gameFps
 
   lookAhead: (referencePoint = @position, direction = @direction) ->
-    referencePoint.x += 1 * direction.toCoordinate().x
-    referencePoint.y += 1 * direction.toCoordinate().y
+    referencePoint.x += @displacement * direction.toCoordinate().x
+    referencePoint.y += @displacement * direction.toCoordinate().y
     i = this.currentTile(referencePoint).i
     j = this.currentTile(referencePoint).j
     @map.tiles[i][j]
