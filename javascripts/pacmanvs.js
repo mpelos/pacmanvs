@@ -373,7 +373,7 @@
           }
           if (value === Map.PACMAN) {
             this.tiles[i][j].type = Map.PATH;
-            this.entities.players.push(new Ghost(x, y, this));
+            this.entities.players.push(new Ghost(x, y, this, "#FF3100"));
           }
         }
       }
@@ -572,7 +572,9 @@
   })();
   Ghost = (function() {
     __extends(Ghost, Player);
-    function Ghost() {
+    function Ghost(x, y, map, color) {
+      this.map = map;
+      this.color = color;
       Ghost.__super__.constructor.apply(this, arguments);
     }
     Ghost.prototype.drawEyeBall = function(context, x, y, radius) {
@@ -592,8 +594,8 @@
     Ghost.prototype.draw = function(context) {
       var animations, radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
-      context.fillStyle = "#FF3100";
-      context.strokeStyle = "#FF3100";
+      context.fillStyle = this.color;
+      context.strokeStyle = this.color;
       context.beginPath();
       context.arc(this.position.x, this.position.y, radius, 0, Math.PI, true);
       context.stroke();
@@ -621,8 +623,8 @@
         this.drawPupil(context, this.position.x - (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
         this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
       }
-      context.strokeStyle = "#FF3100";
-      context.fillStyle = "#FF3100";
+      context.strokeStyle = this.color;
+      context.fillStyle = this.color;
       context.beginPath();
       context.moveTo(this.position.x - radius, this.position.y + (radius * 2 / 3));
       animations = [];

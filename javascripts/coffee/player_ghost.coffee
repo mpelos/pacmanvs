@@ -1,4 +1,7 @@
 class Ghost extends Player
+  constructor: (x, y, @map, @color) ->
+    super
+
   drawEyeBall: (context, x, y, radius) ->
     context.beginPath()
     context.fillStyle = "#FFF"
@@ -23,8 +26,8 @@ class Ghost extends Player
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
 
     # Body
-    context.fillStyle = "#FF3100"
-    context.strokeStyle = "#FF3100"
+    context.fillStyle = @color
+    context.strokeStyle = @color
     context.beginPath()
     context.arc @position.x, @position.y, radius, 0, Math.PI, true
     context.stroke()
@@ -58,8 +61,8 @@ class Ghost extends Player
       this.drawPupil context, @position.x + (radius * 3/8), @position.y + (radius * 1/8), radius
 
     # bottom body
-    context.strokeStyle = "#FF3100"
-    context.fillStyle = "#FF3100"
+    context.strokeStyle = @color
+    context.fillStyle = @color
     context.beginPath()
     context.moveTo @position.x - radius, @position.y + (radius * 2/3)
 
