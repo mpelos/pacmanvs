@@ -339,8 +339,8 @@
     return Game;
   })();
   Map = (function() {
-    Map.TILE_WIDTH = 80;
-    Map.TILE_HEIGHT = 80;
+    Map.TILE_WIDTH = 20;
+    Map.TILE_HEIGHT = 20;
     Map.WALL_PADDING = 10;
     Map.WALL = "w";
     Map.PATH = "p";
@@ -590,7 +590,7 @@
       return context.fill();
     };
     Ghost.prototype.draw = function(context) {
-      var cpx, cpy, radius;
+      var animations, radius;
       radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.fillStyle = "#FF3100";
       context.strokeStyle = "#FF3100";
@@ -598,43 +598,80 @@
       context.arc(this.position.x, this.position.y, radius, 0, Math.PI, true);
       context.stroke();
       context.fill();
-      context.fillRect(this.position.x - radius, this.position.y - 1, radius * 2, radius / 2 + 1);
-      context.strokeRect(this.position.x - radius, this.position.y - 1, radius * 2, radius / 2 + 1);
-      context.beginPath();
-      context.moveTo(this.position.x - radius, this.position.y + (radius / 2));
-      cpx = this.position.x - (radius * 2 / 3);
-      cpy = this.position.y + radius;
-      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x - (radius * 1 / 3), this.position.y + (radius / 2));
-      cpx = this.position.x;
-      cpy = this.position.y + radius;
-      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + (radius * 1 / 3), this.position.y + (radius / 2));
-      cpx = this.position.x + (radius * 2 / 3);
-      cpy = this.position.y + radius;
-      context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + radius, this.position.y + (radius / 2));
-      context.lineTo(this.position.x - radius, this.position.y + (radius / 2));
-      context.stroke();
-      context.fill();
+      context.fillRect(this.position.x - radius, this.position.y - 1, radius * 2, (radius * 2 / 3) + 1);
+      context.strokeRect(this.position.x - radius, this.position.y - 1, radius * 2, (radius * 2 / 3) + 1);
       if (this.direction.toString() === "left") {
         this.drawEyeBall(context, this.position.x - (radius * 5 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawEyeBall(context, this.position.x + (radius * 1 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawPupil(context, this.position.x - (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius);
-        return this.drawPupil(context, this.position.x, this.position.y - (radius * 1 / 8), radius);
+        this.drawPupil(context, this.position.x, this.position.y - (radius * 1 / 8), radius);
       } else if (this.direction.toString() === "right") {
         this.drawEyeBall(context, this.position.x - (radius * 1 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawEyeBall(context, this.position.x + (radius * 5 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawPupil(context, this.position.x, this.position.y - (radius * 1 / 8), radius);
-        return this.drawPupil(context, this.position.x + (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius);
+        this.drawPupil(context, this.position.x + (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius);
       } else if (this.direction.toString() === "up") {
         this.drawEyeBall(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 7 / 8), radius);
         this.drawEyeBall(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 7 / 8), radius);
         this.drawPupil(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 6 / 8), radius);
-        return this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 6 / 8), radius);
+        this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 6 / 8), radius);
       } else if (this.direction.toString() === "down") {
         this.drawEyeBall(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawEyeBall(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 4 / 8), radius);
         this.drawPupil(context, this.position.x - (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
-        return this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
+        this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
       }
+      context.strokeStyle = "#FF3100";
+      context.fillStyle = "#FF3100";
+      context.beginPath();
+      context.moveTo(this.position.x - radius, this.position.y + (radius * 2 / 3));
+      animations = [];
+      animations[0] = __bind(function() {
+        var cpx, cpy;
+        cpx = this.position.x - (radius * 2 / 3);
+        cpy = this.position.y + (radius * 1.2);
+        context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x - (radius * 1 / 3), this.position.y + (radius * 2 / 3));
+        cpx = this.position.x;
+        cpy = this.position.y + (radius * 1.2);
+        context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + (radius * 1 / 3), this.position.y + (radius * 2 / 3));
+        cpx = this.position.x + (radius * 2 / 3);
+        cpy = this.position.y + (radius * 1.2);
+        context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + radius, this.position.y + (radius * 2 / 3));
+        context.lineTo(this.position.x - radius, this.position.y + (radius * 2 / 3));
+        context.stroke();
+        return context.fill();
+      }, this);
+      animations[1] = __bind(function() {
+        var cpx, cpy;
+        context.lineTo(this.position.x - radius, this.position.y + radius);
+        context.lineTo(this.position.x - (radius * 2 / 3), this.position.y + (radius * 2 / 3));
+        cpx = this.position.x - (radius * 1 / 6);
+        cpy = this.position.y + (radius * 1.2);
+        context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x - (radius * 1 / 6), this.position.y + (radius * 2 / 3));
+        context.lineTo(this.position.x + (radius * 1 / 6), this.position.y + (radius * 2 / 3));
+        cpx = this.position.x + (radius * 1 / 6);
+        context.bezierCurveTo(cpx, cpy, cpx, cpy, this.position.x + (radius * 2 / 3), this.position.y + (radius * 2 / 3));
+        context.lineTo(this.position.x + radius, this.position.y + radius);
+        context.lineTo(this.position.x + radius, this.position.y + (radius * 2 / 3));
+        context.lineTo(this.position.x - radius, this.position.y + (radius * 2 / 3));
+        context.stroke();
+        return context.fill();
+      }, this);
+            if (typeof animationTime !== "undefined" && animationTime !== null) {
+        animationTime;
+      } else {
+        animationTime = new Cronometer;
+      };
+      if (animationTime.spentMiliseconds() >= 200 && this.canMove()) {
+        this.animationIndex += 1;
+        if (animations[this.animationIndex] == null) {
+          this.animationIndex = 0;
+        }
+        delete animationTime;
+      } else if (!this.canMove()) {
+        this.animationIndex = 0;
+      }
+      return animations[this.animationIndex]();
     };
     return Ghost;
   })();

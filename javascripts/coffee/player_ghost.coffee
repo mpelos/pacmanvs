@@ -29,22 +29,8 @@ class Ghost extends Player
     context.arc @position.x, @position.y, radius, 0, Math.PI, true
     context.stroke()
     context.fill()
-    context.fillRect @position.x - radius, @position.y - 1, radius * 2, radius / 2 + 1
-    context.strokeRect @position.x - radius, @position.y - 1, radius * 2, radius / 2 + 1
-    context.beginPath()
-    context.moveTo @position.x - radius, @position.y + (radius / 2)
-    cpx = @position.x - (radius * 2/3)
-    cpy = @position.y + radius
-    context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x - (radius * 1/3), @position.y + (radius / 2)
-    cpx = @position.x
-    cpy = @position.y + radius
-    context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x + (radius * 1/3), @position.y + (radius / 2)
-    cpx = @position.x + (radius * 2/3)
-    cpy = @position.y + radius
-    context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x + radius, @position.y + (radius / 2)
-    context.lineTo @position.x - radius, @position.y + (radius / 2)
-    context.stroke()
-    context.fill()
+    context.fillRect @position.x - radius, @position.y - 1, radius * 2, (radius * 2/3) + 1
+    context.strokeRect @position.x - radius, @position.y - 1, radius * 2, (radius * 2/3) + 1
 
     # Eyes
     if @direction.toString() is "left"
@@ -70,3 +56,48 @@ class Ghost extends Player
       this.drawEyeBall context, @position.x + (radius * 3/8), @position.y - (radius * 4/8), radius
       this.drawPupil context, @position.x - (radius * 3/8), @position.y + (radius * 1/8), radius
       this.drawPupil context, @position.x + (radius * 3/8), @position.y + (radius * 1/8), radius
+
+    # bottom body
+    context.strokeStyle = "#FF3100"
+    context.fillStyle = "#FF3100"
+    context.beginPath()
+    context.moveTo @position.x - radius, @position.y + (radius * 2/3)
+
+    animations = []
+    animations[0] = =>
+      cpx = @position.x - (radius * 2/3)
+      cpy = @position.y + (radius * 1.2)
+      context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x - (radius * 1/3), @position.y + (radius * 2/3)
+      cpx = @position.x
+      cpy = @position.y + (radius * 1.2)
+      context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x + (radius * 1/3), @position.y + (radius * 2/3)
+      cpx = @position.x + (radius * 2/3)
+      cpy = @position.y + (radius * 1.2)
+      context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x + radius, @position.y + (radius * 2/3)
+      context.lineTo @position.x - radius, @position.y + (radius * 2/3)
+      context.stroke()
+      context.fill()
+    animations[1] = =>
+      context.lineTo @position.x - radius, @position.y + radius
+      context.lineTo @position.x - (radius * 2/3), @position.y + (radius * 2/3)
+      cpx = @position.x - (radius * 1/6)
+      cpy = @position.y + (radius * 1.2)
+      context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x - (radius * 1/6), @position.y + (radius * 2/3)
+      context.lineTo @position.x + (radius * 1/6), @position.y + (radius * 2/3)
+      cpx = @position.x + (radius * 1/6)
+      context.bezierCurveTo cpx, cpy, cpx, cpy, @position.x + (radius * 2/3), @position.y + (radius * 2/3)
+      context.lineTo @position.x + radius, @position.y + radius
+      context.lineTo @position.x + radius, @position.y + (radius * 2/3)
+      context.lineTo @position.x - radius, @position.y + (radius * 2/3)
+      context.stroke()
+      context.fill()
+
+    animationTime ?= new Cronometer
+    if animationTime.spentMiliseconds() >= 200 and this.canMove()
+      @animationIndex += 1
+      @animationIndex = 0 unless animations[@animationIndex]?
+      delete animationTime
+    else if not this.canMove()
+      @animationIndex = 0
+
+    animations[@animationIndex]()
