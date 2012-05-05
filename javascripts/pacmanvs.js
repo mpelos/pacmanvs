@@ -575,14 +575,18 @@
     function Ghost() {
       Ghost.__super__.constructor.apply(this, arguments);
     }
-    Ghost.prototype.drawEyeBall = function(context, x, y) {
-      var radius;
+    Ghost.prototype.drawEyeBall = function(context, x, y, radius) {
       context.beginPath();
       context.fillStyle = "#FFF";
-      radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2;
       context.moveTo(x, y);
       context.bezierCurveTo(x - (radius * 3 / 8), y, x - (radius * 3 / 8), y + (radius * 6 / 8), x, y + (radius * 6 / 8));
       context.bezierCurveTo(x + (radius * 3 / 8), y + (radius * 6 / 8), x + (radius * 3 / 8), y, x, y);
+      return context.fill();
+    };
+    Ghost.prototype.drawPupil = function(context, x, y, radius) {
+      context.beginPath();
+      context.fillStyle = "#3000FF";
+      context.arc(x, y, radius * 1 / 8, 0, Math.PI * 2, false);
       return context.fill();
     };
     Ghost.prototype.draw = function(context) {
@@ -610,13 +614,27 @@
       context.lineTo(this.position.x - radius, this.position.y + (radius / 2));
       context.stroke();
       context.fill();
-      this.drawEyeBall(context, this.position.x - (radius * 5 / 8), this.position.y - (radius * 4 / 8));
-      this.drawEyeBall(context, this.position.x + (radius * 1 / 8), this.position.y - (radius * 4 / 8));
-      context.beginPath();
-      context.fillStyle = "#3000FF";
-      context.arc(this.position.x - (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius * 1 / 8, 0, Math.PI * 2, false);
-      context.arc(this.position.x, this.position.y - (radius * 1 / 8), radius * 1 / 8, 0, Math.PI * 2, false);
-      return context.fill();
+      if (this.direction.toString() === "left") {
+        this.drawEyeBall(context, this.position.x - (radius * 5 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawEyeBall(context, this.position.x + (radius * 1 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawPupil(context, this.position.x - (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius);
+        return this.drawPupil(context, this.position.x, this.position.y - (radius * 1 / 8), radius);
+      } else if (this.direction.toString() === "right") {
+        this.drawEyeBall(context, this.position.x - (radius * 1 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawEyeBall(context, this.position.x + (radius * 5 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawPupil(context, this.position.x, this.position.y - (radius * 1 / 8), radius);
+        return this.drawPupil(context, this.position.x + (radius * 6 / 8), this.position.y - (radius * 1 / 8), radius);
+      } else if (this.direction.toString() === "up") {
+        this.drawEyeBall(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 7 / 8), radius);
+        this.drawEyeBall(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 7 / 8), radius);
+        this.drawPupil(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 6 / 8), radius);
+        return this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 6 / 8), radius);
+      } else if (this.direction.toString() === "down") {
+        this.drawEyeBall(context, this.position.x - (radius * 3 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawEyeBall(context, this.position.x + (radius * 3 / 8), this.position.y - (radius * 4 / 8), radius);
+        this.drawPupil(context, this.position.x - (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
+        return this.drawPupil(context, this.position.x + (radius * 3 / 8), this.position.y + (radius * 1 / 8), radius);
+      }
     };
     return Ghost;
   })();

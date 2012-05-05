@@ -1,8 +1,7 @@
 class Ghost extends Player
-  drawEyeBall: (context, x, y) ->
+  drawEyeBall: (context, x, y, radius) ->
     context.beginPath()
     context.fillStyle = "#FFF"
-    radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
     context.moveTo x, y
     context.bezierCurveTo x - (radius * 3/8), y,
                           x - (radius * 3/8), y + (radius * 6/8)
@@ -14,6 +13,11 @@ class Ghost extends Player
 
     context.fill()
 
+  drawPupil: (context, x, y, radius) ->
+    context.beginPath()
+    context.fillStyle = "#3000FF"
+    context.arc x, y, radius * 1/8, 0, Math.PI * 2, false
+    context.fill()
 
   draw: (context) ->
     radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
@@ -43,11 +47,26 @@ class Ghost extends Player
     context.fill()
 
     # Eyes
-    this.drawEyeBall(context, @position.x - (radius * 5/8), @position.y - (radius * 4/8))
-    this.drawEyeBall(context, @position.x + (radius * 1/8), @position.y - (radius * 4/8))
+    if @direction.toString() is "left"
+      this.drawEyeBall context, @position.x - (radius * 5/8), @position.y - (radius * 4/8), radius
+      this.drawEyeBall context, @position.x + (radius * 1/8), @position.y - (radius * 4/8), radius
+      this.drawPupil context, @position.x - (radius * 6/8), @position.y - (radius * 1/8), radius
+      this.drawPupil context, @position.x, @position.y - (radius * 1/8), radius
 
-    context.beginPath()
-    context.fillStyle = "#3000FF"
-    context.arc @position.x - (radius * 6/8), @position.y - (radius * 1/8), radius * 1/8, 0, Math.PI * 2, false
-    context.arc @position.x, @position.y - (radius * 1/8), radius * 1/8, 0, Math.PI * 2, false
-    context.fill()
+    else if @direction.toString() is "right"
+      this.drawEyeBall context, @position.x - (radius * 1/8), @position.y - (radius * 4/8), radius
+      this.drawEyeBall context, @position.x + (radius * 5/8), @position.y - (radius * 4/8), radius
+      this.drawPupil context, @position.x, @position.y - (radius * 1/8), radius
+      this.drawPupil context, @position.x + (radius * 6/8), @position.y - (radius * 1/8), radius
+
+    else if @direction.toString() is "up"
+      this.drawEyeBall context, @position.x - (radius * 3/8), @position.y - (radius * 7/8), radius
+      this.drawEyeBall context, @position.x + (radius * 3/8), @position.y - (radius * 7/8), radius
+      this.drawPupil context, @position.x - (radius * 3/8), @position.y - (radius * 6/8), radius
+      this.drawPupil context, @position.x + (radius * 3/8), @position.y - (radius * 6/8), radius
+
+    else if @direction.toString() is "down"
+      this.drawEyeBall context, @position.x - (radius * 3/8), @position.y - (radius * 4/8), radius
+      this.drawEyeBall context, @position.x + (radius * 3/8), @position.y - (radius * 4/8), radius
+      this.drawPupil context, @position.x - (radius * 3/8), @position.y + (radius * 1/8), radius
+      this.drawPupil context, @position.x + (radius * 3/8), @position.y + (radius * 1/8), radius
