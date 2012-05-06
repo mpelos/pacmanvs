@@ -272,6 +272,7 @@ Game = (function() {
   MAX_FPS = 60;
 
   function Game() {
+    this.tick = __bind(this.tick, this);
     this.handleKey = __bind(this.handleKey, this);
     var canvas, name, _i, _len, _ref;
     this.map = new Map;
@@ -348,16 +349,17 @@ Game = (function() {
   };
 
   Game.prototype.loop = function(delay) {
-    var _this = this;
-    return setTimeout(function() {
-      var endTime, startTime;
-      startTime = new Date;
-      _this.update();
-      _this.draw();
-      endTime = new Date;
-      delay = (1000 / MAX_FPS) - (endTime - startTime);
-      return _this.loop(delay);
-    }, delay);
+    return setTimeout(this.tick, delay);
+  };
+
+  Game.prototype.tick = function() {
+    var delay, endTime, startTime;
+    startTime = new Date;
+    this.update();
+    this.draw();
+    endTime = new Date;
+    delay = (1000 / MAX_FPS) - (endTime - startTime);
+    return this.loop(delay);
   };
 
   return Game;
