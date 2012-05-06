@@ -13,7 +13,7 @@ class Rectangle
   bottomLeft: ->
     new Coordinate(@position.x - @width / 2, @position.y + @height / 2 - 0.5)
 
-  verticesPositions: ->
+  toArray: ->
     [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()]
 
   isIntersected: (other) ->

@@ -186,7 +186,7 @@ Entity = (function() {
 
   Entity.prototype.currentTiles = function(positions) {
     var i, j, position, tiles, _i, _len;
-    if (positions == null) positions = this.boundingBox.verticesPositions();
+    if (positions == null) positions = this.boundingBox.toArray();
     if (!(positions instanceof Array)) positions = [positions];
     tiles = [];
     for (_i = 0, _len = positions.length; _i < _len; _i++) {
@@ -553,7 +553,7 @@ Player = (function(_super) {
     var position, positionsAhead, _i, _len, _ref;
     if (direction == null) direction = this.direction;
     positionsAhead = [];
-    _ref = this.boundingBox.verticesPositions();
+    _ref = this.boundingBox.toArray();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       position = _ref[_i];
       position.x += this.displacement * direction.toCoordinate().x;
@@ -826,7 +826,7 @@ Rectangle = (function() {
     return new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5);
   };
 
-  Rectangle.prototype.verticesPositions = function() {
+  Rectangle.prototype.toArray = function() {
     return [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()];
   };
 

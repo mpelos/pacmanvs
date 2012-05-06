@@ -3,7 +3,7 @@ class Entity
     @position = new Coordinate(x, y)
     @boundingBox = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
-  currentTiles: (positions = @boundingBox.verticesPositions()) ->
+  currentTiles: (positions = @boundingBox.toArray()) ->
     positions = [positions] unless positions instanceof Array
     tiles = []
     for position in positions
