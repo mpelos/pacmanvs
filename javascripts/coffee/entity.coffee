@@ -1,7 +1,7 @@
 class Entity
   constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
-    @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
+    @collisionLimit = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
   currentTiles: (positions = @collisionLimit.verticesPositions()) ->
     positions = [positions] unless positions instanceof Array

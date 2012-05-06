@@ -3,7 +3,7 @@ class Food extends Entity
     super
     @width = Math.ceil(Map.TILE_WIDTH / 10)
     @height = Math.ceil(Map.TILE_HEIGHT / 10)
-    @collisionLimit = new CollisionLimit(@position, @width, @height)
+    @collisionLimit = new Rectangle(@position, @width, @height)
 
   draw: (context) ->
     context.fillStyle = "#FFF"

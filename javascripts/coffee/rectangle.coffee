@@ -1,4 +1,4 @@
-class CollisionLimit
+class Rectangle
   constructor: (@position, @width, @height) ->
 
   verticesPositions: ->
