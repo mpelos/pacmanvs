@@ -26,3 +26,8 @@ class Entity
 
   isIntersected: (other) ->
     @boundingBox.isIntersected(other.boundingBox)
+
+  drawBoundingBox: (context) ->
+    context.lineWidth = 2
+    context.strokeStyle = "red"
+    context.strokeRect @boundingBox.topLeft().x, @boundingBox.topLeft().y, @boundingBox.width, @boundingBox.height

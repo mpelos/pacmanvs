@@ -230,6 +230,12 @@ Entity = (function() {
     return this.boundingBox.isIntersected(other.boundingBox);
   };
 
+  Entity.prototype.drawBoundingBox = function(context) {
+    context.lineWidth = 2;
+    context.strokeStyle = "red";
+    return context.strokeRect(this.boundingBox.topLeft().x, this.boundingBox.topLeft().y, this.boundingBox.width, this.boundingBox.height);
+  };
+
   return Entity;
 
 })();
