@@ -2,16 +2,16 @@ class Collider
   constructor: (@entities) ->
 
   intersectionOnXAxis: (player, entity) ->
-    player.collisionLimit.verticesPositions()[0].x <= entity.collisionLimit.verticesPositions()[0].x <= player.collisionLimit.verticesPositions()[1].x or
-    player.collisionLimit.verticesPositions()[0].x <= entity.collisionLimit.verticesPositions()[1].x <= player.collisionLimit.verticesPositions()[1].x or
-    entity.collisionLimit.verticesPositions()[0].x <= player.collisionLimit.verticesPositions()[0].x <= entity.collisionLimit.verticesPositions()[1].x or
-    entity.collisionLimit.verticesPositions()[0].x <= player.collisionLimit.verticesPositions()[1].x <= entity.collisionLimit.verticesPositions()[1].x
+    player.collisionLimit.topLeft().x <= entity.collisionLimit.topLeft().x  <= player.collisionLimit.topRight().x or
+    player.collisionLimit.topLeft().x <= entity.collisionLimit.topRight().x <= player.collisionLimit.topRight().x or
+    entity.collisionLimit.topLeft().x <= player.collisionLimit.topLeft().x  <= entity.collisionLimit.topRight().x or
+    entity.collisionLimit.topLeft().x <= player.collisionLimit.topRight().x <= entity.collisionLimit.topRight().x
 
   intersectionOnYAxis: (player, entity) ->
-    player.collisionLimit.verticesPositions()[1].y <= entity.collisionLimit.verticesPositions()[1].y <= player.collisionLimit.verticesPositions()[2].y or
-    player.collisionLimit.verticesPositions()[1].y <= entity.collisionLimit.verticesPositions()[2].y <= player.collisionLimit.verticesPositions()[2].y or
-    entity.collisionLimit.verticesPositions()[1].y <= player.collisionLimit.verticesPositions()[1].y <= entity.collisionLimit.verticesPositions()[2].y or
-    entity.collisionLimit.verticesPositions()[1].y <= player.collisionLimit.verticesPositions()[2].y <= entity.collisionLimit.verticesPositions()[2].y
+    player.collisionLimit.topRight().y <= entity.collisionLimit.topRight().y    <= player.collisionLimit.bottomRight().y or
+    player.collisionLimit.topRight().y <= entity.collisionLimit.bottomRight().y <= player.collisionLimit.bottomRight().y or
+    entity.collisionLimit.topRight().y <= player.collisionLimit.topRight().y    <= entity.collisionLimit.bottomRight().y or
+    entity.collisionLimit.topRight().y <= player.collisionLimit.bottomRight().y <= entity.collisionLimit.bottomRight().y
 
   collisionBetween: (player, entity) ->
     this.intersectionOnXAxis(player, entity) and this.intersectionOnYAxis(player, entity)

@@ -11,12 +11,12 @@ Collider = (function() {
 
   Collider.prototype.intersectionOnXAxis = function(player, entity) {
     var _ref, _ref2, _ref3, _ref4;
-    return (player.collisionLimit.verticesPositions()[0].x <= (_ref = entity.collisionLimit.verticesPositions()[0].x) && _ref <= player.collisionLimit.verticesPositions()[1].x) || (player.collisionLimit.verticesPositions()[0].x <= (_ref2 = entity.collisionLimit.verticesPositions()[1].x) && _ref2 <= player.collisionLimit.verticesPositions()[1].x) || (entity.collisionLimit.verticesPositions()[0].x <= (_ref3 = player.collisionLimit.verticesPositions()[0].x) && _ref3 <= entity.collisionLimit.verticesPositions()[1].x) || (entity.collisionLimit.verticesPositions()[0].x <= (_ref4 = player.collisionLimit.verticesPositions()[1].x) && _ref4 <= entity.collisionLimit.verticesPositions()[1].x);
+    return (player.collisionLimit.topLeft().x <= (_ref = entity.collisionLimit.topLeft().x) && _ref <= player.collisionLimit.topRight().x) || (player.collisionLimit.topLeft().x <= (_ref2 = entity.collisionLimit.topRight().x) && _ref2 <= player.collisionLimit.topRight().x) || (entity.collisionLimit.topLeft().x <= (_ref3 = player.collisionLimit.topLeft().x) && _ref3 <= entity.collisionLimit.topRight().x) || (entity.collisionLimit.topLeft().x <= (_ref4 = player.collisionLimit.topRight().x) && _ref4 <= entity.collisionLimit.topRight().x);
   };
 
   Collider.prototype.intersectionOnYAxis = function(player, entity) {
     var _ref, _ref2, _ref3, _ref4;
-    return (player.collisionLimit.verticesPositions()[1].y <= (_ref = entity.collisionLimit.verticesPositions()[1].y) && _ref <= player.collisionLimit.verticesPositions()[2].y) || (player.collisionLimit.verticesPositions()[1].y <= (_ref2 = entity.collisionLimit.verticesPositions()[2].y) && _ref2 <= player.collisionLimit.verticesPositions()[2].y) || (entity.collisionLimit.verticesPositions()[1].y <= (_ref3 = player.collisionLimit.verticesPositions()[1].y) && _ref3 <= entity.collisionLimit.verticesPositions()[2].y) || (entity.collisionLimit.verticesPositions()[1].y <= (_ref4 = player.collisionLimit.verticesPositions()[2].y) && _ref4 <= entity.collisionLimit.verticesPositions()[2].y);
+    return (player.collisionLimit.topRight().y <= (_ref = entity.collisionLimit.topRight().y) && _ref <= player.collisionLimit.bottomRight().y) || (player.collisionLimit.topRight().y <= (_ref2 = entity.collisionLimit.bottomRight().y) && _ref2 <= player.collisionLimit.bottomRight().y) || (entity.collisionLimit.topRight().y <= (_ref3 = player.collisionLimit.topRight().y) && _ref3 <= entity.collisionLimit.bottomRight().y) || (entity.collisionLimit.topRight().y <= (_ref4 = player.collisionLimit.bottomRight().y) && _ref4 <= entity.collisionLimit.bottomRight().y);
   };
 
   Collider.prototype.collisionBetween = function(player, entity) {
