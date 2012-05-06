@@ -1,9 +1,9 @@
 class Entity
   constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
-    @collisionLimit = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
+    @boundingBox = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
-  currentTiles: (positions = @collisionLimit.verticesPositions()) ->
+  currentTiles: (positions = @boundingBox.verticesPositions()) ->
     positions = [positions] unless positions instanceof Array
     tiles = []
     for position in positions

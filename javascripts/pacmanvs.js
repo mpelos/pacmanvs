@@ -10,7 +10,7 @@ Collider = (function() {
   }
 
   Collider.prototype.collisionBetween = function(player, entity) {
-    return player.collisionLimit.isIntersected(entity.collisionLimit);
+    return player.boundingBox.isIntersected(entity.boundingBox);
   };
 
   Collider.prototype.makeCollisions = function() {
@@ -185,12 +185,12 @@ Entity = (function() {
   function Entity(x, y, map) {
     this.map = map;
     this.position = new Coordinate(x, y);
-    this.collisionLimit = new Rectangle(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
+    this.boundingBox = new Rectangle(this.position, Map.TILE_WIDTH, Map.TILE_HEIGHT);
   }
 
   Entity.prototype.currentTiles = function(positions) {
     var i, j, position, tiles, _i, _len;
-    if (positions == null) positions = this.collisionLimit.verticesPositions();
+    if (positions == null) positions = this.boundingBox.verticesPositions();
     if (!(positions instanceof Array)) positions = [positions];
     tiles = [];
     for (_i = 0, _len = positions.length; _i < _len; _i++) {
@@ -243,7 +243,7 @@ Food = (function(_super) {
     Food.__super__.constructor.apply(this, arguments);
     this.width = Math.ceil(Map.TILE_WIDTH / 10);
     this.height = Math.ceil(Map.TILE_HEIGHT / 10);
-    this.collisionLimit = new Rectangle(this.position, this.width, this.height);
+    this.boundingBox = new Rectangle(this.position, this.width, this.height);
   }
 
   Food.prototype.draw = function(context) {
@@ -553,7 +553,7 @@ Player = (function(_super) {
     var position, positionsAhead, _i, _len, _ref;
     if (direction == null) direction = this.direction;
     positionsAhead = [];
-    _ref = this.collisionLimit.verticesPositions();
+    _ref = this.boundingBox.verticesPositions();
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       position = _ref[_i];
       position.x += this.displacement * direction.toCoordinate().x;

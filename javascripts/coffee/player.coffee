@@ -12,7 +12,7 @@ class Player extends Entity
 
   tilesAhead: (direction = @direction) ->
     positionsAhead = []
-    for position in @collisionLimit.verticesPositions()
+    for position in @boundingBox.verticesPositions()
       position.x += @displacement * direction.toCoordinate().x
       position.y += @displacement * direction.toCoordinate().y
       positionsAhead.push(position)

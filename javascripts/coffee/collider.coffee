@@ -2,7 +2,7 @@ class Collider
   constructor: (@entities) ->
 
   collisionBetween: (player, entity) ->
-    player.collisionLimit.isIntersected(entity.collisionLimit)
+    player.boundingBox.isIntersected(entity.boundingBox)
 
   makeCollisions: ->
     for player in @entities.players
