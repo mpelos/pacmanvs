@@ -9,10 +9,6 @@ Collider = (function() {
     this.entities = entities;
   }
 
-  Collider.prototype.collisionBetween = function(player, entity) {
-    return player.boundingBox.isIntersected(entity.boundingBox);
-  };
-
   Collider.prototype.makeCollisions = function() {
     var entity, player, tile, _i, _len, _ref, _results;
     _ref = this.entities.players;
@@ -32,7 +28,7 @@ Collider = (function() {
             for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
               entity = _ref3[_k];
               if (entity !== player) {
-                if (this.collisionBetween(player, entity)) {
+                if (player.isIntersected(entity)) {
                   _results3.push(player.collidesWith(entity));
                 } else {
                   _results3.push(void 0);
@@ -40,10 +36,10 @@ Collider = (function() {
               }
             }
             return _results3;
-          }).call(this));
+          })());
         }
         return _results2;
-      }).call(this));
+      })());
     }
     return _results;
   };
@@ -228,6 +224,10 @@ Entity = (function() {
       _results.push(tile.entities.push(this));
     }
     return _results;
+  };
+
+  Entity.prototype.isIntersected = function(other) {
+    return this.boundingBox.isIntersected(other.boundingBox);
   };
 
   return Entity;

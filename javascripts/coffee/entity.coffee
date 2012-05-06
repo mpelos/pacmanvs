@@ -23,3 +23,6 @@ class Entity
 
   includeIntoTiles: ->
     tile.entities.push(this) for tile in this.currentTiles()
+
+  isIntersected: (other) ->
+    @boundingBox.isIntersected(other.boundingBox)
