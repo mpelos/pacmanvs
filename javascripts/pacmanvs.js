@@ -107,39 +107,33 @@ Direction = (function() {
   }
 
   Direction.prototype.parse = function(direction) {
-    var angle;
     if (typeof direction === "string") {
-      angle = (function() {
-        switch (direction.toLowerCase()) {
-          case "right":
-            return 0;
-          case "down":
-            return Math.PI * 0.5;
-          case "left":
-            return Math.PI;
-          case "up":
-            return Math.PI * 1.5;
-        }
-      })();
+      switch (direction.toLowerCase()) {
+        case "right":
+          return 0;
+        case "down":
+          return Math.PI * 0.5;
+        case "left":
+          return Math.PI;
+        case "up":
+          return Math.PI * 1.5;
+      }
     } else if (direction instanceof Coordinate) {
-      angle = (function() {
-        switch (direction.toString()) {
-          case "1, 0":
-            return 0;
-          case "0, -1":
-            return Math.PI * 0.5;
-          case "-1, 0":
-            return Math.PI;
-          case "0, 1":
-            return Math.PI * 1.5;
-        }
-      })();
+      switch (direction.toString()) {
+        case "1, 0":
+          return 0;
+        case "0, -1":
+          return Math.PI * 0.5;
+        case "-1, 0":
+          return Math.PI;
+        case "0, 1":
+          return Math.PI * 1.5;
+      }
     } else if (typeof direction === "number") {
-      angle = direction;
+      return direction;
     } else {
-      angle = null;
+      return null;
     }
-    return angle;
   };
 
   Direction.prototype.set = function(direction) {
