@@ -15,3 +15,12 @@ class Rectangle
 
   verticesPositions: ->
     [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()]
+
+  isIntersected: (other) ->
+    isIntersectOnXAxis = this.topLeft().x <= other.topLeft().x  <= this.topRight().x or
+                         this.topLeft().x <= other.topRight().x <= this.topRight().x
+
+    isIntersectOnYAxis = this.topRight().y <= other.topRight().y    <= this.bottomRight().y or
+                         this.topRight().y <= other.bottomRight().y <= this.bottomRight().y
+
+    isIntersectOnXAxis && isIntersectOnYAxis

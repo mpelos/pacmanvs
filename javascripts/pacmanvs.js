@@ -9,18 +9,8 @@ Collider = (function() {
     this.entities = entities;
   }
 
-  Collider.prototype.intersectionOnXAxis = function(player, entity) {
-    var _ref, _ref2, _ref3, _ref4;
-    return (player.collisionLimit.topLeft().x <= (_ref = entity.collisionLimit.topLeft().x) && _ref <= player.collisionLimit.topRight().x) || (player.collisionLimit.topLeft().x <= (_ref2 = entity.collisionLimit.topRight().x) && _ref2 <= player.collisionLimit.topRight().x) || (entity.collisionLimit.topLeft().x <= (_ref3 = player.collisionLimit.topLeft().x) && _ref3 <= entity.collisionLimit.topRight().x) || (entity.collisionLimit.topLeft().x <= (_ref4 = player.collisionLimit.topRight().x) && _ref4 <= entity.collisionLimit.topRight().x);
-  };
-
-  Collider.prototype.intersectionOnYAxis = function(player, entity) {
-    var _ref, _ref2, _ref3, _ref4;
-    return (player.collisionLimit.topRight().y <= (_ref = entity.collisionLimit.topRight().y) && _ref <= player.collisionLimit.bottomRight().y) || (player.collisionLimit.topRight().y <= (_ref2 = entity.collisionLimit.bottomRight().y) && _ref2 <= player.collisionLimit.bottomRight().y) || (entity.collisionLimit.topRight().y <= (_ref3 = player.collisionLimit.topRight().y) && _ref3 <= entity.collisionLimit.bottomRight().y) || (entity.collisionLimit.topRight().y <= (_ref4 = player.collisionLimit.bottomRight().y) && _ref4 <= entity.collisionLimit.bottomRight().y);
-  };
-
   Collider.prototype.collisionBetween = function(player, entity) {
-    return this.intersectionOnXAxis(player, entity) && this.intersectionOnYAxis(player, entity);
+    return player.collisionLimit.isIntersected(entity.collisionLimit);
   };
 
   Collider.prototype.makeCollisions = function() {
@@ -838,6 +828,13 @@ Rectangle = (function() {
 
   Rectangle.prototype.verticesPositions = function() {
     return [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()];
+  };
+
+  Rectangle.prototype.isIntersected = function(other) {
+    var isIntersectOnXAxis, isIntersectOnYAxis, _ref, _ref2, _ref3, _ref4;
+    isIntersectOnXAxis = (this.topLeft().x <= (_ref = other.topLeft().x) && _ref <= this.topRight().x) || (this.topLeft().x <= (_ref2 = other.topRight().x) && _ref2 <= this.topRight().x);
+    isIntersectOnYAxis = (this.topRight().y <= (_ref3 = other.topRight().y) && _ref3 <= this.bottomRight().y) || (this.topRight().y <= (_ref4 = other.bottomRight().y) && _ref4 <= this.bottomRight().y);
+    return isIntersectOnXAxis && isIntersectOnYAxis;
   };
 
   return Rectangle;
