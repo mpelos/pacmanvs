@@ -23,4 +23,4 @@ class Rectangle
     isIntersectOnYAxis = this.topRight().y <= other.topRight().y    <= this.bottomRight().y or
                          this.topRight().y <= other.bottomRight().y <= this.bottomRight().y
 
-    isIntersectOnXAxis && isIntersectOnYAxis
+    isIntersectOnXAxis and isIntersectOnYAxis
