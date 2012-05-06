@@ -334,13 +334,13 @@ Game = (function() {
   Game.prototype.handleKey = function(event) {
     switch (event.which) {
       case 37:
-        return this.pacman.intentDirection.set("left");
+        return this.pacman.turnLeft();
       case 38:
-        return this.pacman.intentDirection.set("up");
+        return this.pacman.turnUp();
       case 39:
-        return this.pacman.intentDirection.set("right");
+        return this.pacman.turnRight();
       case 40:
-        return this.pacman.intentDirection.set("down");
+        return this.pacman.turnDown();
     }
   };
 
@@ -574,6 +574,22 @@ Player = (function(_super) {
     return !_.any(this.tilesAhead(direction), function(tile) {
       return tile.isWall();
     });
+  };
+
+  Player.prototype.turnLeft = function() {
+    return this.intentDirection.set("left");
+  };
+
+  Player.prototype.turnRight = function() {
+    return this.intentDirection.set("right");
+  };
+
+  Player.prototype.turnUp = function() {
+    return this.intentDirection.set("up");
+  };
+
+  Player.prototype.turnDown = function() {
+    return this.intentDirection.set("down");
   };
 
   Player.prototype.canChangeDirection = function() {
