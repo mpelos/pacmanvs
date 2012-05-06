@@ -820,8 +820,24 @@ Rectangle = (function() {
     this.height = height;
   }
 
+  Rectangle.prototype.topLeft = function() {
+    return new Coordinate(this.position.x - this.width / 2, this.position.y - this.height / 2);
+  };
+
+  Rectangle.prototype.topRight = function() {
+    return new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y - this.height / 2);
+  };
+
+  Rectangle.prototype.bottomRight = function() {
+    return new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y + this.height / 2 - 0.5);
+  };
+
+  Rectangle.prototype.bottomLeft = function() {
+    return new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5);
+  };
+
   Rectangle.prototype.verticesPositions = function() {
-    return new Array(new Coordinate(this.position.x - this.width / 2, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y - this.height / 2), new Coordinate(this.position.x + this.width / 2 - 0.5, this.position.y + this.height / 2 - 0.5), new Coordinate(this.position.x - this.width / 2, this.position.y + this.height / 2 - 0.5));
+    return [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()];
   };
 
   return Rectangle;

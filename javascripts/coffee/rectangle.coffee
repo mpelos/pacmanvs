@@ -1,10 +1,17 @@
 class Rectangle
   constructor: (@position, @width, @height) ->
 
+  topLeft: ->
+    new Coordinate(@position.x - @width / 2, @position.y - @height / 2)
+
+  topRight: ->
+    new Coordinate(@position.x + @width / 2 - 0.5, @position.y - @height / 2)
+
+  bottomRight: ->
+    new Coordinate(@position.x + @width / 2 - 0.5, @position.y + @height / 2 - 0.5)
+
+  bottomLeft: ->
+    new Coordinate(@position.x - @width / 2, @position.y + @height / 2 - 0.5)
+
   verticesPositions: ->
-    new Array(
-      new Coordinate(@position.x - @width / 2, @position.y - @height / 2),             # top-left
-      new Coordinate(@position.x + @width / 2 - 0.5, @position.y - @height / 2),       # top-right
-      new Coordinate(@position.x + @width / 2 - 0.5, @position.y + @height / 2 - 0.5), # bottom-right
-      new Coordinate(@position.x - @width / 2, @position.y + @height / 2 - 0.5)        # bottom-left
-    )
+    [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()]
