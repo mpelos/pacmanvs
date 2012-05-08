@@ -50,18 +50,19 @@ class Game
 
   handleKey: (event) =>
     switch event.which
-      when 37 then @pacman.intentDirection.set("left")  # left arrow
-      when 38 then @pacman.intentDirection.set("up")    # up arrow
-      when 39 then @pacman.intentDirection.set("right") # right arrow
-      when 40 then @pacman.intentDirection.set("down")  # down arrow
+      when 37 then @pacman.turnLeft()  # left arrow
+      when 38 then @pacman.turnUp()    # up arrow
+      when 39 then @pacman.turnRight() # right arrow
+      when 40 then @pacman.turnDown()  # down arrow
 
   loop: (delay) ->
-    setTimeout( =>
-      startTime = new Date
-      this.update()
-      this.draw()
-      endTime = new Date
+    setTimeout this.tick, delay
 
-      delay = (1000/MAX_FPS) - (endTime - startTime)
-      this.loop(delay)
-    delay)
+  tick: =>
+    startTime = new Date
+    this.update()
+    this.draw()
+    endTime = new Date
+
+    delay = (1000/MAX_FPS) - (endTime - startTime)
+    this.loop(delay)
