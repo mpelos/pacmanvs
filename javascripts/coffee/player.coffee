@@ -12,7 +12,7 @@ class Player extends Entity
 
   tilesAhead: (direction = @direction) ->
     positionsAhead = []
-    for position in @collisionLimit.verticesPositions()
+    for position in @boundingBox.toArray()
       position.x += @displacement * direction.toCoordinate().x
       position.y += @displacement * direction.toCoordinate().y
       positionsAhead.push(position)
@@ -21,6 +21,11 @@ class Player extends Entity
 
   canMove: (direction = @direction) ->
     not _.any(this.tilesAhead(direction), (tile) -> tile.isWall())
+
+  turnLeft:  -> @intentDirection.set "left"
+  turnRight: -> @intentDirection.set "right"
+  turnUp:    -> @intentDirection.set "up"
+  turnDown:  -> @intentDirection.set "down"
 
   canChangeDirection: ->
     this.canMove(@intentDirection)

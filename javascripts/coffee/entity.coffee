@@ -1,9 +1,9 @@
 class Entity
   constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
-    @collisionLimit = new CollisionLimit(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
+    @boundingBox = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
-  currentTiles: (positions = @collisionLimit.verticesPositions()) ->
+  currentTiles: (positions = @boundingBox.toArray()) ->
     positions = [positions] unless positions instanceof Array
     tiles = []
     for position in positions
@@ -23,3 +23,11 @@ class Entity
 
   includeIntoTiles: ->
     tile.entities.push(this) for tile in this.currentTiles()
+
+  isIntersected: (other) ->
+    @boundingBox.isIntersected(other.boundingBox)
+
+  drawBoundingBox: (context) ->
+    context.lineWidth = 2
+    context.strokeStyle = "red"
+    context.strokeRect @boundingBox.topLeft().x, @boundingBox.topLeft().y, @boundingBox.width, @boundingBox.height

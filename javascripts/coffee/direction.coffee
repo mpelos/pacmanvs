@@ -4,23 +4,21 @@ class Direction
 
   parse: (direction) ->
     if typeof direction is "string"
-      angle =  switch direction.toLowerCase()
+      switch direction.toLowerCase()
         when "right" then 0
         when "down"  then Math.PI * 0.5
         when "left"  then Math.PI
         when "up"    then Math.PI * 1.5
     else if direction instanceof Coordinate
-      angle = switch direction.toString()
+      switch direction.toString()
         when "1, 0"  then 0
         when "0, -1" then Math.PI * 0.5
         when "-1, 0" then Math.PI
         when "0, 1"  then Math.PI * 1.5
     else if typeof direction is "number"
-      angle = direction
+      direction
     else
-      angle = null
-
-    return angle
+      null
 
   set: (direction) ->
     @angle = this.parse(direction)
