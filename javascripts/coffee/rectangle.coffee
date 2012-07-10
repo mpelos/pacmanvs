@@ -17,10 +17,14 @@ class Rectangle
     [this.topLeft(), this.topRight(), this.bottomRight(), this.bottomLeft()]
 
   isIntersected: (other) ->
-    isIntersectOnXAxis = this.topLeft().x <= other.topLeft().x  <= this.topRight().x or
-                         this.topLeft().x <= other.topRight().x <= this.topRight().x
+    isIntersectOnXAxis = this.topLeft().x  <= other.topLeft().x  <= this.topRight().x or
+                         this.topLeft().x  <= other.topRight().x <= this.topRight().x or
+                         other.topLeft().x <= this.topLeft().x   <= other.topRight().x or
+                         other.topLeft().x <= this.topRight().x  <= other.topRight().x
 
-    isIntersectOnYAxis = this.topRight().y <= other.topRight().y    <= this.bottomRight().y or
-                         this.topRight().y <= other.bottomRight().y <= this.bottomRight().y
+    isIntersectOnYAxis = this.topRight().y  <= other.topRight().y    <= this.bottomRight().y or
+                         this.topRight().y  <= other.bottomRight().y <= this.bottomRight().y
+                         other.topRight().y <= this.topRight().y     <= other.bottomRight().y or
+                         other.topRight().y <= this.bottomRight().y  <= other.bottomRight().y
 
     isIntersectOnXAxis and isIntersectOnYAxis
