@@ -1,6 +1,6 @@
 {
-  "name": "Pacman VS",
-  "version": "0.1",
+  "name": "pacmanvs",
+  "version": "0.1.0",
   "dependencies": {
     "express": "~2.5.11"
   }
