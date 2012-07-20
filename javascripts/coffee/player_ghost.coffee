@@ -95,11 +95,11 @@ class Ghost extends Player
       context.stroke()
       context.fill()
 
-    animationTime ?= new Cronometer
-    if animationTime.spentMiliseconds() >= 200 and this.canMove()
+    @animationTime ?= new Cronometer
+    if @animationTime.spentMiliseconds() >= 200 and this.canMove()
       @animationIndex += 1
       @animationIndex = 0 unless animations[@animationIndex]?
-      delete animationTime
+      delete @animationTime
     else if not this.canMove()
       @animationIndex = 0
 

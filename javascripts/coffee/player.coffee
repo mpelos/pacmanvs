@@ -41,17 +41,17 @@ class Player extends Entity
     this.excludeFromTiles()
 
     if this.canMove()
-      previousPosition = _.clone(@position)
+      @previousPosition = _.clone(@position)
 
       @position.x += @direction.toCoordinate().x * @displacement
       @position.y += @direction.toCoordinate().y * @displacement
 
       # ensure that the player always pass through the center of the tile
       tileCenter = this.currentTiles(@position)[0].centerCoordinate()
-      if tileCenter.betweenAxis(@position, previousPosition) or not this.canMove()
+      if tileCenter.betweenAxis(@position, @previousPosition) or not this.canMove()
         @position.change(tileCenter.x, tileCenter.y)
 
-      delete previousPosition
+      delete @previousPosition
 
     this.includeIntoTiles()
     @position
