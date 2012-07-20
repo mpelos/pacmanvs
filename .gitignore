@@ -1,2 +1,3 @@
 node_modules/
-public/javascripts/pacmanvs.js
+app.js
+pacmanvs.js

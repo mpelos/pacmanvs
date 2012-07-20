@@ -2,6 +2,7 @@
   "name": "pacmanvs",
   "version": "0.1.0",
   "dependencies": {
-    "express": "~2.5.11"
+    "express": "~2.5.11",
+    "jade": "~0.26.3"
   }
 }
