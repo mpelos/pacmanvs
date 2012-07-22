@@ -1,6 +1,10 @@
 {
   "name": "pacmanvs",
   "version": "0.1.0",
+  "engines": {
+    "node": "~0.6.17",
+    "npm": "~1.1.21"
+  },
   "dependencies": {
     "express": "~2.5.11",
     "jade": "~0.26.3"
