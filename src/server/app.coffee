@@ -1,6 +1,8 @@
 express = require "express"
+socket  = require "socket.io"
 
 app = module.exports = express.createServer()
+io = socket.listen(app)
 
 app.configure ->
   app.set "views", "#{__dirname}/views"
@@ -12,9 +14,21 @@ app.configure ->
 
 app.configure "development", ->
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
+  app.set "websocket_url", "http://localhost:#{process.env.PORT || 3000}"
 
 app.configure "production", ->
   app.use express.errorHandler()
+  app.set "websocket_url", "http://pacmanvs.herokuapp.com"
+
+io.set "transports", ["xhr-polling"]
+
+sockets = []
+io.sockets.on "connection", (socket) ->
+  sockets.push socket
+
+  socket.on "disconnect", ->
+    socketIndex = sockets.indexOf socket
+    sockets.splice socketIndex, 1
 
 app.get "/", (request, response) ->
   response.render "index"
