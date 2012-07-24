@@ -2,7 +2,6 @@ class Game
   MAX_FPS = 60
 
   constructor: ->
-    @frozen = true
     @map = new Map
     @pacman = @map.entities.players[0]
 
@@ -17,6 +16,7 @@ class Game
 
     @map.draw(@context.map)
     @collider = new Collider(@map.entities)
+    @message = "WAIT"
     this.loop(1000/MAX_FPS) # starts the game loop
 
   calculateFps: ->
@@ -38,6 +38,17 @@ class Game
     @context.player.fillStyle = "#FFF"
     @context.player.fillText "#{@fps} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
 
+  drawMessage: ->
+    if @message
+      x = 14 * Map.TILE_WIDTH
+      y = (17 * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+      context = @context.player
+      context.font = "bold 17px sans-serif"
+      context.textAlign = "center"
+      context.textBaseline = "middle"
+      context.fillStyle = "#FDFB4A"
+      context.fillText @message, x, y
+
   update: ->
     this.calculateFps()
     @pacman.update(@fps)
@@ -48,6 +59,7 @@ class Game
     food.draw(@context.player) for food in @map.entities.foods
     player.draw(@context.player) for player in @map.entities.players
     this.drawFps()
+    this.drawMessage()
 
   handleKey: (event) =>
     switch event.which
