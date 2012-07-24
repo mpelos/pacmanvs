@@ -6,10 +6,10 @@ class Player extends Entity
     @intentDirection = new Direction
     @animationIndex = 0
     @speed = 6 # tiles per second
-    @isFrozen = true
+    @frozen = true
 
   calculateDisplacement: (gameFps) ->
-    @displacement = if @isFrozen then 0 else ((@speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps)
+    @displacement = if @frozen then 0 else ((@speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps)
 
   tilesAhead: (direction = @direction) ->
     positionsAhead = []
@@ -58,10 +58,10 @@ class Player extends Entity
     @position
 
   freeze: ->
-    @isFronzen = true
+    @frozen = true
 
   unfreeze: ->
-    @isFrozen = false
+    @frozen = false
 
   update: (gameFps) ->
     this.calculateDisplacement(gameFps)

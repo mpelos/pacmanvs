@@ -96,11 +96,11 @@ class Ghost extends Player
       context.fill()
 
     @animationTime ?= new Cronometer
-    if @animationTime.spentMiliseconds() >= 200 and not @isFrozen and this.canMove()
+    if @animationTime.spentMiliseconds() >= 200 and not @frozen and this.canMove()
       @animationIndex += 1
       @animationIndex = 0 unless animations[@animationIndex]?
       delete @animationTime
-    else if @isFrozen or not this.canMove()
+    else if @frozen or not this.canMove()
       @animationIndex = 0
 
     animations[@animationIndex]()

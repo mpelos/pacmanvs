@@ -12,7 +12,7 @@ class Pacman extends Player
     context.beginPath()
     context.fillStyle = "#FF0"
 
-    if @isFrozen
+    if @frozen
       context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
       context.fill()
     else
