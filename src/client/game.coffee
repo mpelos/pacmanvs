@@ -2,6 +2,7 @@ class Game
   MAX_FPS = 60
 
   constructor: ->
+    @frozen = true
     @map = new Map
     @pacman = @map.entities.players[0]
 
