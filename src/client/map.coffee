@@ -3,10 +3,12 @@ class Map
   this.TILE_HEIGHT  = 20
   this.WALL_PADDING = 10
 
-  this.WALL   = "w"
-  this.PATH   = "p"
-  this.FOOD   = "f"
-  this.PACMAN = "P"
+  this.WALL       = "w"
+  this.GHOST_WALL = "g"
+  this.PATH       = "p"
+  this.FOOD       = "f"
+  this.PACMAN     = "P"
+  this.GHOST      = "G"
 
   constructor: ->
     @matrix = MAPS_MATRIX[0]
@@ -16,6 +18,8 @@ class Map
     @entities =
       players: []
       foods: []
+
+    ghostColors = ["#F81F17", "#48FEFE", "#FB9DCD", "#FACE26"]
 
     for array, i in @matrix
       @tiles[i] = []
@@ -33,6 +37,10 @@ class Map
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH
           @entities.players.push(new Pacman(x, y, this))
+
+        if value is Map.GHOST
+          @tiles[i][j].type = Map.PATH
+          @entities.players.push(new Ghost(x, y, this, ghostColors.shift()))
 
     @foodCounter = @entities.foods.length
 
