@@ -3,8 +3,6 @@ class Game
 
   constructor: ->
     @map = new Map
-    @pacman = @map.entities.players[0]
-
     @canvas = {}
     @context = {}
     for canvas in $("canvas")
@@ -51,7 +49,7 @@ class Game
 
   update: ->
     this.calculateFps()
-    @pacman.update(@fps)
+    player.update(@fps) for player in @map.entities.players
     @collider.makeCollisions()
 
   draw: ->
@@ -61,12 +59,16 @@ class Game
     this.drawFps()
     this.drawMessage()
 
+  handleCharacter: (characterCode) =>
+    @player = @map.entities.players[characterCode]
+    console.log @player
+
   handleKey: (event) =>
     switch event.which
-      when 37 then @pacman.turnLeft()  # left arrow
-      when 38 then @pacman.turnUp()    # up arrow
-      when 39 then @pacman.turnRight() # right arrow
-      when 40 then @pacman.turnDown()  # down arrow
+      when 37 then @player.turnLeft()  # left arrow
+      when 38 then @player.turnUp()    # up arrow
+      when 39 then @player.turnRight() # right arrow
+      when 40 then @player.turnDown()  # down arrow
 
   loop: ->
     requestAnimationFrame this.tick

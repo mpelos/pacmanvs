@@ -23,12 +23,16 @@ app.configure "production", ->
   io.set "transports", ["xhr-polling"]
 
 sockets = []
+characterCodes = [0, 1, 2, 3, 4]
 io.sockets.on "connection", (socket) ->
   sockets.push socket
+  socket.characterCode = characterCodes.shift()
+  socket.emit "character", socket.characterCode
 
   socket.on "disconnect", ->
-    socketIndex = sockets.indexOf socket
-    sockets.splice socketIndex, 1
+    characterCodes.push(socket.characterCode)
+    characterCodes.sort()
+    sockets.remove socket
 
 app.get "/", (request, response) ->
   response.render "index"
