@@ -1,5 +1,6 @@
 express = require "express"
 socket  = require "socket.io"
+sugar   = require "sugar"
 
 app = module.exports = express.createServer()
 io = socket.listen(app)
