@@ -68,8 +68,8 @@ class Game
       when 39 then @pacman.turnRight() # right arrow
       when 40 then @pacman.turnDown()  # down arrow
 
-  loop: (delay) ->
-    setTimeout this.tick, delay
+  loop: ->
+    requestAnimationFrame this.tick
 
   tick: =>
     startTime = new Date
@@ -77,5 +77,4 @@ class Game
     this.draw()
     endTime = new Date
 
-    delay = (1000/MAX_FPS) - (endTime - startTime)
-    this.loop(delay)
+    this.loop()
