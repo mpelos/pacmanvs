@@ -20,8 +20,7 @@ app.configure "development", ->
 app.configure "production", ->
   app.use express.errorHandler()
   app.set "websocket_url", "http://pacmanvs.herokuapp.com"
-
-io.set "transports", ["xhr-polling"]
+  io.set "transports", ["xhr-polling"]
 
 sockets = []
 io.sockets.on "connection", (socket) ->
