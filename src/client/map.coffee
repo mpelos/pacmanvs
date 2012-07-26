@@ -40,24 +40,43 @@ class Map
           @entities.players.reverse()
 
         if value is Map.GHOST
-          @tiles[i][j].type = Map.PATH
+          @tiles[i][j].type = Map.GHOST_WALL
           @entities.players.push(new Ghost(x, y, this, ghostColors.shift()))
 
     @foodCounter = @entities.foods.length
 
   draw: (context) ->
+    this.drawWalls(context)
+    this.drawGhostWalls(context)
+
+  drawWalls: (context) ->
     context.beginPath()
+    this.drawLines(context)
+    context.closePath()
+    context.strokeStyle = "#03F"
+    context.lineWidth = 2
+    context.stroke()
+
+  drawGhostWalls: (context) ->
+    context.beginPath()
+    this.drawLines(context, Map.GHOST_WALL)
+    context.closePath()
+    context.strokeStyle = "#EEACA9"
+    context.lineWidth = 2
+    context.stroke()
+
+  drawLines: (context, wallType = Map.WALL) ->
     for array, i in @matrix
       for value, j in array
         x = j * Map.TILE_WIDTH
         y = i * Map.TILE_HEIGHT
         tile = @tiles[i][j]
 
-        if tile.isWall()
-          startX = if tile.isWallLeftCorner()  then (x + Map.WALL_PADDING)                   else x
-          endX   = if tile.isWallRightCorner() then (x + Map.TILE_WIDTH - Map.WALL_PADDING)  else (x + Map.TILE_WIDTH)
-          startY = if tile.isWallUpCorner()    then (y + Map.WALL_PADDING)                   else y
-          endY   = if tile.isWallDownCorner()  then (y + Map.TILE_HEIGHT - Map.WALL_PADDING) else (y + Map.TILE_HEIGHT)
+        if tile.isWall(wallType)
+          startX = if tile.isWallLeftCorner(wallType)  then (x + Map.WALL_PADDING)                   else x
+          endX   = if tile.isWallRightCorner(wallType) then (x + Map.TILE_WIDTH - Map.WALL_PADDING)  else (x + Map.TILE_WIDTH)
+          startY = if tile.isWallUpCorner(wallType)    then (y + Map.WALL_PADDING)                   else y
+          endY   = if tile.isWallDownCorner(wallType)  then (y + Map.TILE_HEIGHT - Map.WALL_PADDING) else (y + Map.TILE_HEIGHT)
 
           if tile.above()?.isPath()
             _y = y + Map.WALL_PADDING + 0.5
@@ -79,7 +98,7 @@ class Map
             context.moveTo _x, startY
             context.lineTo _x, endY
 
-          if (tile.above()?.isWall() or not tile.above()?) and (tile.right()?.isWall() or not tile.right()?) and (tile.below()?.isWall() or not tile.below()?) and (tile.left()?.isWall() or not tile.left()?)
+          if (tile.above()?.isWall(wallType) or not tile.above()?) and (tile.right()?.isWall(wallType) or not tile.right()?) and (tile.below()?.isWall(wallType) or not tile.below()?) and (tile.left()?.isWall(wallType) or not tile.left()?)
             if tile.aboveRight()?.isPath()
               context.moveTo (x + Map.TILE_WIDTH), (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.WALL_PADDING + 0.5)
@@ -99,10 +118,6 @@ class Map
               context.moveTo x, (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.WALL_PADDING + 0.5)
               context.lineTo (x + Map.WALL_PADDING + 0.5), y
-
-    context.closePath()
-    context.strokeStyle = "#03F"
-    context.stroke()
 
   drawGrid: (context) ->
     context.beginPath()

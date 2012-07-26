@@ -31,20 +31,20 @@ class Tile
   aboveLeft: ->
     @map.tiles[@i - 1]?[@j - 1]
 
-  isWall: ->
-    @type is Map.WALL
+  isWall: (wallType = Map.WALL) ->
+    @type is wallType
 
   isPath: ->
     @type is Map.PATH
 
-  isWallUpCorner: ->
-    this.above()?.isPath() and this.below()?.isWall()
+  isWallUpCorner: (wallType = Map.WALL) ->
+    this.above()?.isPath() and this.below()?.isWall(wallType)
 
-  isWallRightCorner: ->
-    this.right()?.isPath() and this.left()?.isWall()
+  isWallRightCorner: (wallType = Map.WALL) ->
+    this.right()?.isPath() and this.left()?.isWall(wallType)
 
-  isWallDownCorner: ->
-    this.below()?.isPath() and this.above()?.isWall()
+  isWallDownCorner: (wallType = Map.WALL) ->
+    this.below()?.isPath() and this.above()?.isWall(wallType)
 
-  isWallLeftCorner: ->
-    this.left()?.isPath() and this.right()?.isWall()
+  isWallLeftCorner: (wallType = Map.WALL) ->
+    this.left()?.isPath() and this.right()?.isWall(wallType)
