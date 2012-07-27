@@ -19,7 +19,9 @@ class Map
       players: []
       foods: []
 
-    ghostColors = ["#F81F17", "#48FEFE", "#FB9DCD", "#FACE26"]
+    ghostAttributes =
+      colors: ["#F81F17", "#48FEFE", "#FB9DCD", "#FACE26"]
+      directions: ["up", "right", "left", "down"]
 
     for array, i in @matrix
       @tiles[i] = []
@@ -41,7 +43,10 @@ class Map
 
         if value is Map.GHOST
           @tiles[i][j].type = Map.GHOST_WALL
-          ghost = new Ghost x, y, this, { color: ghostColors.shift() }
+          options =
+            color: ghostAttributes.colors.shift()
+            direction: ghostAttributes.directions.shift()
+          ghost = new Ghost x, y, this, options
           @entities.players.push(ghost)
 
     @foodCounter = @entities.foods.length

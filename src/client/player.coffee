@@ -1,7 +1,8 @@
 class Player extends Entity
-  constructor: (x, y, @map, options) ->
+  constructor: (x, y, @map, options = {}) ->
     super
-    @direction = new Direction("left")
+    options.direction ?= "left"
+    @direction = new Direction(options.direction)
     @intentDirection = new Direction
     @animationIndex = 0
     @speed = 6 # tiles per second
