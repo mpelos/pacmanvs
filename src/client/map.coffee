@@ -41,7 +41,8 @@ class Map
 
         if value is Map.GHOST
           @tiles[i][j].type = Map.GHOST_WALL
-          @entities.players.push(new Ghost(x, y, this, ghostColors.shift()))
+          ghost = new Ghost x, y, this, { color: ghostColors.shift() }
+          @entities.players.push(ghost)
 
     @foodCounter = @entities.foods.length
 

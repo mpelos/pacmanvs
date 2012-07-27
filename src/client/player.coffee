@@ -1,5 +1,5 @@
 class Player extends Entity
-  constructor: (x, y, @map) ->
+  constructor: (x, y, @map, options) ->
     super
     @startPosition = _.clone(@position)
     @direction = new Direction("left")

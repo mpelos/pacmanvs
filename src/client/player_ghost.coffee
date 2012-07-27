@@ -1,6 +1,7 @@
 class Ghost extends Player
-  constructor: (x, y, @map, @color) ->
+  constructor: (x, y, @map, options) ->
     super
+    @color = options.color
 
   drawEyeBall: (context, x, y, radius) ->
     context.beginPath()
