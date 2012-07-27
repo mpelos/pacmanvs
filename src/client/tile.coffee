@@ -34,6 +34,9 @@ class Tile
   isWall: (wallType = Map.WALL) ->
     @type is wallType
 
+  isGhostWall: ->
+    this.isWall(Map.GHOST_WALL)
+
   isPath: ->
     @type is Map.PATH
 

@@ -21,7 +21,8 @@ class Player extends Entity
     this.currentTiles(positionsAhead)
 
   canMove: (direction = @direction) ->
-    not _.any(this.tilesAhead(direction), (tile) -> tile.isWall())
+    not _.any this.tilesAhead(direction), (tile) ->
+      tile.isWall() or tile.isGhostWall()
 
   turnLeft:  -> @intentDirection.set "left"
   turnRight: -> @intentDirection.set "right"

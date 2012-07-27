@@ -3,6 +3,9 @@ class Ghost extends Player
     super
     @color = options.color
 
+  canMove: (direction = @direction) ->
+    not _.any(this.tilesAhead(direction), (tile) -> tile.isWall())
+
   drawEyeBall: (context, x, y, radius) ->
     context.beginPath()
     context.fillStyle = "#FFF"
