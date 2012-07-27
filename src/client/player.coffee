@@ -42,7 +42,13 @@ class Player extends Entity
   updatePosition: () ->
     this.excludeFromTiles()
 
-    if this.canMove()
+    if _.all(this.currentTiles(), (tile) -> !tile)
+      @position.x -= @map.width - 1
+      if @position.x < 0
+        @position.x = parseInt(@position.x.toString().replace("-", ""))
+      else
+        @position.x -= Map.TILE_WIDTH
+    else if this.canMove()
       @previousPosition = _.clone(@position)
 
       @position.x += @direction.toCoordinate().x * @displacement
