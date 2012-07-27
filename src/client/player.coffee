@@ -1,7 +1,6 @@
 class Player extends Entity
   constructor: (x, y, @map, options) ->
     super
-    @startPosition = _.clone(@position)
     @direction = new Direction("left")
     @intentDirection = new Direction
     @animationIndex = 0
