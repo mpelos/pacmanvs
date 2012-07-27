@@ -41,7 +41,7 @@ class Game
       x = 14 * Map.TILE_WIDTH
       y = (17 * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
       context = @context.player
-      context.font = "bold 17px sans-serif"
+      context.font = "bold #{Map.TILE_HEIGHT}px sans-serif"
       context.textAlign = "center"
       context.textBaseline = "middle"
       context.fillStyle = "#FDFB4A"

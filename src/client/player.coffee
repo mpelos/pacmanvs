@@ -22,7 +22,7 @@ class Player extends Entity
 
   canMove: (direction = @direction) ->
     not _.any this.tilesAhead(direction), (tile) ->
-      tile.isWall() or tile.isGhostWall()
+      tile?.isWall() or tile?.isGhostWall()
 
   turnLeft:  -> @intentDirection.set "left"
   turnRight: -> @intentDirection.set "right"
@@ -30,7 +30,7 @@ class Player extends Entity
   turnDown:  -> @intentDirection.set "down"
 
   canChangeDirection: ->
-    this.canMove(@intentDirection)
+    this.canMove(@intentDirection) and _.any(this.tilesAhead(@intentDirection), (tile) -> !!tile)
 
   updateDirection: ->
     if @intentDirection.angle? and this.canChangeDirection()
@@ -49,8 +49,8 @@ class Player extends Entity
       @position.y += @direction.toCoordinate().y * @displacement
 
       # ensure that the player always pass through the center of the tile
-      tileCenter = this.currentTiles(@position)[0].centerCoordinate()
-      if tileCenter.betweenAxis(@position, @previousPosition) or not this.canMove()
+      tileCenter = this.currentTiles(@position)[0]?.centerCoordinate()
+      if tileCenter?.betweenAxis(@position, @previousPosition) or not this.canMove()
         @position.change(tileCenter.x, tileCenter.y)
 
       delete @previousPosition

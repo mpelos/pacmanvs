@@ -15,14 +15,15 @@ class Entity
 
   excludeFromTiles: ->
     for tile in this.currentTiles()
-      tileEntities = []
-      for entity in tile.entities
-        tileEntities.push(entity) if entity isnt this
+      if tile
+        tileEntities = []
+        for entity in tile.entities
+          tileEntities.push(entity) if entity isnt this
 
-      tile.entities = tileEntities
+        tile.entities = tileEntities
 
   includeIntoTiles: ->
-    tile.entities.push(this) for tile in this.currentTiles()
+    tile?.entities.push(this) for tile in this.currentTiles()
 
   isIntersected: (other) ->
     @boundingBox.isIntersected(other.boundingBox)
