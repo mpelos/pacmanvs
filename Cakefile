@@ -12,6 +12,8 @@ files = [
   "player",
   "pacman",
   "ghost",
+  "player_renderer"
+  "ghost_renderer",
   "tile",
   "maps_matrix",
   "map",

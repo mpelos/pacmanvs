@@ -4,7 +4,7 @@ class Player extends Entity
     options.direction ?= "left"
     @direction = new Direction(options.direction)
     @intentDirection = new Direction
-    @animationIndex = 0
+    @frame = 0
     @speed = 6 # tiles per second
     @frozen = true
 
