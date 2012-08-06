@@ -41,13 +41,13 @@ class Pacman extends Player
       animations[4] = animations[2]
       animations[5] = animations[1]
       animations[6] = animations[0]
-      
+
       @animationTime ?= new Cronometer
       if @animationTime.spentMiliseconds() >= 15 and this.canMove()
-        @animationIndex += 1
-        @animationIndex = 0 unless animations[@animationIndex]?
+        @frame += 1
+        @frame = 0 unless animations[@frame]?
         delete @animationTime
       else if not this.canMove()
-        @animationIndex = 1
-      
-      animations[@animationIndex]()
+        @frame = 1
+
+      animations[@frame]()
