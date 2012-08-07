@@ -1,4 +1,4 @@
-class Cronometer
+class Timer
   constructor: ->
     @startTime = new Date
 

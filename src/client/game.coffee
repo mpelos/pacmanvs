@@ -21,9 +21,9 @@ class Game
     @framesCounter ?= 0
     @fps ?= MAX_FPS
 
-    @fpsCronometer ?= new Cronometer
-    unless @fpsCronometer.spentMiliseconds() < 1000
-      delete @fpsCronometer
+    @fpsTimer ?= new Timer
+    unless @fpsTimer.spentMiliseconds() < 1000
+      delete @fpsTimer
       @fps = @framesCounter
       @framesCounter = 0
 

@@ -3,7 +3,7 @@
 # Order matters
 files = [
   "request_animation_frame",
-  "cronometer",
+  "timer",
   "coordinate",
   "direction",
   "rectangle",
