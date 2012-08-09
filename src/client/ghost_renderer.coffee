@@ -10,6 +10,7 @@ class GhostRenderer extends PlayerRenderer
       this.drawPupils()
     else
       this.drawVulnerableEyes()
+      this.drawVulnerableMouth()
 
   drawEyeBalls: ->
     if @player.direction.toString() is "left"
@@ -73,6 +74,28 @@ class GhostRenderer extends PlayerRenderer
     @context.arc -(@radius * 3/8), -(@radius * 1/8), @radius * 1/6, 0, Math.PI * 2, false
     @context.arc (@radius * 3/8), -(@radius * 1/8), @radius * 1/6, 0, Math.PI * 2, false
     @context.fill()
+    @context.restore()
+
+  drawVulnerableMouth: ->
+    @context.save()
+    @context.translate(@player.position.x, @player.position.y)
+    @context.strokeStyle = "#F4BF3B"
+    radius = @radius * 1/6
+    @context.beginPath()
+    @context.arc -(@radius * 4/8), (@radius * 3/6), radius, 0, Math.PI, true
+    @context.stroke()
+    @context.beginPath()
+    @context.arc -(@radius * 2/8), (@radius * 2/6), radius, 0, Math.PI, false
+    @context.stroke()
+    @context.beginPath()
+    @context.arc 0, (@radius * 3/6), radius, 0, Math.PI, true
+    @context.stroke()
+    @context.beginPath()
+    @context.arc (@radius * 2/8), (@radius * 2/6), radius, 0, Math.PI, false
+    @context.stroke()
+    @context.beginPath()
+    @context.arc (@radius * 4/8), (@radius * 3/6), radius, 0, Math.PI, true
+    @context.stroke()
     @context.restore()
 
   drawBody: (color) ->
