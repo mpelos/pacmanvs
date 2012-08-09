@@ -104,12 +104,12 @@ class GhostRenderer extends PlayerRenderer
       @context.lineTo @player.position.x - @radius, @player.position.y + (@radius * 2/3)
 
     @animationTime ?= new Timer
-    if @animationTime.spentMiliseconds() >= 200 and not @player.frozen and @player.canMove()
-      @frame += 1
-      @frame = 0 unless frames[@frame]?
-      delete @animationTime
-    else if @frozen or not @player.canMove()
+    if @player.frozen or not @player.canMove()
       @frame = 0
+    else if @animationTime.spentMiliseconds() >= 200
+      @frame += 1
+      @frame = 0 unless bottomBodyFrames[@frame]?
+      delete @animationTime
 
     bottomBodyFrames[@frame]()
     @context.stroke()
