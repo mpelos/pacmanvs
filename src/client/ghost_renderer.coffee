@@ -1,11 +1,14 @@
 class GhostRenderer extends PlayerRenderer
   draw: ->
-    this.drawBody()
-    this.drawBottomBody()
+    color = if @player.status is "vulnerable" then "#0038F8" else @player.color
+    this.drawBody(color)
+    this.drawBottomBody(color)
 
     if @player.status is "alive" or status is "dead"
       this.drawEyeBalls()
       this.drawPupils()
+    else
+      this.drawVulnerableEyes()
 
   drawEyeBalls: ->
     if @player.direction.toString() is "left"
@@ -61,9 +64,19 @@ class GhostRenderer extends PlayerRenderer
     @context.arc x, y, @radius * 1/8, 0, Math.PI * 2, false
     @context.fill()
 
-  drawBody: ->
-    @context.fillStyle = @player.color
-    @context.strokeStyle = @player.color
+  drawVulnerableEyes: ->
+    @context.save()
+    @context.translate(@player.position.x, @player.position.y)
+    @context.beginPath()
+    @context.fillStyle = "#F4BF3B"
+    @context.arc -(@radius * 3/8), -(@radius * 1/8), @radius * 1/6, 0, Math.PI * 2, false
+    @context.arc (@radius * 3/8), -(@radius * 1/8), @radius * 1/6, 0, Math.PI * 2, false
+    @context.fill()
+    @context.restore()
+
+  drawBody: (color) ->
+    @context.fillStyle = color
+    @context.strokeStyle = color
     @context.beginPath()
     @context.arc @player.position.x, @player.position.y, @radius, 0, Math.PI, true
     @context.stroke()
@@ -71,9 +84,9 @@ class GhostRenderer extends PlayerRenderer
     @context.fillRect @player.position.x - @radius, @player.position.y - 1, @radius * 2, (@radius * 2/3) + 1
     @context.strokeRect @player.position.x - @radius, @player.position.y - 1, @radius * 2, (@radius * 2/3) + 1
 
-  drawBottomBody: () ->
-    @context.strokeStyle = @player.color
-    @context.fillStyle = @player.color
+  drawBottomBody: (color) ->
+    @context.strokeStyle = color
+    @context.fillStyle = color
     @context.beginPath()
     @context.moveTo @player.position.x - @radius, @player.position.y + (@radius * 2/3)
 
