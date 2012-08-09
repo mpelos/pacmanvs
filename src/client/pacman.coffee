@@ -8,46 +8,5 @@ class Pacman extends Player
     @map.foodCounter -= 1
 
   draw: (context) ->
-    radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
-    context.beginPath()
-    context.fillStyle = "#FF0"
-
-    if @frozen
-      context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
-      context.fill()
-    else
-      animations = new Array
-      animations[0] = =>
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.3, @direction.angle + Math.PI * 1.3, false
-        context.fill()
-        context.beginPath()
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.7, @direction.angle + Math.PI * 1.7, false
-        context.fill()
-      animations[1] = =>
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.2, @direction.angle + Math.PI * 1.2, false
-        context.fill()
-        context.beginPath()
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.8, @direction.angle + Math.PI * 1.8, false
-        context.fill()
-      animations[2] = =>
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.1, @direction.angle + Math.PI * 1.1, false
-        context.fill()
-        context.beginPath()
-        context.arc @position.x, @position.y, radius, @direction.angle + Math.PI * 0.9, @direction.angle + Math.PI * 1.9, false
-        context.fill()
-      animations[3] = =>
-        context.arc @position.x, @position.y, radius, 0, Math.PI * 2, false
-        context.fill()
-      animations[4] = animations[2]
-      animations[5] = animations[1]
-      animations[6] = animations[0]
-
-      @animationTime ?= new Timer
-      if @animationTime.spentMiliseconds() >= 15 and this.canMove()
-        @frame += 1
-        @frame = 0 unless animations[@frame]?
-        delete @animationTime
-      else if not this.canMove()
-        @frame = 1
-
-      animations[@frame]()
+    @renderer ?= new PacmanRenderer(this, context)
+    @renderer.draw()
