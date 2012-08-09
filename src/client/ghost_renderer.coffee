@@ -1,10 +1,11 @@
 class GhostRenderer extends PlayerRenderer
   draw: ->
-    color = if @player.status is "vulnerable" then "#0038F8" else @player.color
-    this.drawBody(color)
-    this.drawBottomBody(color)
+    if @player.status is "alive" or @player.status is "vulnerable"
+      color = if @player.status is "vulnerable" then "#0038F8" else @player.color
+      this.drawBody(color)
+      this.drawBottomBody(color)
 
-    if @player.status is "alive" or status is "dead"
+    if @player.status is "alive" or @player.status is "dead"
       this.drawEyeBalls()
       this.drawPupils()
     else
