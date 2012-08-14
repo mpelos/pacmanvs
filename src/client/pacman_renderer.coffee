@@ -2,6 +2,9 @@ class PacmanRenderer extends PlayerRenderer
   draw: ->
     @context.beginPath()
     @context.fillStyle = "#FF0"
+    @context.save()
+    @context.translate @player.position.x, @player.position.y
+    @context.rotate @player.direction.angle
 
     if @frozen
       @context.arc @player.position.x, @player.position.y, @radius, 0, Math.PI * 2, false
@@ -9,37 +12,33 @@ class PacmanRenderer extends PlayerRenderer
     else
       frames = new Array
       frames[0] = =>
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.3, @player.direction.angle + Math.PI * 1.3, false
-        @context.fill()
-        @context.beginPath()
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.7, @player.direction.angle + Math.PI * 1.7, false
-        @context.fill()
+        @context.arc 0, 0, @radius, 0, Math.PI * 2, true
       frames[1] = =>
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.2, @player.direction.angle + Math.PI * 1.2, false
-        @context.fill()
-        @context.beginPath()
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.8, @player.direction.angle + Math.PI * 1.8, false
-        @context.fill()
+        @context.arc 0, 0, @radius, Math.PI * 0.1, Math.PI * 1.9, false
       frames[2] = =>
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.1, @player.direction.angle + Math.PI * 1.1, false
-        @context.fill()
-        @context.beginPath()
-        @context.arc @player.position.x, @player.position.y, @radius, @player.direction.angle + Math.PI * 0.9, @player.direction.angle + Math.PI * 1.9, false
-        @context.fill()
+        @context.arc 0, 0, @radius, Math.PI * 0.2, Math.PI * 1.8, false
       frames[3] = =>
-        @context.arc @player.position.x, @player.position.y, @radius, 0, Math.PI * 2, false
-        @context.fill()
-      frames[4] = frames[2]
-      frames[5] = frames[1]
-      frames[6] = frames[0]
+        @context.arc 0, 0, @radius, Math.PI * 0.3, Math.PI * 1.7, false
+
+      aliveFrames = [
+        frames[3]
+        frames[2]
+        frames[1]
+        frames[0]
+        frames[1]
+        frames[2]
+        frames[3]
+      ]
 
       @animationTime ?= new Timer
       if @player.frozen or not @player.canMove()
         @frame = 1
       else if @animationTime.spentMiliseconds() >= 15 and @player.canMove()
         @frame += 1
-        @frame = 0 unless frames[@frame]?
+        @frame = 0 unless aliveFrames[@frame]?
         delete @animationTime
 
-      frames[@frame]()
-
+      aliveFrames[@frame]()
+      @context.lineTo -(@radius / 4), 0
+      @context.fill()
+      @context.restore()
