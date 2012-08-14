@@ -84,9 +84,7 @@ class Game
     requestAnimationFrame this.tick
 
   tick: =>
-    startTime = new Date
     this.update()
     this.draw()
-    endTime = new Date
 
     this.loop()
