@@ -1,9 +1,12 @@
 class Timer
-  constructor: ->
+  constructor: (@time) ->
     @startTime = new Date
 
-  spentMiliseconds: ->
+  spentTime: ->
     new Date - @startTime
 
-  spentSeconds: ->
-    this.spentMiliseconds() / 1000
+  timeOver: ->
+    this.spentTime() >= @time
+
+  reset: ->
+    @startTime = new Date

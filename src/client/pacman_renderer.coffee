@@ -1,6 +1,7 @@
 class PacmanRenderer extends PlayerRenderer
   constructor: (@player, @context) ->
     super
+    @animationTimer = new Timer(30)
     @frames = new Array
     @frames[0] = =>
       @context.arc 0, 0, @radius, 0, Math.PI * 2, true
@@ -35,11 +36,10 @@ class PacmanRenderer extends PlayerRenderer
     else if @player.isAlive()
       frames = @aliveFrames
 
-      @animationTime ?= new Timer
-      if @animationTime.spentMiliseconds() >= 15
+      if @animationTimer.timeOver()
         @frame += 1
         @frame = 0 unless frames[@frame]?
-        delete @animationTime
+        @animationTimer.reset()
 
       frames[@frame]()
 

@@ -1,4 +1,8 @@
 class GhostRenderer extends PlayerRenderer
+  constructor: (@player, @context) ->
+    super
+    @animationTimer = new Timer(200)
+
   draw: ->
     if @player.status is "alive" or @player.status is "vulnerable"
       color = if @player.status is "vulnerable" then "#0038F8" else @player.color
@@ -140,13 +144,12 @@ class GhostRenderer extends PlayerRenderer
       @context.lineTo @player.position.x + @radius, @player.position.y + (@radius * 2/3)
       @context.lineTo @player.position.x - @radius, @player.position.y + (@radius * 2/3)
 
-    @animationTime ?= new Timer
     if @player.frozen or not @player.canMove()
       @frame = 0
-    else if @animationTime.spentMiliseconds() >= 200
+    else if @animationTimer.timeOver()
       @frame += 1
       @frame = 0 unless bottomBodyFrames[@frame]?
-      delete @animationTime
+      @animationTimer.reset()
 
     bottomBodyFrames[@frame]()
     @context.stroke()

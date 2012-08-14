@@ -14,6 +14,7 @@ class Game
 
     @map.draw(@context.map)
     @collider = new Collider(@map.entities)
+    @fpsTimer = new Timer(1000)
     @message = "WAIT"
     this.loop(1000/MAX_FPS) # starts the game loop
 
@@ -21,9 +22,8 @@ class Game
     @framesCounter ?= 0
     @fps ?= MAX_FPS
 
-    @fpsTimer ?= new Timer
-    unless @fpsTimer.spentMiliseconds() < 1000
-      delete @fpsTimer
+    if @fpsTimer.timeOver()
+      @fpsTimer.reset()
       @fps = @framesCounter
       @framesCounter = 0
 
@@ -86,5 +86,4 @@ class Game
   tick: =>
     this.update()
     this.draw()
-
     this.loop()
