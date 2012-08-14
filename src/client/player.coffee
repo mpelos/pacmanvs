@@ -70,14 +70,20 @@ class Player extends Entity
   unfreeze: ->
     @frozen = false
 
+  isAlive: ->
+    @status is "alive"
+
+  isDead: ->
+    @status is "dead"
+
+  collidesWith: (entity) ->
+
   update: (gameFps) ->
     this.calculateDisplacement(gameFps)
 
     unless @isFronzen
       this.updateDirection()
       this.updatePosition()
-
-  collidesWith: (entity) ->
 
   draw: (context) ->
 
