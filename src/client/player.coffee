@@ -4,9 +4,9 @@ class Player extends Entity
     options.direction ?= "left"
     @direction = new Direction(options.direction)
     @intentDirection = new Direction
-    @frame = 0
     @speed = 6 # tiles per second
     @frozen = true
+    @status = "alive"
 
   calculateDisplacement: (gameFps) ->
     @displacement = if @frozen then 0 else ((@speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps)
