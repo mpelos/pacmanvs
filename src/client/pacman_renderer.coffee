@@ -11,6 +11,16 @@ class PacmanRenderer extends PlayerRenderer
     @frames[3] = =>
       @context.arc 0, 0, @radius, Math.PI * 0.3, Math.PI * 1.7, false
 
+    @aliveFrames = [
+      @frames[3]
+      @frames[2]
+      @frames[1]
+      @frames[0]
+      @frames[1]
+      @frames[2]
+      @frames[3]
+    ]
+
   draw: ->
     @context.beginPath()
     @context.fillStyle = "#FF0"
@@ -23,27 +33,16 @@ class PacmanRenderer extends PlayerRenderer
     else unless @player.canMove()
       @frames[2]()
     else if @player.isAlive()
-      this.drawAlive()
+      frames = @aliveFrames
+
+      @animationTime ?= new Timer
+      if @animationTime.spentMiliseconds() >= 15
+        @frame += 1
+        @frame = 0 unless frames[@frame]?
+        delete @animationTime
+
+      frames[@frame]()
 
     @context.lineTo -(@radius / 4), 0
     @context.fill()
     @context.restore()
-
-  drawAlive: ->
-    aliveFrames = [
-      @frames[3]
-      @frames[2]
-      @frames[1]
-      @frames[0]
-      @frames[1]
-      @frames[2]
-      @frames[3]
-    ]
-
-    @animationTime ?= new Timer
-    if @animationTime.spentMiliseconds() >= 15
-      @frame += 1
-      @frame = 0 unless aliveFrames[@frame]?
-      delete @animationTime
-
-    aliveFrames[@frame]()
