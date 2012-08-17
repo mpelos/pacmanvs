@@ -30,6 +30,11 @@ class Game
     @framesCounter += 1
     @fps
 
+  update: ->
+    this.calculateFps()
+    player.update(@fps) for player in @map.entities.players
+    @collider.makeCollisions()
+
   drawFps: ->
     @context.player.font = "bold 12px sans-serif"
     @context.player.textAlign = "right"
@@ -46,11 +51,6 @@ class Game
       context.textBaseline = "middle"
       context.fillStyle = "#FDFB4A"
       context.fillText @message, x, y
-
-  update: ->
-    this.calculateFps()
-    player.update(@fps) for player in @map.entities.players
-    @collider.makeCollisions()
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
