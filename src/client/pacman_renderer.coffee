@@ -1,6 +1,7 @@
 class PacmanRenderer extends PlayerRenderer
   constructor: (@player, @context) ->
     super
+    @frame = 3
     @frames = [
       => @context.arc 0, 0, @radius, 0, Math.PI * 2, true
       => @context.arc 0, 0, @radius, Math.PI * 0.1, Math.PI * 1.9, false
@@ -40,18 +41,17 @@ class PacmanRenderer extends PlayerRenderer
 
       @frames[@frame]()
 
-    else unless @player.frozen
-      @aliveAnimationTimer ?= new Timer(30)
-      if @aliveAnimationTimer.timeOver()
-        @frame += 1
-        @frame = 0 unless @aliveFrames[@frame]?
-        delete @aliveAnimationTimer
-
-      @frame = 1 if @player.isAlive() and not @player.canMove()
-      @aliveFrames[@frame]()
-
     else
-       @frames[0]()
+      unless @player.frozen
+        @aliveAnimationTimer ?= new Timer(30)
+        if @aliveAnimationTimer.timeOver()
+          @frame += 1
+          @frame = 0 unless @aliveFrames[@frame]?
+          delete @aliveAnimationTimer
+
+        @frame = 1 if @player.isAlive() and not @player.canMove()
+
+      @aliveFrames[@frame]()
 
     @context.lineTo -(@radius / 4), 0
     @context.fill()
