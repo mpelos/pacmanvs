@@ -84,6 +84,8 @@ class Game
     @frozenTimer ?= new Timer(2000)
     unless @frozenTimer.timeOver()
       this.handleStatus "frozen"
+    else
+      @map.pacman.die()
 
   loop: ->
     requestAnimationFrame this.tick

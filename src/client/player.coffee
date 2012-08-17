@@ -81,7 +81,7 @@ class Player extends Entity
   update: (gameFps) ->
     this.calculateDisplacement(gameFps)
 
-    unless @isFronzen
+    unless @frozen
       this.updateDirection()
       this.updatePosition()
 
