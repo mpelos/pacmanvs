@@ -38,7 +38,8 @@ class Map
 
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH
-          @entities.players.push(new Pacman(x, y, this))
+          @pacman = new Pacman(x, y, this)
+          @entities.players.push(@pacman)
           @entities.players.reverse()
 
         if value is Map.GHOST

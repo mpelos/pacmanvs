@@ -29,19 +29,21 @@ class PacmanRenderer extends PlayerRenderer
     @context.translate @player.position.x, @player.position.y
     @context.rotate @player.direction.angle
 
-    if @player.frozen
-      @frames[0]()
-    else unless @player.canMove()
-      @frames[2]()
-    else if @player.isAlive()
-      frames = @aliveFrames
+    if not @player.frozen
+      frames = switch @player.status
+        when "alive" then @aliveFrames
+        when "dead"  then @frames
 
       if @animationTimer.timeOver()
         @frame += 1
         @frame = 0 unless frames[@frame]?
         @animationTimer.reset()
 
+      @frame = 1 if @player.isAlive() and not @player.canMove()
       frames[@frame]()
+
+    else
+      @frames[0]()
 
     @context.lineTo -(@radius / 4), 0
     @context.fill()

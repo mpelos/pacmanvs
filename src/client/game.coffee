@@ -80,10 +80,16 @@ class Game
       @message = "WAIT"
       player.freeze() for player in @map.entities.players
 
+  endGame: ->
+    @frozenTimer ?= new Timer(2000)
+    unless @frozenTimer.timeOver()
+      this.handleStatus "frozen"
+
   loop: ->
     requestAnimationFrame this.tick
 
   tick: =>
+    this.endGame() if @map.pacman.gotCaught()
     this.update()
     this.draw()
     this.loop()
