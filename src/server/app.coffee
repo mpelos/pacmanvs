@@ -24,30 +24,15 @@ app.configure "production", ->
 
 sockets = []
 characterCodes = [0, 1, 2, 3, 4]
-gameStatus = "frozen"
 io.sockets.on "connection", (socket) ->
   sockets.push socket
   socket.characterCode = characterCodes.shift()
   socket.emit "character", socket.characterCode
-  socket.emit "status",    gameStatus
-
-  if sockets.length >= 2 and gameStatus == "frozen"
-    gameStatus = "pending"
-    io.sockets.emit "message", "READY!"
-
-    setTimeout ->
-      gameStatus = "running"
-      io.sockets.emit "status", "running"
-    , 3000
 
   socket.on "disconnect", ->
     characterCodes.push(socket.characterCode)
     characterCodes.sort()
     sockets.remove socket
-
-    if sockets.length < 2 or characterCodes.none(0)
-      gameStatus = "frozen"
-      io.sockets.emit "status", gameStatus
 
 app.get "/", (request, response) ->
   response.render "index"

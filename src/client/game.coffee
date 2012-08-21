@@ -16,7 +16,8 @@ class Game
     @collider = new Collider(@map.entities)
     @fpsTimer = new Timer(1000)
     @message = "WAIT"
-    this.loop # starts the game loop
+    this.delay(2000) # Freeze game for 2 seconds
+    this.loop() # starts the game loop
 
   calculateFps: ->
     @framesCounter ?= 0
@@ -30,8 +31,49 @@ class Game
     @framesCounter += 1
     @fps
 
+  draw: ->
+    @canvas.player.width = @canvas.player.width # clear player canvas
+    food.draw(@context.player) for food in @map.entities.foods
+    player.draw(@context.player) for player in @map.entities.players
+    this.drawFps()
+    this.drawMessage()
+
+  handleKey: (event) =>
+    switch event.which
+      when 37 then @player.turnLeft()  # left arrow
+      when 38 then @player.turnUp()    # up arrow
+      when 39 then @player.turnRight() # right arrow
+      when 40 then @player.turnDown()  # down arrow
+
+  setPlayerCharacter: (characterCode) =>
+    console.log characterCode
+    @player = @map.entities.players[characterCode]
+
+  setMessage: (message) =>
+    @message = message
+
+  setStatus: (status) =>
+    @status = status
+    if status == "running"
+      player.unfreeze() for player in @map.entities.players
+    else if status == "frozen"
+      player.freeze() for player in @map.entities.players
+
+  delay: (time) ->
+    @delayTimer ?= new Timer(time)
+    @delayTimer.setTime(time) if time
+
+    if @delayTimer.timeOver()
+      this.setStatus "running"
+    else
+      this.setStatus "frozen"
+
+  isFrozen: ->
+    @status is "frozen"
+
   update: ->
     this.calculateFps()
+    this.delay() if this.isFrozen()
     player.update(@fps) for player in @map.entities.players
     @collider.makeCollisions()
 
@@ -52,46 +94,10 @@ class Game
       context.fillStyle = "#FDFB4A"
       context.fillText @message, x, y
 
-  draw: ->
-    @canvas.player.width = @canvas.player.width # clear player canvas
-    food.draw(@context.player) for food in @map.entities.foods
-    player.draw(@context.player) for player in @map.entities.players
-    this.drawFps()
-    this.drawMessage()
-
-  handleKey: (event) =>
-    switch event.which
-      when 37 then @player.turnLeft()  # left arrow
-      when 38 then @player.turnUp()    # up arrow
-      when 39 then @player.turnRight() # right arrow
-      when 40 then @player.turnDown()  # down arrow
-
-  handleCharacter: (characterCode) =>
-    @player = @map.entities.players[characterCode]
-
-  handleMessage: (message) =>
-    @message = message
-
-  handleStatus: (status) =>
-    if status == "running"
-      @message = ""
-      player.unfreeze() for player in @map.entities.players
-    else if status == "frozen"
-      @message = "WAIT"
-      player.freeze() for player in @map.entities.players
-
-  endGame: ->
-    @frozenTimer ?= new Timer(2000)
-    unless @frozenTimer.timeOver()
-      this.handleStatus "frozen"
-    else
-      @map.pacman.die()
-
   loop: ->
     requestAnimationFrame this.tick
 
   tick: =>
-    this.endGame() if @map.pacman.gotCaught()
     this.update()
     this.draw()
     this.loop()

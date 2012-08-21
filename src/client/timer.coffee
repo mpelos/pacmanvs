@@ -8,5 +8,9 @@ class Timer
   timeOver: ->
     this.spentTime() >= @time
 
+  setTime: (time) ->
+    @time = time
+    this.reset()
+
   reset: ->
     @startTime = new Date

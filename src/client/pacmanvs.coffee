@@ -5,7 +5,4 @@ jQuery ($) ->
   $(document).bind "keydown", game.handleKey
 
   socket = io.connect $("meta[name='websocket']").attr("content")
-  socket.emit "gameInitialized"
-  socket.on "character", game.handleCharacter
-  socket.on "message",   game.handleMessage
-  socket.on "status",    game.handleStatus
+  socket.on "character", game.setPlayerCharacter
