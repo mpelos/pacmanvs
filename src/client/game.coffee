@@ -16,7 +16,7 @@ class Game
     @collider = new Collider(@map.entities)
     @fpsTimer = new Timer(1000)
     @message = "WAIT"
-    this.loop(1000/MAX_FPS) # starts the game loop
+    this.loop # starts the game loop
 
   calculateFps: ->
     @framesCounter ?= 0
