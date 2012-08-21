@@ -39,11 +39,11 @@ class Player extends Entity
 
     @direction
 
-  updatePosition: () ->
+  updatePosition: ->
     this.excludeFromTiles()
 
     if _.all(this.currentTiles(), (tile) -> !tile)
-      @position.x -= @map.width - 1
+      @position.x -= @map.width - Map.TILE_WIDTH / 10
       if @position.x < 0
         @position.x = parseInt(@position.x.toString().replace("-", ""))
       else

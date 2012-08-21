@@ -4,7 +4,7 @@ class Ghost extends Player
     @color = options.color
 
   canMove: (direction = @direction) ->
-    not _.any(this.tilesAhead(direction), (tile) -> tile.isWall())
+    not _.any(this.tilesAhead(direction), (tile) -> tile?.isWall())
 
   collidesWith: (entity) ->
     this.collidesWithPacman(entity) if entity instanceof Pacman
