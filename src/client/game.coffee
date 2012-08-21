@@ -46,7 +46,6 @@ class Game
       when 40 then @player.turnDown()  # down arrow
 
   setPlayerCharacter: (characterCode) =>
-    console.log characterCode
     @player = @map.entities.players[characterCode]
 
   setMessage: (message) =>
