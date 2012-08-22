@@ -17,7 +17,7 @@ class Game
     @fpsTimer = new Timer(1000)
     @message = "WAIT"
     this.delay(2000) # Freeze game for 2 seconds
-    this.loop() # starts the game loop
+    this.loop()      # starts the game loop
 
   calculateFps: ->
     @framesCounter ?= 0
@@ -51,21 +51,20 @@ class Game
   setMessage: (message) =>
     @message = message
 
-  setStatus: (status) =>
-    @status = status
-    if status == "running"
-      player.unfreeze() for player in @map.entities.players
-    else if status == "frozen"
-      player.freeze() for player in @map.entities.players
+  play: ->
+    @status = "running"
+    @message = ""
+    player.unfreeze() for player in @map.entities.players
+
+  freeze: ->
+    @status = "frozen"
+    @message = "Wait"
+    player.freeze() for player in @map.entities.players
 
   delay: (time) ->
     @delayTimer ?= new Timer(time)
     @delayTimer.setTime(time) if time
-
-    if @delayTimer.timeOver()
-      this.setStatus "running"
-    else
-      this.setStatus "frozen"
+    if @delayTimer.timeOver() then this.play() else this.freeze()
 
   isFrozen: ->
     @status is "frozen"
