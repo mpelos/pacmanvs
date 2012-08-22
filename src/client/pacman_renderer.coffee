@@ -1,5 +1,5 @@
 class PacmanRenderer extends PlayerRenderer
-  constructor: (@player, @context) ->
+  constructor: (@context, @player) ->
     super
     @frame = 3
     @frames = [

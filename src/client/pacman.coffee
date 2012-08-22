@@ -32,5 +32,5 @@ class Pacman extends Player
       this.updatePosition()
 
   draw: (context) ->
-    @renderer ?= new PacmanRenderer(this, context)
+    @renderer ?= new PacmanRenderer(context, this)
     @renderer.draw()

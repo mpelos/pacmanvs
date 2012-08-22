@@ -1,5 +1,5 @@
 class GhostRenderer extends PlayerRenderer
-  constructor: (@player, @context) ->
+  constructor: (@context, @player) ->
     super
     @animationTimer = new Timer(200)
 

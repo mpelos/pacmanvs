@@ -13,5 +13,5 @@ class Ghost extends Player
     pacman.getCaught()
 
   draw: (context) ->
-    @renderer ?= new GhostRenderer(this, context)
+    @renderer ?= new GhostRenderer(context, this)
     @renderer.draw()
