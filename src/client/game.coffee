@@ -13,9 +13,10 @@ class Game
       @context[name] = @canvas[name].getContext("2d")
 
     @map.draw(@context.map)
+    @characters = @map.entities.characters
+    @foods = @map.entities.foods
     @collider = new Collider(@map.entities)
     @fpsTimer = new Timer(1000)
-    @message = "WAIT"
     this.delay(2000) # Freeze game for 2 seconds
     this.loop()      # starts the game loop
 
@@ -33,8 +34,8 @@ class Game
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
-    food.draw(@context.player) for food in @map.entities.foods
-    player.draw(@context.player) for player in @map.entities.players
+    food.draw(@context.player) for food in @foods
+    player.draw(@context.player) for player in @characters
     this.drawFps()
     this.drawMessage()
 
@@ -46,7 +47,7 @@ class Game
       when 40 then @player.turnDown()  # down arrow
 
   setPlayerCharacter: (characterCode) =>
-    @player = @map.entities.players[characterCode]
+    @player = @characters[characterCode]
 
   setMessage: (message) =>
     @message = message
@@ -54,12 +55,12 @@ class Game
   play: ->
     @status = "running"
     @message = ""
-    player.unfreeze() for player in @map.entities.players
+    character.unfreeze() for character in @characters
 
   freeze: ->
     @status = "frozen"
     @message = "Wait"
-    player.freeze() for player in @map.entities.players
+    character.freeze() for character in @characters
 
   delay: (time) ->
     @delayTimer ?= new Timer(time)
@@ -72,7 +73,7 @@ class Game
   update: ->
     this.calculateFps()
     this.delay() if this.isFrozen()
-    player.update(@fps) for player in @map.entities.players
+    character.update(@fps) for character in @characters
     @collider.makeCollisions()
 
   drawFps: ->
@@ -90,7 +91,7 @@ class Game
       context.textAlign = "center"
       context.textBaseline = "middle"
       context.fillStyle = "#FDFB4A"
-      context.fillText @message, x, y
+      context.fillText @message.toUpperCase(), x, y
 
   loop: ->
     requestAnimationFrame this.tick

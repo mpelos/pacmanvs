@@ -16,7 +16,7 @@ class Map
     @height = @matrix.length    * Map.TILE_HEIGHT
     @tiles = []
     @entities =
-      players: []
+      characters: []
       foods: []
 
     ghostAttributes =
@@ -38,9 +38,8 @@ class Map
 
         if value is Map.PACMAN
           @tiles[i][j].type = Map.PATH
-          @pacman = new Pacman(x, y, this)
-          @entities.players.push(@pacman)
-          @entities.players.reverse()
+          @entities.characters.push new Pacman(x, y, this)
+          @entities.characters.reverse()
 
         if value is Map.GHOST
           @tiles[i][j].type = Map.GHOST_WALL
@@ -48,9 +47,7 @@ class Map
             color: ghostAttributes.colors.shift()
             direction: ghostAttributes.directions.shift()
           ghost = new Ghost x, y, this, options
-          @entities.players.push(ghost)
-
-    @foodCounter = @entities.foods.length
+          @entities.characters.push(ghost)
 
   draw: (context) ->
     this.drawWalls(context)
