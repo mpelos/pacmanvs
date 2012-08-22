@@ -15,8 +15,10 @@ class Game
     @map.draw(@context.map)
     @characters = @map.entities.characters
     @foods = @map.entities.foods
+    @pacmanLifes = 3
     @collider = new Collider(@map.entities)
     @fpsTimer = new Timer(1000)
+    this.drawPacmanLifes()
     this.delay(2000) # Freeze game for 2 seconds
     this.loop()      # starts the game loop
 
@@ -31,12 +33,6 @@ class Game
 
     @framesCounter += 1
     @fps
-
-  draw: ->
-    @canvas.player.width = @canvas.player.width # clear player canvas
-    food.draw(@context.player) for food in @foods
-    player.draw(@context.player) for player in @characters
-    this.drawMessage()
 
   handleKey: (event) =>
     switch event.which
@@ -75,11 +71,15 @@ class Game
     character.update(@fps) for character in @characters
     @collider.makeCollisions()
 
-  drawFps: ->
-    @context.player.font = "bold 12px sans-serif"
-    @context.player.textAlign = "right"
-    @context.player.fillStyle = "#FFF"
-    @context.player.fillText "#{@fps} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
+  draw: ->
+    @canvas.player.width = @canvas.player.width # clear player canvas
+    food.draw(@context.player) for food in @foods
+    player.draw(@context.player) for player in @characters
+    this.drawMessage()
+
+  drawPacmanLifes: ->
+    @pacmanRenderer ?= new PacmanRenderer(@context.map)
+    @pacmanRenderer.drawLifes(@pacmanLifes)
 
   drawMessage: ->
     if @message
@@ -91,6 +91,12 @@ class Game
       context.textBaseline = "middle"
       context.fillStyle = "#FDFB4A"
       context.fillText @message.toUpperCase(), x, y
+
+  drawFps: ->
+    @context.player.font = "bold 12px sans-serif"
+    @context.player.textAlign = "right"
+    @context.player.fillStyle = "#FFF"
+    @context.player.fillText "#{@fps} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
 
   loop: ->
     requestAnimationFrame this.tick

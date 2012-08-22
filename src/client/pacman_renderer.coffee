@@ -56,3 +56,17 @@ class PacmanRenderer extends PlayerRenderer
     @context.lineTo -(@radius / 4), 0
     @context.fill()
     @context.restore()
+
+  drawLifes: (lifes) ->
+    y = (Map.TILE_HEIGHT * MAPS_MATRIX[0].length) - @radius
+    _.times lifes, (n) =>
+      x = (Map.TILE_WIDTH * MAPS_MATRIX[0][0].length) - (n * Map.TILE_WIDTH) - @radius
+      @context.save()
+      @context.translate x, y
+      @context.scale 0.65, 0.65
+      @context.beginPath()
+      @context.fillStyle = "#FF0"
+      @frames[2]()
+      @context.lineTo -(@radius / 4), 0
+      @context.fill()
+      @context.restore()
