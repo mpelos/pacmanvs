@@ -14,10 +14,12 @@ class Game
 
     @map.draw(@context.map)
     @characters = @map.entities.characters
+    @pacman = @characters[0]
     @foods = @map.entities.foods
     @pacmanLifes = 3
     @collider = new Collider(@map.entities)
     @fpsTimer = new Timer(1000)
+    @message = "Wait" # Initial game message
     this.drawPacmanLifes()
     this.delay(2000) # Freeze game for 2 seconds
     this.loop()      # starts the game loop
@@ -54,13 +56,21 @@ class Game
 
   freeze: ->
     @status = "frozen"
-    @message = "Wait"
     character.freeze() for character in @characters
 
-  delay: (time) ->
+  delay: (time, callback) ->
     @delayTimer ?= new Timer(time)
     @delayTimer.setTime(time) if time
-    if @delayTimer.timeOver() then this.play() else this.freeze()
+    @delayCallback = callback if callback
+
+    if @delayTimer.timeOver()
+      this.play()
+
+      if @delayCallback
+        @delayCallback()
+        delete @delayCallback
+    else
+      this.freeze()
 
   isFrozen: ->
     @status is "frozen"
@@ -68,8 +78,12 @@ class Game
   update: ->
     this.calculateFps()
     this.delay() if this.isFrozen()
-    character.update(@fps) for character in @characters
-    @collider.makeCollisions()
+
+    if @pacman.isAlive()
+      character.update(@fps) for character in @characters
+      @collider.makeCollisions()
+    else if @pacman.gotCaught() and not this.isFrozen()
+      this.delay 2000, -> @pacman.die()
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
