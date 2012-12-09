@@ -150,3 +150,18 @@ class Map
         if i is 0
           context.textAlign = "center"
           context.fillText j, x + (Map.TILE_WIDTH / 2), y + 6
+
+  drawTilesType: (context) ->
+    context.font = "normal 12px menlo"
+    context.textAlign = "center"
+    context.textBaseline = "middle"
+    context.fillStyle = "#FFF"
+
+    for array, i in @matrix
+      for value, j in array
+        value = "p" if value is "f" or value is "P"
+        value = "g" if value is "G"
+        x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
+        y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+
+        context.fillText value, x, y
