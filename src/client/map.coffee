@@ -21,7 +21,7 @@ class Map
 
     ghostAttributes =
       colors: ["#F81F17", "#48FEFE", "#FB9DCD", "#FACE26"]
-      directions: ["up", "right", "left", "down"]
+      initialDirections: ["up", "right", "left", "down"]
 
     for array, i in @matrix
       @tiles[i] = []
@@ -45,7 +45,7 @@ class Map
           @tiles[i][j].type = Map.GHOST_WALL
           options =
             color: ghostAttributes.colors.shift()
-            direction: ghostAttributes.directions.shift()
+            direction: ghostAttributes.initialDirections.shift()
           ghost = new Ghost x, y, this, options
           @entities.characters.push(ghost)
 
