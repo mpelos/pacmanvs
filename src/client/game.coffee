@@ -58,6 +58,9 @@ class Game
     @status = "frozen"
     character.freeze() for character in @characters
 
+  isFrozen: ->
+    @status is "frozen"
+
   delay: (time, callback) ->
     @delayTimer ?= new Timer(time)
     @delayTimer.setTime(time) if time
@@ -72,8 +75,7 @@ class Game
     else
       this.freeze()
 
-  isFrozen: ->
-    @status is "frozen"
+  reset: ->
 
   update: ->
     this.calculateFps()
@@ -84,6 +86,12 @@ class Game
       @collider.makeCollisions()
     else if @pacman.gotCaught() and not this.isFrozen()
       this.delay 2000, -> @pacman.die()
+    else if @pacman.isDead()
+      @endMatchTimer ?= new Timer(4000)
+
+      if @endMatchTimer.timeOver()
+        delete @endMatchTimer
+        this.reset()
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
