@@ -1,9 +1,14 @@
 class Coordinate
   constructor: (@x, @y) ->
 
-  change: (x, y) ->
-    @x = x
-    @y = y
+  set: ->
+    if arguments[0] instanceof Coordinate
+      position = arguments[0]
+      @x = position.x
+      @y = position.y
+    else
+      @x = arguments[0]
+      @y = arguments[1]
 
   betweenAxisX: (x1, x2) ->
     x1 < @x < x2 or x1 > @x > x2
