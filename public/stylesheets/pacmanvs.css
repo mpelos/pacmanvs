@@ -3,7 +3,7 @@
   margin: 0 auto;
 }
 
-#map_canvas, #player_canvas {
+#map_canvas, #player_canvas, #life_canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -16,4 +16,8 @@
 
 #player_canvas {
   z-index: 1;
+}
+
+#life_canvas {
+  z-index: 2;
 }

@@ -104,7 +104,8 @@ class Game
     this.drawMessage()
 
   drawPacmanLifes: ->
-    @pacmanRenderer ?= new PacmanRenderer(@context.map)
+    @canvas.life.width = @canvas.life.width # clear life canvas
+    @pacmanRenderer ?= new PacmanRenderer(@context.life)
     @pacmanRenderer.drawLifes(@pacmanLifes)
 
   drawMessage: ->
