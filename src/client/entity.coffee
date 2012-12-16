@@ -1,6 +1,7 @@
 class Entity
   constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
+    @initialPosition = new Coordinate(x, y)
     @boundingBox = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
 
   currentTiles: (positions = @boundingBox.toArray()) ->
