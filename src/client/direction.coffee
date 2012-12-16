@@ -17,6 +17,8 @@ class Direction
         when "0, 1"  then Math.PI * 1.5
     else if typeof direction is "number"
       direction
+    else if direction instanceof Direction
+      direction.angle
     else
       null
 
