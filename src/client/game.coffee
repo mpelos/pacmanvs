@@ -58,8 +58,16 @@ class Game
     @status = "frozen"
     character.freeze() for character in @characters
 
+  end: (winner) ->
+    @status = "ended"
+    @message = "#{winner} won"
+    this.drawPacmanLifes()
+
   isFrozen: ->
     @status is "frozen"
+
+  ended: ->
+    @status is "ended"
 
   delay: (time, callback) ->
     @delayTimer ?= new Timer(time)
@@ -85,7 +93,9 @@ class Game
     this.calculateFps()
     this.delay() if this.isFrozen()
 
-    if @pacman.isAlive()
+    if @map.remainingFoods().length is 0
+      this.end("pacman")
+    else if @pacman.isAlive()
       character.update(@fps) for character in @characters
       @collider.makeCollisions()
     else if @pacman.gotCaught() and not this.isFrozen()
@@ -96,7 +106,11 @@ class Game
       if @endMatchTimer.timeOver()
         delete @endMatchTimer
         @pacmanLifes -= 1
-        this.reset()
+
+        if @pacmanLifes > 0
+          this.reset()
+        else
+          this.end("ghosts")
 
   draw: ->
     @canvas.player.width = @canvas.player.width # clear player canvas
@@ -132,4 +146,4 @@ class Game
   tick: =>
     this.update()
     this.draw()
-    this.loop()
+    this.loop() unless this.ended()

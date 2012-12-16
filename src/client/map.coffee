@@ -49,6 +49,10 @@ class Map
           ghost = new Ghost x, y, this, options
           @entities.characters.push(ghost)
 
+  remainingFoods: ->
+    _.filter @entities.foods, (food) ->
+      !food.eated
+
   draw: (context) ->
     this.drawWalls(context)
     this.drawGhostWalls(context)
