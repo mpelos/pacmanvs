@@ -14,3 +14,7 @@ class Food extends Entity
       context.fillStyle = "#FFF"
       context.beginPath()
       context.fillRect(@position.x - (@width / 2), @position.y - (@height / 2), @width, @height)
+
+  reset: ->
+    @eated = false
+    this.includeIntoTiles()

@@ -4,3 +4,5 @@ class PlayerRenderer
     @frame = 0
 
   draw: ->
+
+  reset: ->

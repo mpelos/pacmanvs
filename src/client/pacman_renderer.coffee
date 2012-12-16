@@ -70,3 +70,6 @@ class PacmanRenderer extends PlayerRenderer
       @context.lineTo -(@radius / 4), 0
       @context.fill()
       @context.restore()
+
+  reset: ->
+    @frame = 3

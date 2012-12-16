@@ -96,3 +96,11 @@ class Player extends Entity
     context.textAlign = "center"
     context.fillStyle = "#FFF"
     context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
+
+  reset: ->
+    this.excludeFromTiles()
+    @position.set(@initialPosition)
+    @direction.set(@initialDirection)
+    @renderer.reset()
+    this.includeIntoTiles()
+    this.live()
