@@ -20,9 +20,6 @@ class Pacman extends Player
       @renderer.frame = 0
       this.unfreeze()
 
-  isDead: ->
-    @status is "dead"
-
   update: (gameFps) ->
     this.calculateDisplacement(gameFps)
 

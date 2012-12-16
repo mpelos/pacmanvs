@@ -71,6 +71,9 @@ class Player extends Entity
   unfreeze: ->
     @frozen = false
 
+  live: ->
+    @status = "alive"
+
   isAlive: ->
     @status is "alive"
 
