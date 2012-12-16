@@ -10,8 +10,9 @@ class Map
   this.PACMAN     = "P"
   this.GHOST      = "G"
 
-  constructor: ->
-    @matrix = MAPS_MATRIX[0]
+  constructor: (options = {})->
+    mapIndex = options.mapIndex || 0
+    @matrix = MAPS_MATRIX[mapIndex]
     @width  = @matrix[0].length * Map.TILE_WIDTH
     @height = @matrix.length    * Map.TILE_HEIGHT
     @tiles = []
