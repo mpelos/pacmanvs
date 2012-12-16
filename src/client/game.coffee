@@ -95,6 +95,7 @@ class Game
 
       if @endMatchTimer.timeOver()
         delete @endMatchTimer
+        @pacmanLifes -= 1
         this.reset()
 
   draw: ->
