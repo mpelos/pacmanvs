@@ -36,12 +36,18 @@ class Game
     @framesCounter += 1
     @fps
 
-  handleKey: (event) =>
-    switch event.which
-      when 37 then @player.turnLeft()  # left arrow
-      when 38 then @player.turnUp()    # up arrow
-      when 39 then @player.turnRight() # right arrow
-      when 40 then @player.turnDown()  # down arrow
+  handleKey: (event, characterCode = @characters.indexOf(@player)) =>
+    player = @characters[characterCode]
+    keyCode = if player is @player then event.which else event
+
+    if player is @player and _.contains([37..40], keyCode)
+      socket.emit("keyPress", keyCode, @characters.indexOf(@player))
+
+    switch keyCode
+      when 37 then player.turnLeft()  # left arrow
+      when 38 then player.turnUp()    # up arrow
+      when 39 then player.turnRight() # right arrow
+      when 40 then player.turnDown()  # down arrow
 
   setPlayerCharacter: (characterCode) =>
     @player = @characters[characterCode]

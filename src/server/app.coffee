@@ -34,6 +34,9 @@ io.sockets.on "connection", (socket) ->
     characterCodes.sort()
     sockets.remove socket
 
+  socket.on "keyPress", (keyCode, characterCode) ->
+    socket.broadcast.emit "playerKeyPress", keyCode, characterCode
+
 app.get "/", (request, response) ->
   response.render "index"
 
