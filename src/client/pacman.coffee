@@ -4,8 +4,7 @@ class Pacman extends Player
 
   collidesWithFood: (food) ->
     food.excludeFromTiles()
-    food.position.change(null, null)
-    @map.foodCounter -= 1
+    food.getEaten()
 
   getCaught: ->
     if this.isAlive()
