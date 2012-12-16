@@ -76,7 +76,7 @@ class Game
       this.freeze()
 
   reset: ->
-    entity.reset() for entity in @characters.concat(@foods)
+    character.reset() for character in @characters
     @message = "Wait" # Initial game message
     this.drawPacmanLifes()
     this.delay(2000) # Freeze game for 2 seconds
