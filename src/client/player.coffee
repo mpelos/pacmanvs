@@ -10,7 +10,7 @@ class Player extends Entity
     @status = "alive"
 
   calculateDisplacement: (gameFps) ->
-    @displacement = if @frozen then 0 else ((@speed * (Map.TILE_WIDTH + Map.TILE_HEIGHT) / 2) / gameFps)
+    @displacement = if @frozen then 0 else ((@speed * (Map.tileWidth + Map.tileHeight) / 2) / gameFps)
 
   tilesAhead: (direction = @direction) ->
     positionsAhead = []
@@ -44,11 +44,11 @@ class Player extends Entity
     this.excludeFromTiles()
 
     if _.all(this.currentTiles(), (tile) -> !tile)
-      @position.x -= @map.width - Map.TILE_WIDTH / 10
+      @position.x -= @map.width - Map.tileWidth / 10
       if @position.x < 0
         @position.x = parseInt(@position.x.toString().replace("-", ""))
       else
-        @position.x -= Map.TILE_WIDTH
+        @position.x -= Map.tileWidth
     else if this.canMove()
       @previousPosition = _.clone(@position)
 
@@ -95,7 +95,7 @@ class Player extends Entity
     context.font = "bold 12px sans-serif"
     context.textAlign = "center"
     context.fillStyle = "#FFF"
-    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.TILE_HEIGHT)
+    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.tileHeight)
 
   reset: ->
     this.excludeFromTiles()

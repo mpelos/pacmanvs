@@ -1,6 +1,6 @@
 class PlayerRenderer
   constructor: (@context, @player) ->
-    @radius = (Map.TILE_WIDTH + (Map.WALL_PADDING / 2)) / 2
+    @radius = (Map.tileWidth + (Map.wallPadding / 2)) / 2
     @frame = 0
 
   draw: ->

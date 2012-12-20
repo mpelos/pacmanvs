@@ -1,7 +1,7 @@
 class Map
-  this.TILE_WIDTH   = 20
-  this.TILE_HEIGHT  = 20
-  this.WALL_PADDING = 10
+  @tileWidth   = 20
+  @tileHeight  = 20
+  @wallPadding = 10
 
   this.WALL       = "w"
   this.GHOST_WALL = "g"
@@ -13,8 +13,11 @@ class Map
   constructor: (options = {})->
     mapIndex = options.mapIndex || 0
     @matrix = MAPS_MATRIX[mapIndex]
-    @width  = @matrix[0].length * Map.TILE_WIDTH
-    @height = @matrix.length    * Map.TILE_HEIGHT
+    Map.tileHeight = Math.floor(window.innerHeight / @matrix.length)
+    Map.tileWidth = Map.tileHeight
+    Map.wallPadding = Map.tileHeight / 2
+    @width  = @matrix[0].length * Map.tileWidth
+    @height = @matrix.length    * Map.tileHeight
     @tiles = []
     @entities =
       characters: []
@@ -77,68 +80,69 @@ class Map
   drawLines: (context, wallType = Map.WALL) ->
     for array, i in @matrix
       for value, j in array
-        x = j * Map.TILE_WIDTH
-        y = i * Map.TILE_HEIGHT
+        x = j * Map.tileWidth
+        y = i * Map.tileHeight
         tile = @tiles[i][j]
 
         if tile.isWall(wallType)
-          startX = if tile.isWallLeftCorner(wallType)  then (x + Map.WALL_PADDING)                   else x
-          endX   = if tile.isWallRightCorner(wallType) then (x + Map.TILE_WIDTH - Map.WALL_PADDING)  else (x + Map.TILE_WIDTH)
-          startY = if tile.isWallUpCorner(wallType)    then (y + Map.WALL_PADDING)                   else y
-          endY   = if tile.isWallDownCorner(wallType)  then (y + Map.TILE_HEIGHT - Map.WALL_PADDING) else (y + Map.TILE_HEIGHT)
+          startX = if tile.isWallLeftCorner(wallType)  then (x + Map.wallPadding)                   else x
+          endX   = if tile.isWallRightCorner(wallType) then (x + Map.tileWidth - Map.wallPadding)  else (x + Map.tileWidth)
+          startY = if tile.isWallUpCorner(wallType)    then (y + Map.wallPadding)                   else y
+          endY   = if tile.isWallDownCorner(wallType)  then (y + Map.tileHeight - Map.wallPadding) else (y + Map.tileHeight)
 
           if tile.above()?.isPath()
-            _y = y + Map.WALL_PADDING + 0.5
+            _y = y + Map.wallPadding + 0.5
             context.moveTo startX, _y
             context.lineTo endX, _y
 
           if tile.right()?.isPath()
-            _x = x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5
+            _x = x + Map.tileWidth - Map.wallPadding - 0.5
             context.moveTo _x, startY
             context.lineTo _x, endY
 
           if tile.below()?.isPath()
-            _y = y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5
+            _y = y + Map.tileHeight - Map.wallPadding - 0.5
             context.moveTo startX, _y
             context.lineTo endX, _y
 
           if tile.left()?.isPath()
-            _x = x + Map.WALL_PADDING + 0.5
+            _x = x + Map.wallPadding + 0.5
             context.moveTo _x, startY
             context.lineTo _x, endY
 
           if (tile.above()?.isWall(wallType) or not tile.above()?) and (tile.right()?.isWall(wallType) or not tile.right()?) and (tile.below()?.isWall(wallType) or not tile.below()?) and (tile.left()?.isWall(wallType) or not tile.left()?)
             if tile.aboveRight()?.isPath()
-              context.moveTo (x + Map.TILE_WIDTH), (y + Map.WALL_PADDING + 0.5)
-              context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.WALL_PADDING + 0.5)
-              context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), y
+              context.moveTo (x + Map.tileWidth), (y + Map.wallPadding + 0.5)
+              context.lineTo (x + Map.tileWidth - Map.wallPadding - 0.5), (y + Map.wallPadding + 0.5)
+              context.lineTo (x + Map.tileWidth - Map.wallPadding - 0.5), y
 
             if tile.belowRight()?.isPath()
-              context.moveTo (x + Map.TILE_WIDTH), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
-              context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
-              context.lineTo (x + Map.TILE_WIDTH - Map.WALL_PADDING - 0.5), (y + Map.TILE_HEIGHT)
+              context.moveTo (x + Map.tileWidth), (y + Map.tileHeight - Map.wallPadding - 0.5)
+              context.lineTo (x + Map.tileWidth - Map.wallPadding - 0.5), (y + Map.tileHeight - Map.wallPadding - 0.5)
+              context.lineTo (x + Map.tileWidth - Map.wallPadding - 0.5), (y + Map.tileHeight)
 
             if tile.belowLeft()?.isPath()
-              context.moveTo x, (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
-              context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.TILE_HEIGHT - Map.WALL_PADDING - 0.5)
-              context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.TILE_HEIGHT)
+              context.moveTo x, (y + Map.tileHeight - Map.wallPadding - 0.5)
+              context.lineTo (x + Map.wallPadding + 0.5), (y + Map.tileHeight - Map.wallPadding - 0.5)
+              context.lineTo (x + Map.wallPadding + 0.5), (y + Map.tileHeight)
 
             if tile.aboveLeft()?.isPath()
-              context.moveTo x, (y + Map.WALL_PADDING + 0.5)
-              context.lineTo (x + Map.WALL_PADDING + 0.5), (y + Map.WALL_PADDING + 0.5)
-              context.lineTo (x + Map.WALL_PADDING + 0.5), y
+              context.moveTo x, (y + Map.wallPadding + 0.5)
+              context.lineTo (x + Map.wallPadding + 0.5), (y + Map.wallPadding + 0.5)
+              context.lineTo (x + Map.wallPadding + 0.5), y
 
   drawGrid: (context) ->
     context.beginPath()
+    context.lineWidth = 1
     for array, i in @matrix
       for value, j in array
-        x = j * Map.TILE_WIDTH
-        y = i * Map.TILE_HEIGHT
+        x = j * Map.tileWidth
+        y = i * Map.tileHeight
 
-        context.moveTo x, y + Map.TILE_HEIGHT + 0.5
-        context.lineTo x + Map.TILE_WIDTH, y + Map.TILE_HEIGHT + 0.5
-        context.moveTo x + Map.TILE_WIDTH + 0.5, y
-        context.lineTo x + Map.TILE_WIDTH + 0.5, y + Map.TILE_HEIGHT
+        context.moveTo x, y + Map.tileHeight + 0.5
+        context.lineTo x + Map.tileWidth, y + Map.tileHeight + 0.5
+        context.moveTo x + Map.tileWidth + 0.5, y
+        context.lineTo x + Map.tileWidth + 0.5, y + Map.tileHeight
 
         context.closePath()
         context.strokeStyle = "#444"
@@ -150,11 +154,11 @@ class Map
 
         if j is 0
           context.textAlign = "left"
-          context.fillText i, x, y + (Map.TILE_HEIGHT / 2)
+          context.fillText i, x, y + (Map.tileHeight / 2)
 
         if i is 0
           context.textAlign = "center"
-          context.fillText j, x + (Map.TILE_WIDTH / 2), y + 6
+          context.fillText j, x + (Map.tileWidth / 2), y + 6
 
   drawTilesType: (context) ->
     context.font = "normal 12px menlo"
@@ -166,7 +170,7 @@ class Map
       for value, j in array
         value = "p" if value is "f" or value is "P"
         value = "g" if value is "G"
-        x = (j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
-        y = (i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+        x = (j * Map.tileWidth) + (Map.tileWidth / 2)
+        y = (i * Map.tileHeight) + (Map.tileHeight / 2)
 
         context.fillText value, x, y

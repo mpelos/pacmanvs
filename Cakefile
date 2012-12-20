@@ -19,13 +19,26 @@ files = [
   "maps_matrix",
   "map",
   "collider",
-  "game",
-  "pacmanvs"
+  "game"
+]
+
+gameFiles = files.concat(["pacmanvs"])
+
+presentationFiles = [
+  "slide",
+  "presentation",
+  "initializer"
 ]
 
 clientSource = ""
-for file in files
+for file in gameFiles
   clientSource += " src/client/#{file}.coffee"
+
+presentationSource = ""
+for file in files
+  presentationSource += " src/client/#{file}.coffee"
+for file in presentationFiles
+  presentationSource += " src/client/presentation/#{file}.coffee"
 
 task "watch", "Generate the javascript output when changes are detected", ->
   watch = exec "coffee -j app.js -cwb src/server/*"
@@ -34,6 +47,10 @@ task "watch", "Generate the javascript output when changes are detected", ->
   watch = exec "coffee -j public/javascripts/pacmanvs.js -cwb #{clientSource}"
   watch.stdout.on "data", (data) -> process.stdout.write data
 
+  watch = exec "coffee -j public/javascripts/presentation.js -cwb #{presentationSource}"
+  watch.stdout.on "data", (data) -> process.stdout.write data
+
 task "build", "Generate the javascript output", ->
   exec "coffee -j app.js -cb src/server/*"
   exec "coffee -j public/javascripts/pacmanvs.js -cb #{clientSource}"
+  exec "coffee -j public/javascripts/presentation.js -cb #{presentationSource}"

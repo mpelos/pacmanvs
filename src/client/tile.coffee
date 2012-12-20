@@ -3,8 +3,8 @@ class Tile
     @entities = []
 
   centerCoordinate: ->
-    x = (@j * Map.TILE_WIDTH) + (Map.TILE_WIDTH / 2)
-    y = (@i * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+    x = (@j * Map.tileWidth) + (Map.tileWidth / 2)
+    y = (@i * Map.tileHeight) + (Map.tileHeight / 2)
     new Coordinate(x, y)
 
   above: ->

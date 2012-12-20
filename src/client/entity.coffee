@@ -2,14 +2,14 @@ class Entity
   constructor: (x, y, @map) ->
     @position = new Coordinate(x, y)
     @initialPosition = new Coordinate(x, y)
-    @boundingBox = new Rectangle(@position, Map.TILE_WIDTH, Map.TILE_HEIGHT)
+    @boundingBox = new Rectangle(@position, Map.tileWidth, Map.tileHeight)
 
   currentTiles: (positions = @boundingBox.toArray()) ->
     positions = [positions] unless positions instanceof Array
     tiles = []
     for position in positions
-      i = Math.floor(position.y / Map.TILE_HEIGHT)
-      j = Math.floor(position.x / Map.TILE_WIDTH)
+      i = Math.floor(position.y / Map.tileHeight)
+      j = Math.floor(position.x / Map.tileWidth)
       tiles.push(@map.tiles[i][j])
 
     _.uniq(tiles)

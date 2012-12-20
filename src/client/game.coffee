@@ -8,8 +8,8 @@ class Game
     for canvas in $("canvas")
       name = canvas.id.replace("_canvas", "")
       @canvas[name] = document.getElementById(canvas.id)
-      @canvas[name].width  = @map.matrix[0].length * Map.TILE_WIDTH
-      @canvas[name].height = @map.matrix.length    * Map.TILE_HEIGHT
+      @canvas[name].width  = @map.matrix[0].length * Map.tileWidth
+      @canvas[name].height = @map.matrix.length    * Map.tileHeight
       @context[name] = @canvas[name].getContext("2d")
 
     @map.draw(@context.map)
@@ -131,10 +131,10 @@ class Game
 
   drawMessage: ->
     if @message
-      x = 14 * Map.TILE_WIDTH
-      y = (17 * Map.TILE_HEIGHT) + (Map.TILE_HEIGHT / 2)
+      x = 14 * Map.tileWidth
+      y = (17 * Map.tileHeight) + (Map.tileHeight / 2)
       context = @context.player
-      context.font = "bold #{Map.TILE_HEIGHT}px sans-serif"
+      context.font = "bold #{Map.tileHeight}px sans-serif"
       context.textAlign = "center"
       context.textBaseline = "middle"
       context.fillStyle = "#FDFB4A"

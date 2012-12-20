@@ -1,8 +1,8 @@
 class Food extends Entity
   constructor: (x, y, @map) ->
     super
-    @width = Math.ceil(Map.TILE_WIDTH / 10)
-    @height = Math.ceil(Map.TILE_HEIGHT / 10)
+    @width = Math.ceil(Map.tileWidth / 10)
+    @height = Math.ceil(Map.tileHeight / 10)
     @boundingBox = new Rectangle(@position, @width, @height)
     @eated = false
 

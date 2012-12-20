@@ -58,9 +58,9 @@ class PacmanRenderer extends PlayerRenderer
     @context.restore()
 
   drawLifes: (lifes) ->
-    y = (Map.TILE_HEIGHT * MAPS_MATRIX[0].length) - @radius
+    y = (Map.tileHeight * MAPS_MATRIX[0].length) - @radius
     _.times lifes, (n) =>
-      x = (Map.TILE_WIDTH * MAPS_MATRIX[0][0].length) - (n * Map.TILE_WIDTH) - @radius
+      x = (Map.tileWidth * MAPS_MATRIX[0][0].length) - (n * Map.tileWidth) - @radius
       @context.save()
       @context.translate x, y
       @context.scale 0.65, 0.65
