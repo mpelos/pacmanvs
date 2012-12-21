@@ -25,6 +25,7 @@ files = [
 gameFiles = files.concat(["pacmanvs"])
 
 presentationFiles = [
+  "basic_player"
   "slide",
   "presentation",
   "initializer"
