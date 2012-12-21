@@ -1924,14 +1924,11 @@ Slide = (function() {
     slides[40] = function() {
       _this.writeTitle("Implementação");
       _this.writeText("● Loop principal", 8);
-      _this.writeText("● Mapa", 10);
-      _this.writeText("● Entidades", 12);
-      _this.writeText("● Personagens", 14);
-      _this.writeText("● Colisões", 16);
-      _this.writeText("● Pacman e Fantasmas", 18);
+      _this.writeText("● Mapa", 11);
+      _this.writeText("● Entidades", 14);
+      _this.writeText("● Personagens", 17);
       _this.writeText("● Renderizador de Personagens", 20);
-      _this.writeText("● Integração", 22);
-      return _this.writeText("● Servidor", 24);
+      return _this.writeText("● Integração", 23);
     };
     slides[41] = function() {
       return _this.writeTitle("Loop Principal");
