@@ -275,14 +275,11 @@ class Slide
     slides[40] = =>
       @writeTitle "Implementação"
       @writeText "● Loop principal", 8
-      @writeText "● Mapa", 10
-      @writeText "● Entidades", 12
-      @writeText "● Personagens", 14
-      @writeText "● Colisões", 16
-      @writeText "● Pacman e Fantasmas", 18
+      @writeText "● Mapa", 11
+      @writeText "● Entidades", 14
+      @writeText "● Personagens", 17
       @writeText "● Renderizador de Personagens", 20
-      @writeText "● Integração", 22
-      @writeText "● Servidor", 24
+      @writeText "● Integração", 23
 
     slides[41] = =>
       @writeTitle "Loop Principal"
