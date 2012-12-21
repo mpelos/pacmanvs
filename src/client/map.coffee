@@ -161,7 +161,7 @@ class Map
           context.fillText j, x + (Map.tileWidth / 2), y + 6
 
   drawTilesType: (context) ->
-    context.font = "normal 12px menlo"
+    context.font = "bold 14px menlo"
     context.textAlign = "center"
     context.textBaseline = "middle"
     context.fillStyle = "#FFF"

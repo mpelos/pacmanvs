@@ -2,7 +2,7 @@ class Presentation
   MAX_FPS = 60
 
   constructor: ->
-    @map = new Map({ mapIndex: 1 })
+    @map = new Map
     @canvas = {}
     @context = {}
     for canvas in $("canvas")
@@ -35,6 +35,7 @@ class Presentation
     @status is "paused"
 
   resume: ->
+    this.loop() unless this.running()
     @status = "running"
 
   running: ->

@@ -469,7 +469,7 @@ Player = (function(_super) {
     context.font = "bold 12px sans-serif";
     context.textAlign = "center";
     context.fillStyle = "#FFF";
-    return context.fillText("(" + this.position.x + ", " + this.position.y + ")", this.position.x, this.position.y - Map.tileHeight);
+    return context.fillText("(" + Math.ceil(this.position.x) + ", " + Math.ceil(this.position.y) + ")", this.position.x, this.position.y - Map.tileHeight);
   };
 
   Player.prototype.reset = function() {
@@ -1221,7 +1221,7 @@ Map = (function() {
 
   Map.prototype.drawTilesType = function(context) {
     var array, i, j, value, x, y, _i, _len, _ref, _results;
-    context.font = "normal 12px menlo";
+    context.font = "bold 14px menlo";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillStyle = "#FFF";
@@ -1605,7 +1605,7 @@ Slide = (function() {
     this.presentation = presentation;
     this.context = this.presentation.context;
     this.map = this.presentation.map;
-    this.current = 45;
+    this.current = 67;
     this.slides = this.slides();
   }
 
@@ -1619,6 +1619,17 @@ Slide = (function() {
     return this.slides[this.current]();
   };
 
+  Slide.prototype.deleteGame = function() {
+    if (this.game) {
+      this.game.tick = function() {
+        return false;
+      };
+      if (this.game) {
+        return delete this.game;
+      }
+    }
+  };
+
   Slide.prototype.writeTitle = function(text, options) {
     var fontSize;
     if (options == null) {
@@ -1626,11 +1637,12 @@ Slide = (function() {
     }
     fontSize = options.fontSize ? Map.tileWidth * options.fontSize : Map.tileWidth * 2.8;
     this.context.map.beginPath();
-    this.context.map.font = "" + fontSize + "px sans-serif";
+    this.context.map.font = "bold " + fontSize + "px sans-serif";
     this.context.map.lineWidth = 2;
     this.context.map.textAlign = "center";
     this.context.map.strokeStyle = "#03F";
-    this.context.map.strokeText(text, this.map.width / 2, Map.tileHeight * 4);
+    this.context.map.fillStyle = "#FFF";
+    this.context.map.fillText(text, this.map.width / 2, Map.tileHeight * 4);
     return this.context.map.closePath();
   };
 
@@ -1638,13 +1650,24 @@ Slide = (function() {
     this.context.map.beginPath();
     this.context.map.font = "" + (Map.tileWidth * 1.4) + "px sans-serif";
     this.context.map.textAlign = "start";
-    this.context.map.fillStyle = "#FFF";
+    this.context.map.fillStyle = "#EEE";
     this.context.map.fillText(text, 0, Map.tileHeight * tileRow);
     return this.context.map.closePath();
   };
 
   Slide.prototype.draw = function() {
     return this.slides[this.current]();
+  };
+
+  Slide.prototype.drawIntegratorImage = function(n) {
+    var image, imageHeight, imageWidth;
+    if (n == null) {
+      n = 1;
+    }
+    image = document.getElementById("integration_" + n);
+    imageWidth = Map.tileWidth * 32;
+    imageHeight = imageWidth * 0.75;
+    return this.context.map.drawImage(image, (this.map.width / 2) - (imageWidth / 2), Map.tileHeight * 6, imageWidth, imageHeight);
   };
 
   Slide.prototype.slides = function() {
@@ -1675,7 +1698,7 @@ Slide = (function() {
       var browsersImage, imageHeight, imageWidth;
       _this.slides[1]();
       _this.writeText("● Implementado nativamente em todos os", 7);
-      _this.writeText("navegadores;", 9);
+      _this.writeText("navegadores", 9);
       browsersImage = document.getElementsByClassName("browsers")[0];
       imageWidth = Map.tileWidth * 14;
       imageHeight = Map.tileHeight * 14;
@@ -1683,44 +1706,44 @@ Slide = (function() {
     };
     slides[3] = function() {
       _this.slides[2]();
-      return _this.writeText("● Multi-plataforma;", 23);
+      return _this.writeText("● Multi-plataforma", 23);
     };
     slides[4] = function() {
       _this.slides[3]();
-      return _this.writeText("● Usado para interação com HTML.", 27);
+      return _this.writeText("● Usado para interação com HTML", 27);
     };
     slides[5] = function() {
       return _this.writeTitle("HTML 5 Canvas");
     };
     slides[6] = function() {
       _this.slides[5]();
-      return _this.writeText("● Elemento para renderização gráfica;", 9);
+      return _this.writeText("● Elemento para renderização gráfica", 9);
     };
     slides[7] = function() {
       _this.slides[6]();
       _this.writeText("● Manipulado utlizando a linguagem", 14);
-      return _this.writeText("Javascript;", 16);
+      return _this.writeText("Javascript", 16);
     };
     slides[8] = function() {
       _this.slides[7]();
       _this.writeText("● Abriu portas para o desenvolvimento de", 21);
-      return _this.writeText("jogos utilizando Javascript;", 23);
+      return _this.writeText("jogos utilizando Javascript", 23);
     };
     slides[9] = function() {
       return _this.writeTitle("Jogos para Navegadores", {
-        fontSize: 2.4
+        fontSize: 2.3
       });
     };
     slides[10] = function() {
       _this.slides[9]();
       _this.writeText("● Grande parcela dos jogos são", 10);
-      return _this.writeText("desenvolvidos utilizando Adobe Flash;", 12);
+      return _this.writeText("desenvolvidos utilizando Adobe Flash", 12);
     };
     slides[11] = function() {
       _this.slides[10]();
       _this.writeText("● Quantidade de jogos desenvolvidos com", 17);
       _this.writeText("Javascript aumentam com a evolução do", 19);
-      return _this.writeText("HTML 5.", 21);
+      return _this.writeText("HTML 5", 21);
     };
     slides[12] = function() {
       return _this.writeTitle("Projeto Proposto");
@@ -1775,52 +1798,52 @@ Slide = (function() {
       _this.ghost1.draw(_this.ghostRenderer2);
       _this.context.map.strokeText("N", Map.tileWidth * 24.4, textHeight);
       _this.context.map.closePath();
-      _this.writeText("● Desenvolvido em Javascript;", 18);
-      return _this.writeText("● Interação multiplayer.", 22);
+      _this.writeText("● Desenvolvido em Javascript", 18);
+      return _this.writeText("● Interação multiplayer", 22);
     };
     slides[14] = function() {
       return _this.writeTitle("Ferramentas Utilizadas", {
-        fontSize: 2.7
+        fontSize: 2.5
       });
     };
     slides[15] = function() {
       _this.slides[14]();
       _this.writeText("● Javascript: Linguagem de programação", 9);
-      return _this.writeText("utilizada;", 11);
+      return _this.writeText("utilizada", 11);
     };
     slides[16] = function() {
       _this.slides[15]();
       _this.writeText("● Canvas do HTML 5: Renderização de", 14);
-      return _this.writeText("gráficos;", 16);
+      return _this.writeText("gráficos", 16);
     };
     slides[17] = function() {
       _this.slides[16]();
       _this.writeText("● Coffeescript: Melhor sintaxe para o", 19);
-      return _this.writeText("Javascript;", 21);
+      return _this.writeText("Javascript", 21);
     };
     slides[18] = function() {
       _this.slides[17]();
-      return _this.writeText("● Node.js: Javascript no servidor.", 24);
+      return _this.writeText("● Node.js: Javascript no servidor", 24);
     };
     slides[19] = function() {
       return _this.writeTitle("Javascript");
     };
     slides[20] = function() {
       _this.slides[19]();
-      return _this.writeText("● Criada pela Netscape em 1995;", 9);
+      return _this.writeText("● Criada pela Netscape em 1995", 9);
     };
     slides[21] = function() {
       _this.slides[20]();
-      _this.writeText("● Nomes: Mocha, Livescript e finalmente;", 13);
-      return _this.writeText("Javascript;", 15);
+      _this.writeText("● Nomes: Mocha, Livescript e finalmente", 13);
+      return _this.writeText("Javascript", 15);
     };
     slides[22] = function() {
       _this.slides[21]();
-      return _this.writeText("● Linguagem destinada a web;", 19);
+      return _this.writeText("● Linguagem destinada a web", 19);
     };
     slides[23] = function() {
       _this.slides[22]();
-      return _this.writeText("● Simples e Versátil.", 23);
+      return _this.writeText("● Simples e Versátil", 23);
     };
     slides[24] = function() {
       return _this.writeTitle("HTML 5 Canvas");
@@ -1828,24 +1851,24 @@ Slide = (function() {
     slides[25] = function() {
       _this.slides[24]();
       _this.writeText("● Criado pela Apple em 2004 para", 8);
-      return _this.writeText("implementar widgets do Dashboard;", 10);
+      return _this.writeText("implementar widgets do Dashboard", 10);
     };
     slides[26] = function() {
       _this.slides[25]();
       _this.writeText("● Posteriormente implementado nos", 13);
-      return _this.writeText("navegadores Firefox Opera e Safari;", 15);
+      return _this.writeText("navegadores Firefox Opera e Safari", 15);
     };
     slides[27] = function() {
       _this.slides[26]();
       _this.writeText("● Marcador que permite desenhar gráficos", 18);
-      return _this.writeText("utilizando a linguagem Javascript;", 20);
+      return _this.writeText("utilizando a linguagem Javascript", 20);
     };
     slides[28] = function() {
       _this.slides[27]();
       _this.writeText("● Possível renderizar textos, imagens, ", 23);
       _this.writeText("aplicar cores, rotações, transparências, ", 25);
       _this.writeText("manipulação de pixels, vários tipos de linhas", 27);
-      return _this.writeText("e curvas, etc.", 29);
+      return _this.writeText("e curvas, etc", 29);
     };
     slides[29] = function() {
       return _this.writeTitle("Coffeescript");
@@ -1853,58 +1876,58 @@ Slide = (function() {
     slides[30] = function() {
       _this.slides[29]();
       _this.writeText("● Linguagem que quando compilada gera", 8);
-      return _this.writeText("Javascript;", 10);
+      return _this.writeText("Javascript", 10);
     };
     slides[31] = function() {
       _this.slides[30]();
-      return _this.writeText("● Torna a sintaxe do Javascript mais limpa;", 13);
+      return _this.writeText("● Torna a sintaxe do Javascript mais limpa", 13);
     };
     slides[32] = function() {
       _this.slides[31]();
       _this.writeText("● Sintaxe inspirada nas linguagens Ruby e", 16);
-      return _this.writeText("Python;", 18);
+      return _this.writeText("Python", 18);
     };
     slides[33] = function() {
       _this.slides[32]();
       _this.writeText("● Sem necessidade de chaves e ponto e", 21);
-      return _this.writeText("vírgula;", 23);
+      return _this.writeText("vírgula", 23);
     };
     slides[34] = function() {
       _this.slides[33]();
       _this.writeText("● Pode-se usar qualquer biblioteca", 26);
-      return _this.writeText("Javascript;", 28);
+      return _this.writeText("Javascript", 28);
     };
     slides[35] = function() {
       return _this.writeTitle("Node.js");
     };
     slides[36] = function() {
       _this.slides[35]();
-      return _this.writeText("● Criada por Ryan Dalh em 2009;", 9);
+      return _this.writeText("● Criada por Ryan Dalh em 2009", 9);
     };
     slides[37] = function() {
       _this.slides[36]();
-      return _this.writeText("● Utiliza Javascript para Servidor;", 13);
+      return _this.writeText("● Utiliza Javascript para Servidor", 13);
     };
     slides[38] = function() {
       _this.slides[37]();
-      return _this.writeText("● Linguagem não obstrutiva;", 17);
+      return _this.writeText("● Linguagem não obstrutiva", 17);
     };
     slides[39] = function() {
       _this.slides[38]();
       _this.writeText("● Perfeita para jogos com interação", 21);
-      return _this.writeText("multi-jogador em tempo real.", 23);
+      return _this.writeText("multi-jogador em tempo real", 23);
     };
     slides[40] = function() {
       _this.writeTitle("Implementação");
-      _this.writeText("● Loop principal;", 8);
-      _this.writeText("● Mapa;", 10);
-      _this.writeText("● Entidade;", 12);
-      _this.writeText("● Personagem;", 14);
-      _this.writeText("● Colisões;", 16);
-      _this.writeText("● Pacman e Fantasmas;", 18);
-      _this.writeText("● Renderizador de Personagens;", 20);
-      _this.writeText("● Integração;", 22);
-      return _this.writeText("● Servidor.", 24);
+      _this.writeText("● Loop principal", 8);
+      _this.writeText("● Mapa", 10);
+      _this.writeText("● Entidades", 12);
+      _this.writeText("● Personagens", 14);
+      _this.writeText("● Colisões", 16);
+      _this.writeText("● Pacman e Fantasmas", 18);
+      _this.writeText("● Renderizador de Personagens", 20);
+      _this.writeText("● Integração", 22);
+      return _this.writeText("● Servidor", 24);
     };
     slides[41] = function() {
       return _this.writeTitle("Loop Principal");
@@ -1912,25 +1935,27 @@ Slide = (function() {
     slides[42] = function() {
       _this.slides[41]();
       _this.writeText("● Necessário para que haja animação e", 8);
-      return _this.writeText("interação;", 10);
+      return _this.writeText("interação", 10);
     };
     slides[43] = function() {
       _this.slides[42]();
       _this.writeText("● Atualização (verificar colisões, alterar", 14);
-      return _this.writeText("direção e deslocar as personagens, etc);", 16);
+      return _this.writeText("direção e deslocar as personagens, etc)", 16);
     };
     slides[44] = function() {
       _this.slides[43]();
-      return _this.writeText("● Apagar e desenhar;", 20);
+      return _this.writeText("● Apagar e desenhar", 20);
     };
     slides[45] = function() {
+      _this.deleteGame();
       _this.presentation.resume();
       _this.slides[44]();
-      return _this.writeText("● 60 interações por segundo.", 24);
+      return _this.writeText("● 60 interações por segundo", 24);
     };
     slides[46] = function() {
       var timeout;
       _this.presentation.pause();
+      _this.deleteGame();
       return timeout = setTimeout(function() {
         var _ref;
         if ((_ref = _this.game) == null) {
@@ -1942,14 +1967,7 @@ Slide = (function() {
     slides[47] = function() {
       var timeout;
       _this.presentation.pause();
-      if (_this.game) {
-        _this.game.tick = function() {
-          return false;
-        };
-        if (_this.game) {
-          delete _this.game;
-        }
-      }
+      _this.deleteGame();
       return timeout = setTimeout(function() {
         var character, _i, _len, _ref, _ref1;
         if ((_ref = _this.game) == null) {
@@ -1981,6 +1999,320 @@ Slide = (function() {
         return clearTimeout(timeout);
       }, 100);
     };
+    slides[48] = function() {
+      _this.deleteGame();
+      _this.presentation.resume();
+      return _this.writeTitle("Mapa");
+    };
+    slides[49] = function() {
+      return _this.presentation.map.draw(_this.context.map);
+    };
+    slides[50] = function() {
+      return _this.presentation.map.drawTilesType(_this.context.map);
+    };
+    slides[51] = function() {
+      _this.presentation.map.draw(_this.context.map);
+      return _this.presentation.map.drawTilesType(_this.context.map);
+    };
+    slides[52] = function() {
+      _this.deleteGame();
+      _this.presentation.resume();
+      _this.presentation.map.draw(_this.context.map);
+      return _this.presentation.map.drawGrid(_this.context.map);
+    };
+    slides[53] = function() {
+      var timeout;
+      _this.deleteGame();
+      _this.presentation.pause();
+      return timeout = setTimeout(function() {
+        var pacman, tile, _ref;
+        if ((_ref = _this.game) == null) {
+          _this.game = new Game;
+        }
+        pacman = _this.game.pacman;
+        tile = _this.game.map.tiles[2][14];
+        pacman.direction.set("down");
+        pacman.position.set(tile.centerCoordinate());
+        pacman.canMove = function() {
+          return true;
+        };
+        _this.game.draw = function() {
+          _this.presentation.clearAllCanvas();
+          pacman.draw(_this.context.player);
+          return pacman.drawPosition(_this.context.player);
+        };
+        return clearTimeout(timeout);
+      }, 100);
+    };
+    slides[54] = function() {
+      var timeout;
+      _this.deleteGame();
+      _this.presentation.pause();
+      return timeout = setTimeout(function() {
+        var pacman, tile, _ref;
+        if ((_ref = _this.game) == null) {
+          _this.game = new Game;
+        }
+        pacman = _this.game.pacman;
+        tile = _this.game.map.tiles[14][2];
+        pacman.direction.set("right");
+        pacman.position.set(tile.centerCoordinate());
+        pacman.canMove = function() {
+          return true;
+        };
+        _this.game.draw = function() {
+          _this.presentation.clearAllCanvas();
+          pacman.draw(_this.context.player);
+          return pacman.drawPosition(_this.context.player);
+        };
+        return clearTimeout(timeout);
+      }, 100);
+    };
+    slides[55] = function() {
+      _this.deleteGame();
+      _this.presentation.resume();
+      _this.writeTitle("Entidades");
+      _this.writeText("● São entidades: personagens (Pacman", 9);
+      _this.writeText("e fantasmas) e comida", 11);
+      _this.writeText("● Toda entidade possui uma cordenada X,", 16);
+      return _this.writeText("Y e uma área de limite", 18);
+    };
+    slides[56] = function() {
+      var timeout;
+      _this.presentation.pause();
+      return timeout = setTimeout(function() {
+        var _ref;
+        if ((_ref = _this.game) == null) {
+          _this.game = new Game;
+        }
+        _this.game.draw = function() {
+          var entities, entity, food, player, _i, _j, _k, _len, _len1, _len2, _ref1, _ref2, _results;
+          _this.game.canvas.player.width = _this.game.canvas.player.width;
+          _ref1 = _this.game.foods;
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            food = _ref1[_i];
+            food.draw(_this.context.player);
+          }
+          _ref2 = _this.game.characters;
+          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
+            player = _ref2[_j];
+            player.draw(_this.context.player);
+          }
+          entities = _this.game.characters.concat(_this.game.map.remainingFoods());
+          _results = [];
+          for (_k = 0, _len2 = entities.length; _k < _len2; _k++) {
+            entity = entities[_k];
+            _results.push(entity.drawBoundingBox(_this.context.player));
+          }
+          return _results;
+        };
+        return clearTimeout(timeout);
+      }, 100);
+    };
+    slides[57] = function() {
+      _this.deleteGame();
+      if (_this.angle) {
+        delete _this.angle;
+      }
+      _this.presentation.resume();
+      _this.writeTitle("Personagens");
+      _this.writeText("● Possuem área delimitadora, posição,", 9);
+      _this.writeText("direção, velocidade e deslocamento", 11);
+      _this.writeText("● Direção definida pelo jogador", 15);
+      _this.writeText("● Fórmula de deslocamento:", 19);
+      _this.writeText("deslocamento = velocidade / fps", 21);
+      _this.writeText("● Fórmula de movimentação:", 25);
+      return _this.writeText("posição(x,y) + (direção(x,y) * deslocamento)", 27);
+    };
+    slides[58] = function() {
+      return _this.writeTitle("Renderizador de Personagens", {
+        fontSize: 1.9
+      });
+    };
+    slides[59] = function() {
+      var radius, x, y, _ref;
+      _this.slides[58]();
+      if ((_ref = _this.angle) == null) {
+        _this.angle = 0.3;
+      }
+      if (_this.angle < 1.7) {
+        _this.angle += 0.01;
+      }
+      radius = Map.tileWidth * 4;
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      _this.context.map.beginPath();
+      _this.context.map.strokeStyle = "#FF0";
+      _this.context.map.arc(x, y, radius, Math.PI * 0.3, Math.PI * _this.angle, false);
+      _this.context.map.stroke();
+      return _this.context.map.closePath();
+    };
+    slides[60] = function() {
+      var radius, x, y;
+      if (_this.angle) {
+        delete _this.angle;
+      }
+      _this.slides[58]();
+      radius = Map.tileWidth * 4;
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      _this.context.map.beginPath();
+      _this.context.map.save();
+      _this.context.map.translate(x, y);
+      _this.context.map.strokeStyle = "#FF0";
+      _this.context.map.arc(0, 0, radius, Math.PI * 0.3, Math.PI * 1.7, false);
+      _this.context.map.lineTo(-(radius / 4), 0);
+      _this.context.map.stroke();
+      _this.context.map.restore();
+      return _this.context.map.closePath();
+    };
+    slides[61] = function() {
+      var radius, x, y;
+      _this.slides[58]();
+      radius = Map.tileWidth * 4;
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      _this.context.map.beginPath();
+      _this.context.map.save();
+      _this.context.map.translate(x, y);
+      _this.context.map.fillStyle = "#FF0";
+      _this.context.map.arc(0, 0, radius, Math.PI * 0.3, Math.PI * 1.7, false);
+      _this.context.map.lineTo(-(radius / 4), 0);
+      _this.context.map.fill();
+      _this.context.map.restore();
+      return _this.context.map.closePath();
+    };
+    slides[62] = function() {
+      if (_this.ghost) {
+        delete _this.ghost;
+      }
+      if (_this.ghostRenderer) {
+        delete _this.ghostRenderer;
+      }
+      return _this.slides[58]();
+    };
+    slides[63] = function() {
+      var radius, x, y, _ref, _ref1;
+      _this.slides[58]();
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      radius = Map.tileWidth * 4;
+      if ((_ref = _this.ghost) == null) {
+        _this.ghost = new BasicPlayer(x, y, {
+          direction: "right",
+          color: "#F81F17"
+        });
+      }
+      if ((_ref1 = _this.ghostRenderer) == null) {
+        _this.ghostRenderer = new GhostRenderer(_this.context.player, _this.ghost, {
+          radius: radius
+        });
+      }
+      return _this.ghostRenderer.drawEyeBalls();
+    };
+    slides[64] = function() {
+      var radius, x, y, _ref, _ref1;
+      _this.slides[58]();
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      radius = Map.tileWidth * 4;
+      if ((_ref = _this.ghost) == null) {
+        _this.ghost = new BasicPlayer(x, y, {
+          direction: "right",
+          color: "#F81F17"
+        });
+      }
+      if ((_ref1 = _this.ghostRenderer) == null) {
+        _this.ghostRenderer = new GhostRenderer(_this.context.player, _this.ghost, {
+          radius: radius
+        });
+      }
+      _this.ghostRenderer.drawEyeBalls();
+      return _this.ghostRenderer.drawPupils();
+    };
+    slides[65] = function() {
+      var radius, x, y, _ref, _ref1;
+      _this.slides[58]();
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      radius = Map.tileWidth * 4;
+      if ((_ref = _this.ghost) == null) {
+        _this.ghost = new BasicPlayer(x, y, {
+          direction: "right",
+          color: "#F81F17"
+        });
+      }
+      if ((_ref1 = _this.ghostRenderer) == null) {
+        _this.ghostRenderer = new GhostRenderer(_this.context.player, _this.ghost, {
+          radius: radius
+        });
+      }
+      _this.ghostRenderer.drawBody(_this.ghost.color);
+      _this.ghostRenderer.drawEyeBalls();
+      return _this.ghostRenderer.drawPupils();
+    };
+    slides[66] = function() {
+      var radius, x, y, _ref, _ref1;
+      _this.slides[58]();
+      x = _this.map.width / 2;
+      y = Map.tileHeight * 15;
+      radius = Map.tileWidth * 4;
+      if ((_ref = _this.ghost) == null) {
+        _this.ghost = new BasicPlayer(x, y, {
+          direction: "right",
+          color: "#F81F17"
+        });
+      }
+      if ((_ref1 = _this.ghostRenderer) == null) {
+        _this.ghostRenderer = new GhostRenderer(_this.context.player, _this.ghost, {
+          radius: radius
+        });
+      }
+      return _this.ghost.draw(_this.ghostRenderer);
+    };
+    slides[67] = function() {
+      return _this.writeTitle("Visão Geral");
+    };
+    slides[68] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(1);
+    };
+    slides[69] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(2);
+    };
+    slides[70] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(3);
+    };
+    slides[71] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(4);
+    };
+    slides[72] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(5);
+    };
+    slides[73] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(6);
+    };
+    slides[74] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(7);
+    };
+    slides[75] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(8);
+    };
+    slides[76] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(9);
+    };
+    slides[77] = function() {
+      _this.slides[67]();
+      return _this.drawIntegratorImage(10);
+    };
     return slides;
   };
 
@@ -1999,9 +2331,7 @@ Presentation = (function() {
     this.handleKey = __bind(this.handleKey, this);
 
     var canvas, name, _i, _len, _ref;
-    this.map = new Map({
-      mapIndex: 1
-    });
+    this.map = new Map;
     this.canvas = {};
     this.context = {};
     _ref = $("canvas");
@@ -2039,6 +2369,9 @@ Presentation = (function() {
   };
 
   Presentation.prototype.resume = function() {
+    if (!this.running()) {
+      this.loop();
+    }
     return this.status = "running";
   };
 

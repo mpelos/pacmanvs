@@ -95,7 +95,7 @@ class Player extends Entity
     context.font = "bold 12px sans-serif"
     context.textAlign = "center"
     context.fillStyle = "#FFF"
-    context.fillText ("(" + @position.x + ", " + @position.y + ")"), @position.x, (@position.y - Map.tileHeight)
+    context.fillText ("(" + Math.ceil(@position.x) + ", " + Math.ceil(@position.y) + ")"), @position.x, (@position.y - Map.tileHeight)
 
   reset: ->
     this.excludeFromTiles()
