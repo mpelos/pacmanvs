@@ -1511,7 +1511,8 @@ Game = (function() {
       player = _ref1[_j];
       player.draw(this.context.player);
     }
-    return this.drawMessage();
+    this.drawMessage();
+    return this.drawFps();
   };
 
   Game.prototype.drawPacmanLifes = function() {
@@ -1539,9 +1540,10 @@ Game = (function() {
 
   Game.prototype.drawFps = function() {
     this.context.player.font = "bold 12px sans-serif";
-    this.context.player.textAlign = "right";
+    this.context.player.textAlign = "left";
+    this.context.player.textBaseline = "bottom";
     this.context.player.fillStyle = "#FFF";
-    return this.context.player.fillText("" + this.fps + " FPS", this.canvas.map.width - 5, this.canvas.map.height - 5);
+    return this.context.player.fillText("" + this.fps + " FPS", 5, this.canvas.map.height - 10);
   };
 
   Game.prototype.loop = function() {
@@ -1599,10 +1601,11 @@ BasicPlayer = (function() {
 
 Slide = (function() {
 
-  function Slide(context, map) {
-    this.context = context;
-    this.map = map;
-    this.current = 42;
+  function Slide(presentation) {
+    this.presentation = presentation;
+    this.context = this.presentation.context;
+    this.map = this.presentation.map;
+    this.current = 45;
     this.slides = this.slides();
   }
 
@@ -1921,8 +1924,62 @@ Slide = (function() {
       return _this.writeText("● Apagar e desenhar;", 20);
     };
     slides[45] = function() {
+      _this.presentation.resume();
       _this.slides[44]();
       return _this.writeText("● 60 interações por segundo.", 24);
+    };
+    slides[46] = function() {
+      var timeout;
+      _this.presentation.pause();
+      return timeout = setTimeout(function() {
+        var _ref;
+        if ((_ref = _this.game) == null) {
+          _this.game = new Game;
+        }
+        return clearTimeout(timeout);
+      }, 100);
+    };
+    slides[47] = function() {
+      var timeout;
+      _this.presentation.pause();
+      if (_this.game) {
+        _this.game.tick = function() {
+          return false;
+        };
+        if (_this.game) {
+          delete _this.game;
+        }
+      }
+      return timeout = setTimeout(function() {
+        var character, _i, _len, _ref, _ref1;
+        if ((_ref = _this.game) == null) {
+          _this.game = new Game;
+        }
+        _ref1 = _this.game.characters;
+        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+          character = _ref1[_i];
+          character.calculateDisplacement = function() {
+            return false;
+          };
+          character.displacement = 1;
+        }
+        _this.game.message = "";
+        _this.game.delayTimer.timeOver = function() {
+          return true;
+        };
+        _this.game.tick = function() {
+          _this.game.update();
+          _this.game.draw();
+          _this.game.map.draw(_this.context.map);
+          return setTimeout(function() {
+            _this.presentation.clearAllCanvas();
+            return setTimeout((function() {
+              return _this.game.loop();
+            }), 200);
+          }, 800);
+        };
+        return clearTimeout(timeout);
+      }, 100);
     };
     return slides;
   };
@@ -1958,7 +2015,8 @@ Presentation = (function() {
     }
     this.map.draw(this.context.map);
     this.fpsTimer = new Timer(1000);
-    this.slide = new Slide(this.context, this.map);
+    this.slide = new Slide(this);
+    this.status = "running";
     this.loop();
   }
 
@@ -1971,15 +2029,38 @@ Presentation = (function() {
     }
   };
 
+  Presentation.prototype.pause = function() {
+    this.status = "paused";
+    return this.clearAllCanvas();
+  };
+
+  Presentation.prototype.paused = function() {
+    return this.status === "paused";
+  };
+
+  Presentation.prototype.resume = function() {
+    return this.status = "running";
+  };
+
+  Presentation.prototype.running = function() {
+    return this.status === "running";
+  };
+
   Presentation.prototype.update = function() {};
 
-  Presentation.prototype.draw = function() {
-    var canvas, type, _ref;
+  Presentation.prototype.clearAllCanvas = function() {
+    var canvas, type, _ref, _results;
     _ref = this.canvas;
+    _results = [];
     for (type in _ref) {
       canvas = _ref[type];
-      canvas.width = canvas.width;
+      _results.push(canvas.width = canvas.width);
     }
+    return _results;
+  };
+
+  Presentation.prototype.draw = function() {
+    this.clearAllCanvas();
     return this.slide.draw();
   };
 
@@ -1990,7 +2071,9 @@ Presentation = (function() {
   Presentation.prototype.tick = function() {
     this.update();
     this.draw();
-    return this.loop();
+    if (this.running()) {
+      return this.loop();
+    }
   };
 
   return Presentation;

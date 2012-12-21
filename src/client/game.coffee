@@ -123,6 +123,7 @@ class Game
     food.draw(@context.player) for food in @foods
     player.draw(@context.player) for player in @characters
     this.drawMessage()
+    this.drawFps()
 
   drawPacmanLifes: ->
     @canvas.life.width = @canvas.life.width # clear life canvas
@@ -142,9 +143,10 @@ class Game
 
   drawFps: ->
     @context.player.font = "bold 12px sans-serif"
-    @context.player.textAlign = "right"
+    @context.player.textAlign = "left"
+    @context.player.textBaseline = "bottom"
     @context.player.fillStyle = "#FFF"
-    @context.player.fillText "#{@fps} FPS", (@canvas.map.width - 5), (@canvas.map.height - 5)
+    @context.player.fillText "#{@fps} FPS", 5, (@canvas.map.height - 10)
 
   loop: ->
     requestAnimationFrame this.tick

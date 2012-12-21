@@ -14,7 +14,8 @@ class Presentation
 
     @map.draw(@context.map)
     @fpsTimer = new Timer(1000)
-    @slide = new Slide(@context, @map)
+    @slide = new Slide(this)
+    @status = "running"
     this.loop() # starts the loop
 
   handleKey: (e) =>
@@ -26,12 +27,27 @@ class Presentation
       when 39 or 13 then @slide.next()
       when 37       then @slide.previous()
 
+  pause: ->
+    @status = "paused"
+    this.clearAllCanvas()
+
+  paused: ->
+    @status is "paused"
+
+  resume: ->
+    @status = "running"
+
+  running: ->
+    @status is "running"
+
   update: ->
 
-  draw: ->
+  clearAllCanvas: ->
     for type, canvas of @canvas
       canvas.width = canvas.width
 
+  draw: ->
+    this.clearAllCanvas()
     @slide.draw()
 
   loop: ->
@@ -40,4 +56,4 @@ class Presentation
   tick: =>
     this.update()
     this.draw()
-    this.loop()
+    this.loop() if this.running()

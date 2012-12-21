@@ -1,6 +1,8 @@
 class Slide
-  constructor: (@context, @map) ->
-    @current = 42
+  constructor: (@presentation) ->
+    @context = @presentation.context
+    @map = @presentation.map
+    @current = 45
     @slides = this.slides()
 
   next: ->
@@ -288,7 +290,43 @@ class Slide
       @writeText "● Apagar e desenhar;", 20
 
     slides[45] = =>
+      @presentation.resume()
       @slides[44]()
       @writeText "● 60 interações por segundo.", 24
+
+    slides[46] = =>
+      @presentation.pause()
+
+      timeout = setTimeout =>
+        @game ?= new Game
+        clearTimeout timeout
+      , 100
+
+    slides[47] = =>
+      @presentation.pause()
+      if @game
+        @game.tick = -> false
+        delete @game if @game
+
+      timeout = setTimeout =>
+        @game ?= new Game
+
+        for character in @game.characters
+          character.calculateDisplacement = -> false
+          character.displacement = 1
+
+        @game.message = ""
+        @game.delayTimer.timeOver = -> true
+        @game.tick = =>
+          @game.update()
+          @game.draw()
+          @game.map.draw(@context.map)
+          setTimeout =>
+            @presentation.clearAllCanvas()
+            setTimeout (=> @game.loop()), 200
+          , 800
+
+        clearTimeout timeout
+      , 100
 
     slides
