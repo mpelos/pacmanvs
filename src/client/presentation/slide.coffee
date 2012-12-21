@@ -2,15 +2,15 @@ class Slide
   constructor: (@presentation) ->
     @context = @presentation.context
     @map = @presentation.map
-    @current = 67
+    @current = 0
     @slides = this.slides()
 
   next: ->
-    @current += 1
+    @current += 1 if @slides[@current + 1]
     @slides[@current]()
 
   previous: ->
-    @current -= 1
+    @current -= 1 if @slides[@current - 1]
     @slides[@current]()
 
   deleteGame: ->

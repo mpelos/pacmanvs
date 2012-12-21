@@ -1605,17 +1605,21 @@ Slide = (function() {
     this.presentation = presentation;
     this.context = this.presentation.context;
     this.map = this.presentation.map;
-    this.current = 67;
+    this.current = 0;
     this.slides = this.slides();
   }
 
   Slide.prototype.next = function() {
-    this.current += 1;
+    if (this.slides[this.current + 1]) {
+      this.current += 1;
+    }
     return this.slides[this.current]();
   };
 
   Slide.prototype.previous = function() {
-    this.current -= 1;
+    if (this.slides[this.current - 1]) {
+      this.current -= 1;
+    }
     return this.slides[this.current]();
   };
 
